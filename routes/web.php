@@ -351,6 +351,11 @@ Route::post('confirm', [\App\Http\Controllers\SellerloginController::class, 'con
 
 
 // Guru Maurya Work
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\WebSettingsController;
+use App\Http\Controllers\Admin\SubCategoryController;
+
 Route::prefix('super-admin')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
     Route::get('web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
@@ -364,4 +369,9 @@ Route::prefix('super-admin')->group(function () {
     Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy'])->name('super-admin.categories.destroy');
 });
 
-
+Route::get('super-admin/sub-categories', [SubCategoryController::class, 'index'])->name('super-admin.sub-categories.index');
+Route::get('super-admin/sub-categories/create', [SubCategoryController::class, 'create'])->name('super-admin.sub-categories.create');
+Route::post('super-admin/sub-categories', [SubCategoryController::class, 'store'])->name('super-admin.sub-categories.store');
+Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('super-admin.sub-categories.edit');
+Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('super-admin.sub-categories.update');
+Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('super-admin.sub-categories.destroy');
