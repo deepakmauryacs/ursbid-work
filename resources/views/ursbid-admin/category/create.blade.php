@@ -33,14 +33,6 @@
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Category ID</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="cat_id" class="form-control" placeholder="Enter Category ID">
-                            </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Post Date</label>
                             </div>
                             <div class="col-md-8">
