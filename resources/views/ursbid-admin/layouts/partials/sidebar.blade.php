@@ -80,6 +80,9 @@
                           <li class="sub-nav-item">
                                <a class="sub-nav-link {{ request()->is('super-admin/sub-categories*') ? 'active' : '' }}" href="{{ route('super-admin.sub-categories.index') }}">Sub Category</a>
                           </li>
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link {{ request()->is('super-admin/products*') ? 'active' : '' }}" href="{{ route('super-admin.products.index') }}">Product</a>
+                          </li>
                      </ul>
                 </div>
            </li>
