@@ -52,9 +52,13 @@
                             <div class="col-md-2 no-padding-left">
                                 <div class="form-group">
                                     <select class="form-control select2" name="r_page">
+                                        <option value="10" {{ $data['r_page'] == 10 ? 'selected' : '' }}> 10 Records Per
+                                            Page</option>
                                         <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}> 25 Records Per
                                             Page</option>
                                         <option value="50" {{ $data['r_page'] == 50 ? 'selected' : '' }}> 50 Records Per
+                                            Page</option>
+                                        <option value="75" {{ $data['r_page'] == 75 ? 'selected' : '' }}> 75 Records Per
                                             Page</option>
                                         <option value="100" {{ $data['r_page'] == 100 ? 'selected' : '' }}> 100 Records
                                             Per Page</option>
