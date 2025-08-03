@@ -5,6 +5,8 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 
 
 /*
@@ -352,10 +354,6 @@ Route::post('confirm', [\App\Http\Controllers\SellerloginController::class, 'con
 
 // Guru Maurya Work
 
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\WebSettingsController;
-use App\Http\Controllers\Admin\SubCategoryController;
-
 Route::prefix('super-admin')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
     Route::get('web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
@@ -375,3 +373,10 @@ Route::post('super-admin/sub-categories', [SubCategoryController::class, 'store'
 Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('super-admin.sub-categories.edit');
 Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('super-admin.sub-categories.update');
 Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('super-admin.sub-categories.destroy');
+
+Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
+Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
+Route::post('super-admin/blogs', [AdminBlogController::class, 'store'])->name('super-admin.blogs.store');
+Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])->name('super-admin.blogs.edit');
+Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])->name('super-admin.blogs.update');
+Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])->name('super-admin.blogs.destroy');
