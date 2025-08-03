@@ -13,15 +13,17 @@ class SubCategoryController extends Controller
     /**
      * Display a listing of the sub categories.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->get('per_page', 10);
+
         $subs = DB::table('sub')
             ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
             ->select('sub.*', 'category.title as category_title')
             ->orderBy('sub.order_by')
-            ->get();
+            ->paginate($perPage);
 
-        return view('ursbid-admin.sub_categories.list', compact('subs'));
+        return view('ursbid-admin.sub_categories.list', compact('subs', 'perPage'));
     }
 
     /**
