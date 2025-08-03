@@ -2,6 +2,9 @@
 use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\WebSettingsController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 
 /*
@@ -348,13 +351,23 @@ Route::post('confirm', [\App\Http\Controllers\SellerloginController::class, 'con
 
 
 // Guru Maurya Work
+
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\SubCategoryController;
-Route::get('admin-dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
-Route::get('super-admin/web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
-Route::post('super-admin/web-settings/save', [WebSettingsController::class, 'save'])->name('super-admin.web-settings.save');
 
+Route::prefix('super-admin')->group(function () {
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
+    Route::get('web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
+    Route::post('web-settings/save', [WebSettingsController::class, 'save'])->name('super-admin.web-settings.save');
+
+    Route::get('categories', [AdminCategoryController::class, 'index'])->name('super-admin.categories.index');
+    Route::get('categories/create', [AdminCategoryController::class, 'create'])->name('super-admin.categories.create');
+    Route::post('categories', [AdminCategoryController::class, 'store'])->name('super-admin.categories.store');
+    Route::get('categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('super-admin.categories.edit');
+    Route::put('categories/{id}', [AdminCategoryController::class, 'update'])->name('super-admin.categories.update');
+    Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy'])->name('super-admin.categories.destroy');
+});
 
 Route::get('super-admin/sub-categories', [SubCategoryController::class, 'index'])->name('super-admin.sub-categories.index');
 Route::get('super-admin/sub-categories/create', [SubCategoryController::class, 'create'])->name('super-admin.sub-categories.create');
