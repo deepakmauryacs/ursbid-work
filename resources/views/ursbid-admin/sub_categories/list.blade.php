@@ -12,17 +12,6 @@
                     <a href="{{ route('super-admin.sub-categories.create') }}" class="btn btn-sm btn-primary">Add Sub Category</a>
                 </div>
                 <div class="card-body">
-                    <form method="get" class="row mb-3">
-                        <div class="col-md-2">
-                            <select name="per_page" class="form-select" onchange="this.form.submit()">
-                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                                <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                                <option value="75" {{ $perPage == 75 ? 'selected' : '' }}>75</option>
-                                <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                            </select>
-                        </div>
-                    </form>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -57,13 +46,34 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer">
-                    {{ $subs->withQueryString()->links() }}
+                <div class="card-footer d-flex flex-wrap justify-content-between align-items-center">
+                    <!-- Show Length + Info -->
+                    <form method="get" class="d-flex align-items-center mb-2 mb-md-0">
+                        <label class="me-2 mb-0">Show</label>
+                        <select name="per_page" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                            <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                            <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                            <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                            <option value="75" {{ $perPage == 75 ? 'selected' : '' }}>75</option>
+                            <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                        </select>
+                        <span class="ms-2">entries</span>
+                        <span class="ms-3 text-muted">
+                            Showing {{ $subs->firstItem() ?? 0 }} to {{ $subs->lastItem() ?? 0 }} of {{ $subs->total() }} entries
+                        </span>
+                    </form>
+
+                    <!-- Modern Pagination -->
+                    <div>
+                        {{ $subs->withQueryString()->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
+
 @push('scripts')
 <script>
 $(function(){

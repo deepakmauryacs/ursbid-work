@@ -78,11 +78,24 @@ class SubCategoryController extends Controller
 
         $id = DB::table('sub')->insertGetId($data);
 
+       // Handle image upload
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-            DB::table('sub')->where('id', $id)->update(['image' => $filename]);
+    
+            // Ensure directory exists
+            $uploadPath = public_path('uploads/sub_category');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+    
+            // Move uploaded file
+            $file->move($uploadPath, $filename);
+    
+            // Update database with image path
+            DB::table('sub')->where('id', $id)->update([
+                'image' => 'uploads/sub_category/' . $filename
+            ]);
         }
 
         return response()->json([
@@ -152,17 +165,28 @@ class SubCategoryController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            if (!empty($sub->image)) {
-                $path = public_path('uploads/' . $sub->image);
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
+            // Delete old image if exists
+            if (!empty($sub->image) && file_exists(public_path($sub->image))) {
+                @unlink(public_path($sub->image));
             }
+        
+            // Upload new image
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-            $data['image'] = $filename;
+        
+            // Create folder if not exists
+            $uploadPath = public_path('uploads/sub_category');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+        
+            // Move file
+            $file->move($uploadPath, $filename);
+        
+            // Save path in database
+            $data['image'] = 'uploads/sub_category/' . $filename;
         }
+
 
         DB::table('sub')->where('id', $id)->update($data);
 

@@ -61,11 +61,12 @@
                                 <label class="form-label fw-semibold">Image</label>
                             </div>
                             <div class="col-md-8">
-                                @if(!empty($sub->image))
+                               @if (!empty($sub->image))
                                     <div class="mb-2">
-                                        <img src="{{ asset('public/uploads/' . $sub->image) }}" alt="Image" height="80" style="border:1px solid #ccc;">
+                                        <img src="{{ asset('public/' . $sub->image) }}" alt="Image" height="80" style="border:1px solid #ccc;">
                                     </div>
                                 @endif
+
                                 <input type="file" name="image" class="form-control" accept="image/*">
                             </div>
                         </div>
