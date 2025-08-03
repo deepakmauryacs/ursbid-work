@@ -120,8 +120,13 @@ $(function(){
                 processData: false,
                 contentType: false,
                 success: function(res){
-                    toastr.success(res.message);
-                    $('#updateBtn').prop('disabled',false).text('Update');
+                    if(res.status === 'success'){
+                        toastr.success(res.message);
+                        window.location.href = '{{ route('super-admin.categories.index') }}';
+                    } else {
+                        toastr.error(res.message || 'An error occurred');
+                        $('#updateBtn').prop('disabled',false).text('Update');
+                    }
                 },
                 error: function(xhr){
                     let err = 'An error occurred';

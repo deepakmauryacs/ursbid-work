@@ -114,9 +114,13 @@ $(function(){
                 processData: false,
                 contentType: false,
                 success: function(res){
-                    toastr.success(res.message);
-                    form.reset();
-                    $('#saveBtn').prop('disabled',false).text('Save');
+                    if(res.status === 'success'){
+                        toastr.success(res.message);
+                        window.location.href = '{{ route('super-admin.categories.index') }}';
+                    } else {
+                        toastr.error(res.message || 'An error occurred');
+                        $('#saveBtn').prop('disabled',false).text('Save');
+                    }
                 },
                 error: function(xhr){
                     let err = 'An error occurred';
