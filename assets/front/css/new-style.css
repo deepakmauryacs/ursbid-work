@@ -1,0 +1,211 @@
+label.label {
+margin-bottom: 10px;
+font-size: 19px;
+font-weight: 600;
+padding-left: 10px;
+}
+button.my_bnty {
+padding: 8px 39px;
+background: #171b2a;
+color: #fff;
+font-weight: 800;
+border-radius: 34px;
+}
+.go-to-btn a small {
+font-size: 16px;
+margin-top: 11px;
+display: block;
+font-weight: 700;
+}
+.ltn__login-area {
+padding-bottom: 70px;
+}
+.ltn__contact-address-item-3 {-webkit-box-shadow: none;box-shadow: none;text-align: center;border: 2px solid var(--border-color-11);padding: 50px 30px 25px;height: 100%;}
+.ltn__contact-address-item-3 i {
+font-size: 50px;
+border: 0;
+-webkit-box-shadow: none;
+box-shadow: none; }
+.ltn__contact-address-item-3 .ltn__contact-address-icon {
+margin-bottom: 35px; }
+.ltn__contact-address-item-3 .ltn__contact-address-icon img {
+max-width: 80px; }
+.ltn__contact-address-item-3:hover i {
+background-color: transparent;
+color: var(--ltn__secondary-color); }
+
+.pd-60
+{padding:60px 0px;}
+
+.sub_dp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.sub_dp .item {
+    width: 32%;
+}
+.sub_dp .item .img {
+    height: 180px;
+    width: 100%;
+}
+.sub_dp .item a {
+    border: 1px solid #eee;
+    display: block;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px #cfcfcf;
+}
+.sub_dp .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.sub_dp .item .hd_name h3 {
+    font-size: 19px;
+    margin: 0;
+    padding: 8px 0px;
+    text-align: center;
+}
+.nav a {
+    width: 100%;
+    display: inline-block;
+    padding: 4px 17px;
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.ltn__appointment-area {
+    padding: 60px 0px;
+}
+.nav a.active {
+    background: #191246;
+    color: #fff;
+    border-radius: 42px;
+}
+.ltn__tab-menu.ltn__tab-menu-3 {
+    background: aliceblue;
+    padding: 7px;
+}
+h6.frm {
+    font-size: 30px;
+}
+label.q_lab {
+    font-weight: 700;
+    font-size: 18px;
+    padding-left: 17px;
+    margin-bottom: 9px;
+    color: #191246;
+}
+
+.radio label {
+  /* margin: 1em 0; */
+  display: block;
+  position: relative;
+  padding-left: 40px;
+  cursor: pointer;
+  line-height: 1.75em;
+  width: 100%;
+}
+
+.radio input[type=radio] {
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+}
+
+.radio input[type=text] {
+  margin-left: 5px;
+  opacity: 1;
+  transition: opacity 500ms;
+  padding: 0.3em;
+  border: 1px solid #ccc;
+}
+.radio input[type=text]:disabled {
+  opacity: 0;
+}
+
+.radio .outside {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -15px;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #cccccc;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.radio .inside {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  background: #191246;
+  left: 7px;
+  top: 7px;
+  transform: scale(0, 0);
+}
+.radio .no-transforms .inside {
+  left: auto;
+  top: auto;
+  width: 0;
+  height: 0;
+}
+
+.radio input[type=radio] {
+  /*&:focus, &:active {
+      + .outside {
+        border-color: $almost-black;
+      }
+    }*/
+}
+.radio input[type=radio]:checked + .outside .inside {
+  -webkit-animation: radio-select 0.1s linear;
+          animation: radio-select 0.1s linear;
+  transform: scale(1, 1);
+}
+.radio 	.no-transforms input[type=radio]:checked + .outside .inside {
+  width: 20px;
+  height: 20px;
+}
+.radio {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+input#myFile {
+    border: 2px solid #e4ecf2;
+    margin-bottom: 25px;
+    background: #fff;
+    width: 100%;
+    height: 56px;
+    padding: 11px 24px;
+    border-radius: 44px;
+}
+.ltn__apartments-tab-content-inner.my_for {
+    padding: 52px;
+    background: #f6f6f6;
+}
+.nav a:hover {
+    background: #191246;
+    color: #fff;
+    border-radius: 29px;
+}
+.tab-content {
+    margin-top: 60px;
+}
+.radio.mrb_t {
+    margin-bottom: 19px;
+}
+.col-lg-6.regis {
+    background: #c4c4c4;
+}

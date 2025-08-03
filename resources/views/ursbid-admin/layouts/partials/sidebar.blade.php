@@ -1,0 +1,73 @@
+<div class="main-nav">
+    <!-- Sidebar Logo -->
+    <div class="logo-box">
+        <a href="{{ route('super-admin.dashboard') }}" class="logo-dark">
+            <img src="{{ asset('public/assets/images/logo-sm.png?v=1.0.3') }}" class="logo-sm" alt="logo sm">
+            <img src="{{ asset('public/assets/images/logo-dark.png?v=1.0.3') }}" class="logo-lg" alt="logo dark">
+        </a>
+    
+        <a href="{{ route('super-admin.dashboard') }}" class="logo-light">
+            <img src="{{ asset('public/assets/images/logo-sm.png?v=1.0.3') }}" class="logo-sm" alt="logo sm">
+            <img src="{{ asset('public/assets/images/logo-light.png?v=1.0.3') }}" class="logo-lg" alt="logo light">
+        </a>
+    </div>
+
+
+    <button type="button" class="button-sm-hover" aria-label="Show Full Sidebar">
+        <i class="ri-menu-2-line fs-24 button-sm-hover-icon"></i>
+    </button>
+
+    <div class="scrollbar" data-simplebar>
+        <ul class="navbar-nav" id="navbar-nav">
+            <li class="menu-title">Menu</li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('admin-dashboard*') ? 'active' : '' }}" href="{{ route('super-admin.dashboard') }}">
+                    <span class="nav-icon">
+                        <i class="ri-dashboard-2-line"></i>
+                    </span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link menu-arrow" href="#sidebarBlog" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBlog">
+                     <span class="nav-icon">
+                          <i class="ri-news-line"></i>
+                     </span>
+                     <span class="nav-text">Blog ( CMS ) </span>
+                </a>
+                <div class="collapse" id="sidebarBlog">
+                     <ul class="nav sub-navbar-nav">
+                         
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link" href="post-create.html">Create Blog</a>
+                          </li>  
+                          
+                           <li class="sub-nav-item">
+                               <a class="sub-nav-link" href="post.html">Blog List</a>
+                          </li>
+                     </ul>
+                </div>
+           </li> 
+            
+            <li class="nav-item">
+                <a class="nav-link menu-arrow" href="#sidebarProperty" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProperty">
+                     <span class="nav-icon">
+                        <i class='ri-share-line'></i> 
+                     </span>
+                     <span class="nav-text"> Settings </span>
+                </a>
+                <div class="collapse" id="sidebarProperty">
+                     <ul class="nav sub-navbar-nav">
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link" href="{{ route('super-admin.web-settings.edit') }}">General Settings</a>
+                          </li>
+                     </ul>
+                </div>
+           </li> 
+            
+            <!-- Add other menu items similarly -->
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,1 @@
+[10-Dec-2024 11:51:33 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home3/ursbid/public_html/demo/storage/framework/views/5c7bf8cd92466423e319a8654ed16088.php on line 36
