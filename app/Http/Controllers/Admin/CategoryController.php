@@ -25,7 +25,6 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255|unique:category,title',
-            'cat_id' => 'nullable|string|max:200',
             'post_date' => 'required|date_format:d-m-Y',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'meta_title' => 'nullable|string|max:255',
@@ -71,7 +70,6 @@ class CategoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255|unique:category,title,' . $category->id,
-            'cat_id' => 'nullable|string|max:200',
             'post_date' => 'required|date_format:d-m-Y',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'meta_title' => 'nullable|string|max:255',
