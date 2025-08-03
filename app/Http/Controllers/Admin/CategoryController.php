@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::orderByDesc('id')->get();
+       $categories = Category::orderByDesc('id')->paginate(10);
         return view('ursbid-admin.category.list', compact('categories'));
     }
 
