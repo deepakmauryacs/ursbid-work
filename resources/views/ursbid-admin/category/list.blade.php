@@ -44,7 +44,8 @@
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div>
-                                            <img src="{{ asset('assets/images/properties/p-1.jpg') }}" alt="" class="avatar-md rounded border border-light border-3">
+                                           <img src="{{ $category->image ? asset('public/'.$category->image) : asset('assets/images/default-category.png') }}" alt="{{ $category->title }}"  class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
+
                                         </div>
                                         <div>
                                             <a href="#!" class="text-dark fw-medium fs-15">{{ $category->title }}</a>
