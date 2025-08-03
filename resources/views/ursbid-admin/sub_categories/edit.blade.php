@@ -102,45 +102,49 @@
         </div>
     </div>
 </div>
+@push('styles')
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+@endpush
 @push('scripts')
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
 $(function(){
-    $('#subCategoryForm').on('submit', function(e){
-        e.preventDefault();
-        if(!validateForm()) return;
-        $('#saveBtn').attr('disabled', true).text('Updating...');
-        $.ajax({
-            url: "{{ route('super-admin.sub-categories.update', $sub->id) }}",
-            method: 'POST',
-            data: new FormData(this),
-            processData: false,
-            contentType: false,
-            success: function(res){
-                toastr.success(res.message);
-                window.location.href = "{{ route('super-admin.sub-categories.index') }}";
-            },
-            error: function(xhr){
-                let err = 'Error updating data';
-                if(xhr.responseJSON && xhr.responseJSON.errors){
-                    err = Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('<br>');
-                }
-                toastr.error(err, 'Error');
-                $('#saveBtn').attr('disabled', false).text('Update');
-            }
-        });
-    });
+    $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
 
-    function validateForm(){
-        let title = $('input[name="title"]').val().trim();
-        let cat = $('select[name="cat_id"]').val();
-        let date = $('#post_date').val().trim();
-        let dateRegex = /^\d{2}-\d{2}-\d{4}$/;
-        if(title === '' || cat === '' || date === '' || !dateRegex.test(date)){
-            toastr.error('Please fill required fields with valid data');
-            return false;
+    $.validator.addMethod('dmy', function(value){
+        return /^\d{2}-\d{2}-\d{4}$/.test(value);
+    }, 'Please enter a date in the format dd-mm-yyyy');
+
+    $('#subCategoryForm').validate({
+        rules:{
+            title:{ required:true },
+            cat_id:{ required:true },
+            post_date:{ required:true, dmy:true }
+        },
+        submitHandler:function(form){
+            $('#saveBtn').attr('disabled', true).text('Updating...');
+            $.ajax({
+                url: "{{ route('super-admin.sub-categories.update', $sub->id) }}",
+                type: 'POST',
+                data: new FormData(form),
+                processData: false,
+                contentType: false,
+                success: function(res){
+                    toastr.success(res.message);
+                    window.location.href = "{{ route('super-admin.sub-categories.index') }}";
+                },
+                error: function(xhr){
+                    let err = 'Error updating data';
+                    if(xhr.responseJSON && xhr.responseJSON.errors){
+                        err = Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('<br>');
+                    }
+                    toastr.error(err, 'Error');
+                    $('#saveBtn').attr('disabled', false).text('Update');
+                }
+            });
         }
-        return true;
-    }
+    });
 });
 </script>
 @endpush

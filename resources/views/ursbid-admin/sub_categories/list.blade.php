@@ -41,7 +41,7 @@
                                         <td>{{ $sub->id }}</td>
                                         <td>{{ $sub->title }}</td>
                                         <td>{{ $sub->category_title }}</td>
-                                        <td>{{ \Carbon\Carbon::createFromFormat('d-m-Y', $sub->post_date)->format('d-m-Y') }}</td>
+                                        <td>{{ $sub->post_date ? \Carbon\Carbon::parse($sub->post_date)->format('d-m-Y') : '' }}</td>
                                         <td>{{ $sub->status == 1 ? 'Active' : 'Inactive' }}</td>
                                         <td>
                                             <a href="{{ route('super-admin.sub-categories.edit', $sub->id) }}" class="btn btn-sm btn-info">Edit</a>
