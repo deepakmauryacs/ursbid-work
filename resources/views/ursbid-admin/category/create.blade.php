@@ -2,6 +2,21 @@
 @section('title', 'Add Category')
 @section('content')
 <div class="container-fluid">
+
+    <!-- ========== Page Title Start ========== -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="mb-0 fw-semibold">Add Category</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Add Category</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- ========== Page Title End ========== -->
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
