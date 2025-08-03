@@ -31,25 +31,23 @@
             </li>
             
             <li class="nav-item">
-                <a class="nav-link menu-arrow" href="#sidebarBlog" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBlog">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/blogs*') ? 'active' : '' }}" href="#sidebarBlog" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/blogs*') ? 'true' : 'false' }}" aria-controls="sidebarBlog">
                      <span class="nav-icon">
                           <i class="ri-news-line"></i>
                      </span>
                      <span class="nav-text">Blog ( CMS ) </span>
                 </a>
-                <div class="collapse" id="sidebarBlog">
+                <div class="collapse {{ request()->is('super-admin/blogs*') ? 'show' : '' }}" id="sidebarBlog">
                      <ul class="nav sub-navbar-nav">
-                         
                           <li class="sub-nav-item">
-                               <a class="sub-nav-link" href="post-create.html">Create Blog</a>
-                          </li>  
-                          
+                               <a class="sub-nav-link {{ request()->is('super-admin/blogs/create') ? 'active' : '' }}" href="{{ route('super-admin.blogs.create') }}">Create Blog</a>
+                          </li>
                            <li class="sub-nav-item">
-                               <a class="sub-nav-link" href="post.html">Blog List</a>
+                               <a class="sub-nav-link {{ request()->is('super-admin/blogs') ? 'active' : '' }}" href="{{ route('super-admin.blogs.index') }}">Blog List</a>
                           </li>
                      </ul>
                 </div>
-           </li> 
+           </li>
             
             <li class="nav-item">
                 <a class="nav-link menu-arrow" href="#sidebarProperty" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProperty">

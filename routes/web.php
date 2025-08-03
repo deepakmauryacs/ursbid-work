@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+
 
 
 /*
@@ -374,6 +376,13 @@ Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class
 Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('super-admin.sub-categories.update');
 Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('super-admin.sub-categories.destroy');
 
+Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
+Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
+Route::post('super-admin/blogs', [AdminBlogController::class, 'store'])->name('super-admin.blogs.store');
+Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])->name('super-admin.blogs.edit');
+Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])->name('super-admin.blogs.update');
+Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])->name('super-admin.blogs.destroy');
+
 Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
 Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
 Route::post('super-admin/products', [AdminProductController::class, 'store'])->name('super-admin.products.store');
@@ -381,3 +390,4 @@ Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'ed
 Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])->name('super-admin.products.update');
 Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])->name('super-admin.products.destroy');
 Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])->name('super-admin.products.get-subcategories');
+
