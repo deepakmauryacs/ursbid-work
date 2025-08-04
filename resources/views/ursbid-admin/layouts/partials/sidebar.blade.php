@@ -116,6 +116,15 @@
                     </ul>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('super-admin/youtube-links*') ? 'active' : '' }}" href="{{ route('super-admin.youtube-links.index') }}">
+                    <span class="nav-icon">
+                        <i class="ri-youtube-line"></i>
+                    </span>
+                    <span class="nav-text">Youtube Links</span>
+                </a>
+            </li>
             
             <li class="nav-item">
                 <a class="nav-link menu-arrow" href="#sidebarProperty" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProperty">

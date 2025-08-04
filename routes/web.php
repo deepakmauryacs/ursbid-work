@@ -357,6 +357,7 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OnPageSeoController;
+use App\Http\Controllers\Admin\YoutubeLinkController;
 
 
 
@@ -399,6 +400,13 @@ Route::post('super-admin/on-page-seo', [OnPageSeoController::class, 'store'])->n
 Route::get('super-admin/on-page-seo/{id}/edit', [OnPageSeoController::class, 'edit'])->name('super-admin.on-page-seo.edit');
 Route::post('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'update'])->name('super-admin.on-page-seo.update');
 Route::delete('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'destroy'])->name('super-admin.on-page-seo.destroy');
+
+Route::get('super-admin/youtube-links', [YoutubeLinkController::class, 'index'])->name('super-admin.youtube-links.index');
+Route::get('super-admin/youtube-links/create', [YoutubeLinkController::class, 'create'])->name('super-admin.youtube-links.create');
+Route::post('super-admin/youtube-links', [YoutubeLinkController::class, 'store'])->name('super-admin.youtube-links.store');
+Route::get('super-admin/youtube-links/{id}/edit', [YoutubeLinkController::class, 'edit'])->name('super-admin.youtube-links.edit');
+Route::post('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'update'])->name('super-admin.youtube-links.update');
+Route::delete('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'destroy'])->name('super-admin.youtube-links.destroy');
 
 Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
 Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
