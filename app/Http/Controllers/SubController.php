@@ -65,7 +65,7 @@ class SubController extends Controller
     public function view(Request $request)
 {
     $keyword = $request->input('keyword');
-    $recordsPerPage = $request->input('r_page', 10);
+    $recordsPerPage = $request->input('r_page', 15);
     
     $query = DB::table('sub')
         ->join('category', 'sub.cat_id', '=', 'category.id')

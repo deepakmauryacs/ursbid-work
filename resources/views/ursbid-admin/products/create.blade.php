@@ -79,7 +79,8 @@
                                 <label class="form-label fw-semibold">Description</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea name="description" class="form-control" rows="3"></textarea>
+                                <div id="editor" style="height: 200px; background: #fff;"></div>
+                                <textarea name="description" id="description" class="d-none"></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -119,14 +120,47 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-toolbar.ql-snow {
+        border-radius: 5px 5px 0 0;
+    }
+    .ql-container.ql-snow {
+        border-radius: 0 0 5px 5px;
+    }
+</style>
 @endpush
 
 @push('scripts')
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 <script>
 $(function(){
     $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
+
+       // Initialize Quill
+       var quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Write product description...',
+        modules: {
+            toolbar: [
+                [{'header': [1, 2, 3, 4, 5, 6, false]}], // Header dropdown
+                [{'font': []}], // Font dropdown
+                [{'size': ['small', false, 'large', 'huge']}], // Font size dropdown
+                ['bold', 'italic', 'underline', 'strike'], // Text formatting
+                [{'color': []}, {'background': []}], // Color and background
+                [{'align': []}], // Alignment
+                [{'list': 'ordered'}, {'list': 'bullet'}], // Lists
+                [{'indent': '-1'}, {'indent': '+1'}], // Indentation
+                [{'script': 'sub'}, {'script': 'super'}], // Subscript/superscript
+                ['blockquote', 'code-block'], // Blockquote and code block
+                ['link', 'image', 'video'], // Links, images, videos
+                [{'direction': 'rtl'}], // Text direction
+                ['clean'] // Clear formatting
+            ]
+         }
+      });
 
     $.validator.addMethod('dmy', function(value){
         return /^\d{2}-\d{2}-\d{4}$/.test(value);
@@ -152,6 +186,9 @@ $(function(){
             post_date:{ required:true, dmy:true }
         },
         submitHandler:function(form){
+            // Copy Quill content to textarea before submitting
+            $('#description').val(quill.root.innerHTML);
+
             $('#saveBtn').attr('disabled', true).text('Saving...');
             $.ajax({
                 url: '{{ route('super-admin.products.store') }}',
@@ -162,6 +199,7 @@ $(function(){
                 success: function(res){
                     toastr.success(res.message);
                     form.reset();
+                    quill.setContents([]);
                     $('#saveBtn').attr('disabled', false).text('Save');
                 },
                 error: function(xhr){

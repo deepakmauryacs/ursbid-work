@@ -1,9 +1,79 @@
 @extends('ursbid-admin.layouts.app')
 @section('title', 'Blogs')
+
 @section('content')
+
+<style>
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 5px;
+}
+.page-item {
+    margin: 0;
+}
+.page-link {
+    display: inline-block;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.page-item.active .page-link {
+    background-color: #614ce1;
+    color: #fff;
+    border-color: #614ce1;
+}
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #ddd;
+}
+.page-link:hover {
+    background-color: #f8f9fa;
+    color: #0056b3;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 12px;
+}
+.modal-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.btn-light, .btn-danger {
+    border-radius: 6px;
+}
+</style>
+
 <div class="container-fluid">
+    <!-- ========== Page Title Start ========== -->
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="mb-0 fw-semibold">Blogs</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Blogs</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- ========== Page Title End ========== -->
+
+    <div class="row">
+        <div class="col-xl-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
@@ -11,82 +81,124 @@
                     </div>
                     <a href="{{ route('super-admin.blogs.create') }}" class="btn btn-sm btn-primary">Add Blog</a>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Title</th>
-                                    <th>Post Date</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($blogs as $blog)
-                                    <tr id="row-{{ $blog->id }}">
-                                        <td>{{ $blog->id }}</td>
-                                        <td>{{ $blog->title }}</td>
-                                        <td>{{ $blog->post_date ? \Carbon\Carbon::parse($blog->post_date)->format('d-m-Y') : '' }}</td>
-                                        <td>{{ $blog->status == 1 ? 'Active' : 'Inactive' }}</td>
-                                        <td>
-                                            <a href="{{ route('super-admin.blogs.edit', $blog->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                            <button type="button" class="btn btn-sm btn-danger delete-btn" data-url="{{ route('super-admin.blogs.destroy', $blog->id) }}">Delete</button>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">No records found</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap table-hover table-centered mb-0">
+                        <thead class="bg-light-subtle">
+                            <tr>
+                                <th>Blog Title</th>
+                                <th>Post Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($blogs as $blog)
+                            <tr id="row-{{ $blog->id }}">
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div>
+                                            <img src="{{ $blog->image ? asset('public/'.$blog->image) : asset('public/uploads/no-image.jpg') }}" alt="{{ $blog->title }}" class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
+                                        </div>
+                                        <div>
+                                            <a href="#!" class="text-dark fw-medium fs-15">{{ $blog->title }}</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ $blog->post_date ? \Carbon\Carbon::parse($blog->post_date)->format('d-m-Y') : '' }}</td>
+                                <td>
+                                    @if($blog->status == 1)
+                                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
+                                    @else
+                                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('super-admin.blogs.edit', $blog->id) }}" class="btn btn-soft-primary btn-sm">
+                                            <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+                                        </a>
+                                        <button type="button" 
+                                                data-id="{{ $blog->id }}" 
+                                                data-url="{{ route('super-admin.blogs.destroy', $blog->id) }}" 
+                                                class="btn btn-soft-danger btn-sm deleteBtn">
+                                            <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center">No blogs found.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-footer d-flex flex-wrap justify-content-between align-items-center">
-                    <form method="get" class="d-flex align-items-center mb-2 mb-md-0">
-                        <label class="me-2 mb-0">Show</label>
-                        <select name="per_page" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
-                            <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                            <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                            <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                            <option value="75" {{ $perPage == 75 ? 'selected' : '' }}>75</option>
-                            <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                        </select>
-                        <span class="ms-2">entries</span>
-                        <span class="ms-3 text-muted">
-                            Showing {{ $blogs->firstItem() ?? 0 }} to {{ $blogs->lastItem() ?? 0 }} of {{ $blogs->total() }} entries
-                        </span>
-                    </form>
-                    <div>
-                        {{ $blogs->withQueryString()->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
+                <x-paginationwithlength :paginator="$blogs" />
             </div>
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-danger text-white rounded-top">
+        <h5 class="modal-title" id="deleteConfirmLabel">
+            <i class="ri-error-warning-line me-2"></i> Confirm Deletion
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="mb-3">
+          <i class="ri-alert-line text-danger" style="font-size: 40px;"></i>
+        </div>
+        <p class="mb-1 fs-5 fw-semibold">Are you sure you want to delete this item?</p>
+        <p class="text-muted">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer justify-content-center border-0">
+        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
+            <i class="ri-close-line me-1"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">
+            <i class="ri-delete-bin-line me-1"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+
 @push('scripts')
 <script>
+let deleteId = null;
+let deleteUrl = null;
+
 $(function(){
-    $('.delete-btn').on('click', function(){
-        if(!confirm('Are you sure?')) return;
-        let url = $(this).data('url');
+    $('.deleteBtn').on('click', function(){
+        deleteId = $(this).data('id');
+        deleteUrl = $(this).data('url');
+        $('#deleteConfirmModal').modal('show');
+    });
+
+    $('#confirmDeleteBtn').on('click', function(){
         $.ajax({
-            url: url,
-            method: 'POST',
-            data: {_method:'DELETE', _token:'{{ csrf_token() }}'},
+            url: deleteUrl,
+            type: 'DELETE',
+            data: { _token: '{{ csrf_token() }}' },
             success: function(res){
+                $('#deleteConfirmModal').modal('hide');
                 toastr.success(res.message);
-                $('#row-'+url.split('/').pop()).remove();
+                $('#row-'+deleteId).remove();
             },
             error: function(){
-                toastr.error('Delete failed', 'Error');
+                $('#deleteConfirmModal').modal('hide');
+                toastr.error('Unable to delete record');
             }
         });
     });
 });
 </script>
 @endpush
-@endsection

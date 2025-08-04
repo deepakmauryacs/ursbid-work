@@ -24,6 +24,8 @@ class ProductController extends Controller
         return view('ursbid-admin.products.list', compact('products', 'perPage'));
     }
 
+
+
     public function create()
     {
         $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
@@ -125,7 +127,6 @@ class ProductController extends Controller
             'title' => 'required|string|max:255',
             'cat_id' => 'required|integer',
             'sub_id' => 'required|integer',
-            'post_date' => 'required|date_format:d-m-Y',
             'order_by' => 'nullable|integer',
             'status' => 'required|in:0,1',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
@@ -158,7 +159,6 @@ class ProductController extends Controller
             'title' => $validated['title'],
             'cat_id' => $validated['cat_id'],
             'sub_id' => $validated['sub_id'],
-            'post_date' => $validated['post_date'],
             'order_by' => $validated['order_by'],
             'status' => $validated['status'],
             'description' => $request->description,

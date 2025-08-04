@@ -29,7 +29,8 @@
                                 <label class="form-label fw-semibold">Description<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-md-8">
-                                <textarea name="description" class="form-control" rows="4" required></textarea>
+                                <div id="editor" style="height:200px; background: #fff;"></div>
+                                <textarea name="description" id="description" class="d-none" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -92,15 +93,47 @@
         </div>
     </div>
 </div>
+@endsection
+
 @push('styles')
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-toolbar.ql-snow {
+        border-radius: 5px 5px 0 0;
+    }
+    .ql-container.ql-snow {
+        border-radius: 0 0 5px 5px;
+    }
+</style>
 @endpush
+
 @push('scripts')
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 <script>
 $(function(){
     $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
+
+    // Initialize Quill with all options
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Write blog description...',
+        modules: {
+            toolbar: [
+                [{ 'font': [] }, { 'size': [] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'script': 'super' }, { 'script': 'sub' }],
+                [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }, { 'align': [] }],
+                ['link', 'image', 'video', 'formula'],
+                ['clean']
+            ]
+        }
+    });
 
     $.validator.addMethod('dmy', function(value){
         return /^\d{2}-\d{2}-\d{4}$/.test(value);
@@ -113,6 +146,9 @@ $(function(){
             description:{ required:true }
         },
         submitHandler:function(form){
+            // Copy Quill content to textarea before submitting
+            $('#description').val(quill.root.innerHTML);
+
             $('#saveBtn').attr('disabled', true).text('Saving...');
             $.ajax({
                 url: "{{ route('super-admin.blogs.store') }}",
@@ -123,6 +159,7 @@ $(function(){
                 success: function(res){
                     toastr.success(res.message);
                     form.reset();
+                    quill.setContents([]); // Clear editor
                     $('#saveBtn').attr('disabled', false).text('Save');
                 },
                 error: function(xhr){
@@ -139,4 +176,3 @@ $(function(){
 });
 </script>
 @endpush
-@endsection

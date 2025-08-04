@@ -2,13 +2,6 @@
 use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmailController;
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\WebSettingsController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\SubCategoryController;
-use App\Http\Controllers\Admin\BlogController as AdminBlogController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
-
 
 
 /*
@@ -355,6 +348,22 @@ Route::post('confirm', [\App\Http\Controllers\SellerloginController::class, 'con
 
 
 // Guru Maurya Work
+// Guru Maurya Work
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\WebSettingsController;
+use App\Http\Controllers\Admin\CategoryController As AdminCategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+
+
+
+Route::get('super-admin', [AuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('super-admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
+Route::post('super-admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
+
+
 
 Route::prefix('super-admin')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
@@ -390,4 +399,6 @@ Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'ed
 Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])->name('super-admin.products.update');
 Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])->name('super-admin.products.destroy');
 Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])->name('super-admin.products.get-subcategories');
+
+
 
