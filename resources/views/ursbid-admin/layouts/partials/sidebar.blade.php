@@ -127,6 +127,25 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/units*') ? 'active' : '' }}" href="#sidebarUnits" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/units*') ? 'true' : 'false' }}" aria-controls="sidebarUnits">
+                    <span class="nav-icon">
+                        <i class="ri-ruler-line"></i>
+                    </span>
+                    <span class="nav-text"> Units </span>
+                </a>
+                <div class="collapse {{ request()->is('super-admin/units*') ? 'show' : '' }}" id="sidebarUnits">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/units/create') ? 'active' : '' }}" href="{{ route('super-admin.units.create') }}">Add Unit</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/units') ? 'active' : '' }}" href="{{ route('super-admin.units.index') }}">Unit List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link {{ request()->is('super-admin/testimonials*') ? 'active' : '' }}" href="{{ route('super-admin.testimonials.index') }}">
                     <span class="nav-icon">
                         <i class="ri-chat-1-line"></i>
