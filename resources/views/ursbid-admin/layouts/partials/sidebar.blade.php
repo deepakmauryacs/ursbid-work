@@ -97,6 +97,25 @@
                      </ul>
                 </div>
            </li>
+
+            <li class="nav-item">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/on-page-seo*') ? 'active' : '' }}" href="#sidebarSeo" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/on-page-seo*') ? 'true' : 'false' }}" aria-controls="sidebarSeo">
+                    <span class="nav-icon">
+                        <i class="ri-search-eye-line"></i>
+                    </span>
+                    <span class="nav-text">On Page SEO</span>
+                </a>
+                <div class="collapse {{ request()->is('super-admin/on-page-seo*') ? 'show' : '' }}" id="sidebarSeo">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/on-page-seo/create') ? 'active' : '' }}" href="{{ route('super-admin.on-page-seo.create') }}">Create</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/on-page-seo') ? 'active' : '' }}" href="{{ route('super-admin.on-page-seo.index') }}">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             
             <li class="nav-item">
                 <a class="nav-link menu-arrow" href="#sidebarProperty" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarProperty">
