@@ -1,6 +1,53 @@
 @extends('ursbid-admin.layouts.app')
 @section('title','On Page SEO')
 @section('content')
+<style>
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    gap: 5px;
+}
+
+.page-item {
+    margin: 0;
+}
+
+.page-link {
+    display: inline-block;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.page-item.active .page-link {
+    background-color: #614ce1;
+    color: #fff;
+    border-color: #614ce1;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+.page-link:hover {
+    background-color: #f8f9fa;
+    color: #0056b3;
+}
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12">
