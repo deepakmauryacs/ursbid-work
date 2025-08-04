@@ -76,6 +76,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Category</th>
                                 <th>Sub Category</th>
                                 <th>Unit Title</th>
@@ -87,6 +88,7 @@
                         <tbody>
                             @forelse($units as $unit)
                             <tr id="row-{{ $unit->id }}">
+                                <td>{{ $units->firstItem() + $loop->index }}</td>
                                 <td>{{ $unit->category_title }}</td>
                                 <td>{{ $unit->sub_title }}</td>
                                 <td>{{ $unit->title }}</td>
@@ -111,7 +113,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center">No units found.</td>
+                                <td colspan="7" class="text-center">No units found.</td>
                             </tr>
                             @endforelse
                         </tbody>
