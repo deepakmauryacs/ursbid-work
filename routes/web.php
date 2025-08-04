@@ -359,6 +359,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OnPageSeoController;
 use App\Http\Controllers\Admin\YoutubeLinkController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
+use App\Http\Controllers\Admin\UnitController;
 
 
 
@@ -387,6 +388,13 @@ Route::post('super-admin/sub-categories', [SubCategoryController::class, 'store'
 Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('super-admin.sub-categories.edit');
 Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('super-admin.sub-categories.update');
 Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('super-admin.sub-categories.destroy');
+
+Route::get('super-admin/units', [UnitController::class, 'index'])->name('super-admin.units.index');
+Route::get('super-admin/units/create', [UnitController::class, 'create'])->name('super-admin.units.create');
+Route::post('super-admin/units', [UnitController::class, 'store'])->name('super-admin.units.store');
+Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])->name('super-admin.units.edit');
+Route::put('super-admin/units/{id}', [UnitController::class, 'update'])->name('super-admin.units.update');
+Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])->name('super-admin.units.destroy');
 
 Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
 Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
