@@ -356,6 +356,7 @@ use App\Http\Controllers\Admin\CategoryController As AdminCategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\OnPageSeoController;
 
 
 
@@ -391,6 +392,13 @@ Route::post('super-admin/blogs', [AdminBlogController::class, 'store'])->name('s
 Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])->name('super-admin.blogs.edit');
 Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])->name('super-admin.blogs.update');
 Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])->name('super-admin.blogs.destroy');
+
+Route::get('super-admin/on-page-seo', [OnPageSeoController::class, 'index'])->name('super-admin.on-page-seo.index');
+Route::get('super-admin/on-page-seo/create', [OnPageSeoController::class, 'create'])->name('super-admin.on-page-seo.create');
+Route::post('super-admin/on-page-seo', [OnPageSeoController::class, 'store'])->name('super-admin.on-page-seo.store');
+Route::get('super-admin/on-page-seo/{id}/edit', [OnPageSeoController::class, 'edit'])->name('super-admin.on-page-seo.edit');
+Route::post('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'update'])->name('super-admin.on-page-seo.update');
+Route::delete('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'destroy'])->name('super-admin.on-page-seo.destroy');
 
 Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
 Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
