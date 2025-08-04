@@ -358,6 +358,7 @@ use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OnPageSeoController;
 use App\Http\Controllers\Admin\YoutubeLinkController;
+use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 
 
 
@@ -407,6 +408,13 @@ Route::post('super-admin/youtube-links', [YoutubeLinkController::class, 'store']
 Route::get('super-admin/youtube-links/{id}/edit', [YoutubeLinkController::class, 'edit'])->name('super-admin.youtube-links.edit');
 Route::post('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'update'])->name('super-admin.youtube-links.update');
 Route::delete('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'destroy'])->name('super-admin.youtube-links.destroy');
+
+Route::get('super-admin/testimonials', [AdminTestimonialController::class, 'index'])->name('super-admin.testimonials.index');
+Route::get('super-admin/testimonials/create', [AdminTestimonialController::class, 'create'])->name('super-admin.testimonials.create');
+Route::post('super-admin/testimonials', [AdminTestimonialController::class, 'store'])->name('super-admin.testimonials.store');
+Route::get('super-admin/testimonials/{id}/edit', [AdminTestimonialController::class, 'edit'])->name('super-admin.testimonials.edit');
+Route::post('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'update'])->name('super-admin.testimonials.update');
+Route::delete('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'destroy'])->name('super-admin.testimonials.destroy');
 
 Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
 Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
