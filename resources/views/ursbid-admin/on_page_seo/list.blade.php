@@ -50,7 +50,7 @@
 </style>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
@@ -62,6 +62,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Page URL</th>
                                 <th>Page Name</th>
                                 <th>Meta Title</th>
@@ -72,6 +73,7 @@
                         <tbody>
                             @forelse($seos as $seo)
                             <tr id="row-{{ $seo->id }}">
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $seo->page_url }}</td>
                                 <td>{{ $seo->page_name }}</td>
                                 <td>{{ $seo->meta_title }}</td>
@@ -89,7 +91,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center">No records found.</td>
+                                <td colspan="6" class="text-center">No records found.</td>
                             </tr>
                             @endforelse
                         </tbody>

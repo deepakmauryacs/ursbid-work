@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="social-dash-wrap">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
 
                 <div class="breadcrumb-main">
                     <h4 class="text-capitalize breadcrumb-title">Blogs List</h4>
@@ -38,7 +38,7 @@
 
         </div>
         <div class="row">
-            <div class="col-lg-12 mb-30">
+            <div class="col-md-12 mb-30">
                 <div class="card">
                     <div class="col-md-12 mt-2">
                         <form class="row" method="get" action="">
@@ -91,7 +91,7 @@
                                     <thead>
                                         <tr class="userDatatable-header">
                                             <th>
-                                                <span class="projectDatatable-title">Sr no</span>
+                                                <span class="projectDatatable-title">S.No</span>
                                             </th>
                                             <th>
                                                 <span class="projectDatatable-title">Title</span>
@@ -116,15 +116,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                        $i=1;
-                                        @endphp
                                         @foreach ($blogs as $blog)
 
                                         <tr>
                                             <td>
                                                 <div class="userDatatable-content text-center">
-                                                    {{ $i++ }}
+                                                    {{ $loop->iteration }}
                                                 </div>
                                             </td>
                                             <td>
@@ -134,7 +131,7 @@
                                             </td>
                                             <td>
                                                 <div class="userDatatable-content">
-                                                    {{ $blog->post_date }}
+                                                    {{ \Carbon\Carbon::parse($blog->post_date)->format('d-m-Y') }}
                                                 </div>
                                             </td>
                                             <td>
