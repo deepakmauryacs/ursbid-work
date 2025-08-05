@@ -146,6 +146,25 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/advertisements*') ? 'active' : '' }}" href="#sidebarAdvertisements" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/advertisements*') ? 'true' : 'false' }}" aria-controls="sidebarAdvertisements">
+                    <span class="nav-icon">
+                        <i class="ri-advertisement-line"></i>
+                    </span>
+                    <span class="nav-text"> Advertisements </span>
+                </a>
+                <div class="collapse {{ request()->is('super-admin/advertisements*') ? 'show' : '' }}" id="sidebarAdvertisements">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/advertisements/create') ? 'active' : '' }}" href="{{ route('super-admin.advertisements.create') }}">Add Advertisement</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/advertisements') ? 'active' : '' }}" href="{{ route('super-admin.advertisements.index') }}">Advertisement List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link menu-arrow {{ request()->is('super-admin/product-brands*') ? 'active' : '' }}" href="#sidebarProductBrands" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/product-brands*') ? 'true' : 'false' }}" aria-controls="sidebarProductBrands">
                     <span class="nav-icon">
                         <i class="ri-price-tag-3-line"></i>
