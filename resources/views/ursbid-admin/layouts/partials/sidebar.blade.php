@@ -146,6 +146,25 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/product-brands*') ? 'active' : '' }}" href="#sidebarProductBrands" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/product-brands*') ? 'true' : 'false' }}" aria-controls="sidebarProductBrands">
+                    <span class="nav-icon">
+                        <i class="ri-price-tag-3-line"></i>
+                    </span>
+                    <span class="nav-text"> Product Brands </span>
+                </a>
+                <div class="collapse {{ request()->is('super-admin/product-brands*') ? 'show' : '' }}" id="sidebarProductBrands">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/product-brands/create') ? 'active' : '' }}" href="{{ route('super-admin.product-brands.create') }}">Add Product Brand</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/product-brands') ? 'active' : '' }}" href="{{ route('super-admin.product-brands.index') }}">Product Brand List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link {{ request()->is('super-admin/testimonials*') ? 'active' : '' }}" href="{{ route('super-admin.testimonials.index') }}">
                     <span class="nav-icon">
                         <i class="ri-chat-1-line"></i>

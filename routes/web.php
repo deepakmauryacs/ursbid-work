@@ -360,6 +360,7 @@ use App\Http\Controllers\Admin\OnPageSeoController;
 use App\Http\Controllers\Admin\YoutubeLinkController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\ProductBrandController;
 
 
 
@@ -395,6 +396,13 @@ Route::post('super-admin/units', [UnitController::class, 'store'])->name('super-
 Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])->name('super-admin.units.edit');
 Route::put('super-admin/units/{id}', [UnitController::class, 'update'])->name('super-admin.units.update');
 Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])->name('super-admin.units.destroy');
+
+Route::get('super-admin/product-brands', [ProductBrandController::class, 'index'])->name('super-admin.product-brands.index');
+Route::get('super-admin/product-brands/create', [ProductBrandController::class, 'create'])->name('super-admin.product-brands.create');
+Route::post('super-admin/product-brands', [ProductBrandController::class, 'store'])->name('super-admin.product-brands.store');
+Route::get('super-admin/product-brands/{id}/edit', [ProductBrandController::class, 'edit'])->name('super-admin.product-brands.edit');
+Route::put('super-admin/product-brands/{id}', [ProductBrandController::class, 'update'])->name('super-admin.product-brands.update');
+Route::delete('super-admin/product-brands/{id}', [ProductBrandController::class, 'destroy'])->name('super-admin.product-brands.destroy');
 
 Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
 Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
