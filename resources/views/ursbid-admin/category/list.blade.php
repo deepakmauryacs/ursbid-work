@@ -19,7 +19,7 @@
     <!-- ========== Page Title End ========== -->
 
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
@@ -32,6 +32,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Category Title</th>
                                 <th>Post Date</th>
                                 <th>Status</th>
@@ -41,6 +42,7 @@
                         <tbody>
                             @forelse($categories as $category)
                             <tr id="row-{{ $category->id }}">
+                                <td>{{ $categories->firstItem() + $loop->index }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div>
@@ -52,7 +54,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ $category->post_date }}</td>
+                                <td>{{ $category->post_date ? \Carbon\Carbon::parse($category->post_date)->format('d-m-Y') : '' }}</td>
                                 <td>
                                     @if($category->status == '1')
                                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
@@ -73,7 +75,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center">No categories found.</td>
+                                <td colspan="5" class="text-center">No categories found.</td>
                             </tr>
                             @endforelse
                         </tbody>

@@ -67,7 +67,7 @@
     <!-- ========== Page Title End ========== -->
 
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
@@ -80,6 +80,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Sub Category Title</th>
                                 <th>Category</th>
                                 <th>Post Date</th>
@@ -90,6 +91,7 @@
                         <tbody>
                             @forelse($subs as $sub)
                             <tr id="row-{{ $sub->id }}">
+                                <td>{{ $subs->firstItem() + $loop->index }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div>
@@ -122,7 +124,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center">No sub categories found.</td>
+                                <td colspan="6" class="text-center">No sub categories found.</td>
                             </tr>
                             @endforelse
                         </tbody>
