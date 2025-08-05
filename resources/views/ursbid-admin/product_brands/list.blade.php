@@ -1,3 +1,4 @@
+@extends('ursbid-admin.layouts.app')
 @section('title', 'Product Brands')
 
 @section('content')
