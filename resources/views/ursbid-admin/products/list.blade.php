@@ -85,7 +85,6 @@
                                 <th>Product Title</th>
                                 <th>Category</th>
                                 <th>Sub Category</th>
-                                <th>Post Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -106,7 +105,6 @@
                                 </td>
                                 <td>{{ $product->category_title }}</td>
                                 <td>{{ $product->sub_title }}</td>
-                                <td>{{ $product->post_date ? \Carbon\Carbon::parse($product->post_date)->format('d-m-Y') : '' }}</td>
                                 <td>
                                     @if($product->status == 1)
                                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
@@ -127,7 +125,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="text-center">No products found.</td>
+                                <td colspan="6" class="text-center">No products found.</td>
                             </tr>
                             @endforelse
                         </tbody>
