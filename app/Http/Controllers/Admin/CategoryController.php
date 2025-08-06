@@ -24,12 +24,14 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255|unique:category,title',
-            'post_date' => 'required|date_format:d-m-Y',
+            'name' => 'required|string|max:255|unique:categories,name',
+            'description' => 'required|string',
+            'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'status' => 'required|in:1,2',
         ]);
 
         if ($validator->fails()) {
@@ -40,7 +42,10 @@ class CategoryController extends Controller
         }
 
         $data = $validator->validated();
-        $data['slug'] = Str::slug($data['title']);
+        $data['slug'] = Str::slug($data['name']);
+        if(isset($data['tags'])){
+            $data['tags'] = json_encode(array_map('trim', explode(',', $data['tags'])));
+        }
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -69,12 +74,14 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255|unique:category,title,' . $category->id,
-            'post_date' => 'required|date_format:d-m-Y',
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'description' => 'required|string',
+            'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'status' => 'required|in:1,2',
         ]);
 
         if ($validator->fails()) {
@@ -85,7 +92,10 @@ class CategoryController extends Controller
         }
 
         $data = $validator->validated();
-        $data['slug'] = Str::slug($data['title']);
+        $data['slug'] = Str::slug($data['name']);
+        if(isset($data['tags'])){
+            $data['tags'] = json_encode(array_map('trim', explode(',', $data['tags'])));
+        }
 
         if ($request->hasFile('image')) {
             if ($category->image && file_exists(public_path($category->image))) {

@@ -25,18 +25,26 @@
                         @csrf
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Title</label>
+                                <label class="form-label fw-semibold">Name</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="title" class="form-control" placeholder="Enter Title">
+                                <input type="text" name="name" class="form-control" placeholder="Enter Name">
                             </div>
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Post Date</label>
+                                <label class="form-label fw-semibold">Description</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="post_date" id="post_date" class="form-control" placeholder="dd-mm-yyyy">
+                                <textarea name="description" class="form-control" rows="3" placeholder="Enter Description"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Tags</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" name="tags" class="form-control" placeholder="tag1, tag2">
                             </div>
                         </div>
                         <div class="row mb-3 align-items-center">
@@ -71,6 +79,17 @@
                                 <textarea name="meta_description" class="form-control" rows="3" placeholder="Enter Meta Description"></textarea>
                             </div>
                         </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Status</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select name="status" class="form-control">
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12 text-end">
                                 <button type="submit" id="saveBtn" class="btn btn-primary">Save</button>
@@ -85,24 +104,17 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endpush
 
 @push('scripts')
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
 $(function(){
-    $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
-
-    $.validator.addMethod('dmy', function(value){
-        return /^\d{2}-\d{2}-\d{4}$/.test(value);
-    }, 'Please enter a date in the format dd-mm-yyyy');
-
     $('#categoryForm').validate({
         rules:{
-            title:{ required:true },
-            post_date:{ required:true, dmy:true }
+            name:{ required:true },
+            description:{ required:true },
+            status:{ required:true }
         },
         submitHandler:function(form){
             $('#saveBtn').prop('disabled',true).text('Saving...');

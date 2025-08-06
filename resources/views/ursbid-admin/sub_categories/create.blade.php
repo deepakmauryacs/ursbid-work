@@ -10,10 +10,10 @@
                         @csrf
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Title<span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">Name<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="title" class="form-control" required>
+                                <input type="text" name="name" class="form-control" required>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -21,20 +21,28 @@
                                 <label class="form-label fw-semibold">Category<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-md-8">
-                                <select name="cat_id" class="form-control" required>
+                                <select name="category_id" class="form-control" required>
                                     <option value="">Select Category</option>
                                     @foreach($categories as $cat)
-                                        <option value="{{ $cat->id }}">{{ $cat->title }}</option>
+                                        <option value="{{ $cat->id }}">{{ $cat->name ?? $cat->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Post Date<span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">Description<span class="text-danger">*</span></label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="post_date" id="post_date" class="form-control" placeholder="dd-mm-yyyy" required>
+                                <textarea name="description" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Tags</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" name="tags" class="form-control" placeholder="tag1, tag2">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -52,7 +60,7 @@
                             <div class="col-md-8">
                                 <select name="status" class="form-control">
                                     <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <option value="2">Inactive</option>
                                 </select>
                             </div>
                         </div>
@@ -98,24 +106,17 @@
     </div>
 </div>
 @push('styles')
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endpush
 @push('scripts')
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
 $(function(){
-    $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
-
-    $.validator.addMethod('dmy', function(value){
-        return /^\d{2}-\d{2}-\d{4}$/.test(value);
-    }, 'Please enter a date in the format dd-mm-yyyy');
-
     $('#subCategoryForm').validate({
         rules:{
-            title:{ required:true },
-            cat_id:{ required:true },
-            post_date:{ required:true, dmy:true }
+            name:{ required:true },
+            category_id:{ required:true },
+            description:{ required:true },
+            status:{ required:true }
         },
         submitHandler:function(form){
             $('#saveBtn').attr('disabled', true).text('Saving...');

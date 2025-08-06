@@ -33,8 +33,8 @@
                         <thead class="bg-light-subtle">
                             <tr>
                                 <th>S.No</th>
-                                <th>Category Title</th>
-                                <th>Post Date</th>
+                                <th>Category Name</th>
+                                <th>Created</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -46,15 +46,14 @@
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div>
-                                           <img src="{{ $category->image ? asset('public/'.$category->image) : asset('assets/images/default-category.png') }}" alt="{{ $category->title }}"  class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
-
+                                           <img src="{{ $category->image ? asset('public/'.$category->image) : asset('assets/images/default-category.png') }}" alt="{{ $category->name }}"  class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
                                         </div>
                                         <div>
-                                            <a href="#!" class="text-dark fw-medium fs-15">{{ $category->title }}</a>
+                                            <a href="#!" class="text-dark fw-medium fs-15">{{ $category->name }}</a>
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ $category->post_date ? \Carbon\Carbon::parse($category->post_date)->format('d-m-Y') : '' }}</td>
+                                <td>{{ $category->created_at ? \Carbon\Carbon::parse($category->created_at)->format('d-m-Y') : '' }}</td>
                                 <td>
                                     @if($category->status == '1')
                                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
