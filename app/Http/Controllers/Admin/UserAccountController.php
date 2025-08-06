@@ -17,6 +17,17 @@ class UserAccountController extends Controller
         'clients' => ['user_type' => 'client', 'label' => 'Client'],
     ];
 
+    /**
+     * Mapping of numeric codes to user type strings.
+     * 1 -> Vendor, 2 -> Contractor, 3 -> Client, 4 -> Buyer
+     */
+    protected array $typeCodes = [
+        '1' => 'vendor',
+        '2' => 'contractor',
+        '3' => 'client',
+        '4' => 'buyer',
+    ];
+
     protected function getTypeData(string $type): array
     {
         if (!isset($this->types[$type])) {
@@ -30,22 +41,30 @@ class UserAccountController extends Controller
     {
         $data = $this->getTypeData($type);
 
+        $userTypeOptions = [
+            ['code' => '1', 'label' => 'Vendor'],
+            ['code' => '2', 'label' => 'Contractor'],
+            ['code' => '3', 'label' => 'Client'],
+            ['code' => '4', 'label' => 'Buyer'],
+        ];
+
         return view('ursbid-admin.user_accounts.index', [
             'type' => $type,
             'userType' => $data['label'],
+            'userTypeOptions' => $userTypeOptions,
         ]);
     }
 
     public function list(Request $request, string $type)
     {
-        $data = $this->getTypeData($type);
-
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'status' => 'nullable|in:1,2',
             'from_date' => 'nullable|date_format:d-m-Y',
             'to_date' => 'nullable|date_format:d-m-Y',
+            'user_types' => 'nullable|array',
+            'user_types.*' => 'in:1,2,3,4',
         ]);
 
         if ($validator->fails()) {
@@ -55,7 +74,15 @@ class UserAccountController extends Controller
             ], 422);
         }
 
-        $query = UserAccount::where('user_type', $data['user_type']);
+        $query = UserAccount::query();
+
+        if ($request->filled('user_types')) {
+            $mapped = array_map(fn($code) => $this->typeCodes[$code], $request->user_types);
+            $query->whereIn('user_type', $mapped);
+        } else {
+            $data = $this->getTypeData($type);
+            $query->where('user_type', $data['user_type']);
+        }
 
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
@@ -79,9 +106,16 @@ class UserAccountController extends Controller
 
         $users = $query->orderByDesc('id')->get();
 
+        $typeRouteMap = [
+            'vendor' => 'vendors',
+            'contractor' => 'contractors',
+            'client' => 'clients',
+            'buyer' => 'buyers',
+        ];
+
         $html = view('ursbid-admin.user_accounts.partials.table', [
             'users' => $users,
-            'type' => $type,
+            'typeRouteMap' => $typeRouteMap,
         ])->render();
 
         return response()->json([

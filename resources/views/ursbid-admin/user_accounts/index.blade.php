@@ -1,5 +1,5 @@
 @extends('ursbid-admin.layouts.app')
-@section('title', $userType . ' List')
+@section('title', 'User Accounts')
 
 @section('content')
 <div class="container-fluid">
@@ -43,6 +43,14 @@
                             <div class="col-md-2">
                                 <label class="form-label">To Date</label>
                                 <input type="text" name="to_date" class="form-control" placeholder="dd-mm-yyyy">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">User Types</label>
+                                <select name="user_types[]" class="form-select" multiple>
+                                    @foreach($userTypeOptions as $opt)
+                                        <option value="{{ $opt['code'] }}">{{ $opt['label'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-12 text-end">
                                 <button type="submit" class="btn btn-primary">Filter</button>
@@ -95,7 +103,9 @@ $(function(){
         const email = $('input[name="email"]').val();
         const from = $('input[name="from_date"]').val();
         const to = $('input[name="to_date"]').val();
+        const userTypes = $('select[name="user_types[]"]').val() || [];
         const datePattern = /^\d{2}-\d{2}-\d{4}$/;
+        const validTypes = ['1','2','3','4'];
         if(name.length > 255){
             toastr.error('Name may not be greater than 255 characters.');
             return;
@@ -111,6 +121,12 @@ $(function(){
         if(to && !datePattern.test(to)){
             toastr.error('To date must be in dd-mm-yyyy format.');
             return;
+        }
+        for(let t of userTypes){
+            if(!validTypes.includes(t)){
+                toastr.error('Invalid user type selected.');
+                return;
+            }
         }
         loadList();
     });
