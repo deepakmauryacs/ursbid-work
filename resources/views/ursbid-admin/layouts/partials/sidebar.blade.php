@@ -151,6 +151,15 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link {{ request()->is('super-admin/user-management*') ? 'active' : '' }}" href="{{ route('super-admin.user-management.index') }}">
+                    <span class="nav-icon">
+                        <i class="ri-user-settings-line"></i>
+                    </span>
+                    <span class="nav-text">User Management</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link {{ request()->is('super-admin/testimonials*') ? 'active' : '' }}" href="{{ route('super-admin.testimonials.index') }}">
                     <span class="nav-icon">
                         <i class="ri-chat-1-line"></i>
