@@ -118,6 +118,31 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/accounts*') ? 'active' : '' }}" href="#sidebarAccounts" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/accounts*') ? 'true' : 'false' }}" aria-controls="sidebarAccounts">
+                    <span class="nav-icon">
+                        <i class="ri-user-3-line"></i>
+                    </span>
+                    <span class="nav-text">Account Module</span>
+                </a>
+                <div class="collapse {{ request()->is('super-admin/accounts*') ? 'show' : '' }}" id="sidebarAccounts">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/accounts/vendors*') ? 'active' : '' }}" href="{{ route('super-admin.accounts.index', 'vendors') }}">Vendor List</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/accounts/buyers*') ? 'active' : '' }}" href="{{ route('super-admin.accounts.index', 'buyers') }}">Buyer List</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/accounts/contractors*') ? 'active' : '' }}" href="{{ route('super-admin.accounts.index', 'contractors') }}">Contractor List</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/accounts/clients*') ? 'active' : '' }}" href="{{ route('super-admin.accounts.index', 'clients') }}">Client List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link {{ request()->is('super-admin/youtube-links*') ? 'active' : '' }}" href="{{ route('super-admin.youtube-links.index') }}">
                     <span class="nav-icon">
                         <i class="ri-youtube-line"></i>
