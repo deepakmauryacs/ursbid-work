@@ -39,4 +39,9 @@ class UserAccount extends Model
         'latitude' => 'float',
         'longitude' => 'float',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user_account');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserAccount;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -104,7 +105,7 @@ class UserAccountController extends Controller
             $query->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d'));
         }
 
-        $users = $query->orderByDesc('id')->get();
+        $users = $query->with('roles')->orderByDesc('id')->get();
 
         $typeRouteMap = [
             'vendor' => 'vendors',
@@ -131,6 +132,7 @@ class UserAccountController extends Controller
         return view('ursbid-admin.user_accounts.create', [
             'type' => $type,
             'userType' => $data['label'],
+            'roles' => Role::orderBy('role_name')->get(),
         ]);
     }
 
@@ -144,6 +146,8 @@ class UserAccountController extends Controller
             'phone' => 'required|string|max:20|unique:user_accounts,phone',
             'status' => 'required|in:1,2',
             'created_at' => 'required|date_format:d-m-Y',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
         ]);
 
         if ($validator->fails()) {
@@ -156,7 +160,11 @@ class UserAccountController extends Controller
         $validated = $validator->validated();
         $validated['user_type'] = $data['user_type'];
         $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
-        UserAccount::create($validated);
+        $user = UserAccount::create($validated);
+
+        if ($request->filled('roles')) {
+            $user->roles()->sync($request->roles);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -173,13 +181,14 @@ class UserAccountController extends Controller
             'user' => $user,
             'type' => $type,
             'userType' => $data['label'],
+            'roles' => Role::orderBy('role_name')->get(),
         ]);
     }
 
     public function show(string $type, int $id)
     {
         $data = $this->getTypeData($type);
-        $user = UserAccount::where('user_type', $data['user_type'])->findOrFail($id);
+        $user = UserAccount::where('user_type', $data['user_type'])->with('roles')->findOrFail($id);
 
         return view('ursbid-admin.user_accounts.show', [
             'user' => $user,
@@ -199,6 +208,8 @@ class UserAccountController extends Controller
             'phone' => 'required|string|max:20|unique:user_accounts,phone,' . $user->id,
             'status' => 'required|in:1,2',
             'created_at' => 'required|date_format:d-m-Y',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
         ]);
 
         if ($validator->fails()) {
@@ -211,6 +222,12 @@ class UserAccountController extends Controller
         $validated = $validator->validated();
         $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
         $user->update($validated);
+
+        if ($request->filled('roles')) {
+            $user->roles()->sync($request->roles);
+        } else {
+            $user->roles()->detach();
+        }
 
         return response()->json([
             'status' => 'success',

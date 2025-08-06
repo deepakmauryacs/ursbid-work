@@ -1,56 +1,36 @@
 @extends('ursbid-admin.layouts.app')
-@section('title', 'Add ' . $userType)
+@section('title', 'Add Role')
 
 @section('content')
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="mb-0 fw-semibold">Add {{ $userType }}</h4>
+                <h4 class="mb-0 fw-semibold">Add Role</h4>
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('super-admin.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('super-admin.accounts.index', $type) }}">{{ $userType }} List</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('super-admin.roles.index') }}">Role List</a></li>
                     <li class="breadcrumb-item active">Add</li>
                 </ol>
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header border-bottom">
-                    <h4 class="card-title mb-0">Add {{ $userType }}</h4>
+                    <h4 class="card-title mb-0">Add Role</h4>
                 </div>
-                <form id="userForm">
+                <form id="roleForm">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" required>
-                            <div class="invalid-feedback" data-field="name"></div>
+                            <label class="form-label">Role Name</label>
+                            <input type="text" name="role_name" class="form-control" required>
+                            <div class="invalid-feedback" data-field="role_name"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" required>
-                            <div class="invalid-feedback" data-field="email"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control" required>
-                            <div class="invalid-feedback" data-field="phone"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Roles</label>
-                            <select name="roles[]" class="form-select" multiple>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->role_name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-field="roles"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Joining Date</label>
+                            <label class="form-label">Created Date</label>
                             <input type="text" name="created_at" class="form-control" placeholder="dd-mm-yyyy" required>
                             <div class="invalid-feedback" data-field="created_at"></div>
                         </div>
@@ -76,29 +56,22 @@
 @push('scripts')
 <script>
 $(function(){
-    $('#userForm').on('submit', function(e){
+    $('#roleForm').on('submit', function(e){
         e.preventDefault();
         $('.invalid-feedback').text('');
         const datePattern = /^\d{2}-\d{2}-\d{4}$/;
-        const joinDate = $('input[name="created_at"]').val();
-        if(!datePattern.test(joinDate)){
+        const created = $('input[name="created_at"]').val();
+        if(!datePattern.test(created)){
             $('[data-field="created_at"]').text('Date must be in dd-mm-yyyy format.');
             return;
         }
-        const roles = $('select[name="roles[]"]').val() || [];
-        for(let r of roles){
-            if(!/^\d+$/.test(r)){
-                $('[data-field="roles"]').text('Invalid role selected.');
-                return;
-            }
-        }
         $.ajax({
-            url: '{{ route('super-admin.accounts.store', $type) }}',
+            url: '{{ route('super-admin.roles.store') }}',
             type: 'POST',
             data: $(this).serialize(),
             success: function(res){
                 toastr.success(res.message);
-                $('#userForm')[0].reset();
+                $('#roleForm')[0].reset();
             },
             error: function(xhr){
                 if(xhr.status === 422){

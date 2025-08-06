@@ -142,6 +142,15 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link {{ request()->is('super-admin/roles*') ? 'active' : '' }}" href="{{ route('super-admin.roles.index') }}">
+                    <span class="nav-icon">
+                        <i class="ri-shield-user-line"></i>
+                    </span>
+                    <span class="nav-text">Roles</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link {{ request()->is('super-admin/testimonials*') ? 'active' : '' }}" href="{{ route('super-admin.testimonials.index') }}">
                     <span class="nav-icon">
                         <i class="ri-chat-1-line"></i>
