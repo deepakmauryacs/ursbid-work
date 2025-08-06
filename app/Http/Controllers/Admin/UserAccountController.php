@@ -109,6 +109,7 @@ class UserAccountController extends Controller
             'email' => 'required|email|unique:user_accounts,email',
             'phone' => 'required|string|max:20|unique:user_accounts,phone',
             'status' => 'required|in:1,2',
+            'created_at' => 'required|date_format:d-m-Y',
         ]);
 
         if ($validator->fails()) {
@@ -118,9 +119,10 @@ class UserAccountController extends Controller
             ], 422);
         }
 
-        UserAccount::create(array_merge($validator->validated(), [
-            'user_type' => $data['user_type'],
-        ]));
+        $validated = $validator->validated();
+        $validated['user_type'] = $data['user_type'];
+        $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
+        UserAccount::create($validated);
 
         return response()->json([
             'status' => 'success',
@@ -162,6 +164,7 @@ class UserAccountController extends Controller
             'email' => 'required|email|unique:user_accounts,email,' . $user->id,
             'phone' => 'required|string|max:20|unique:user_accounts,phone,' . $user->id,
             'status' => 'required|in:1,2',
+            'created_at' => 'required|date_format:d-m-Y',
         ]);
 
         if ($validator->fails()) {
@@ -171,7 +174,9 @@ class UserAccountController extends Controller
             ], 422);
         }
 
-        $user->update($validator->validated());
+        $validated = $validator->validated();
+        $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
+        $user->update($validated);
 
         return response()->json([
             'status' => 'success',

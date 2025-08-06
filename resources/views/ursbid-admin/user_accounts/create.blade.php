@@ -41,6 +41,11 @@
                             <div class="invalid-feedback" data-field="phone"></div>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Joining Date</label>
+                            <input type="text" name="created_at" class="form-control" placeholder="dd-mm-yyyy" required>
+                            <div class="invalid-feedback" data-field="created_at"></div>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select" required>
                                 <option value="1">Active</option>
@@ -65,6 +70,12 @@ $(function(){
     $('#userForm').on('submit', function(e){
         e.preventDefault();
         $('.invalid-feedback').text('');
+        const datePattern = /^\d{2}-\d{2}-\d{4}$/;
+        const joinDate = $('input[name="created_at"]').val();
+        if(!datePattern.test(joinDate)){
+            $('[data-field="created_at"]').text('Date must be in dd-mm-yyyy format.');
+            return;
+        }
         $.ajax({
             url: '{{ route('super-admin.accounts.store', $type) }}',
             type: 'POST',
