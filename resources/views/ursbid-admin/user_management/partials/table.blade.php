@@ -4,10 +4,9 @@
             <th>S.No</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Phone</th>
-            <th>Roles</th>
+            <th>Address</th>
+            <th>User Type</th>
             <th>Created Date</th>
-            <th>Status</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -17,20 +16,9 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{{ $user->phone }}</td>
-                <td>
-                    @foreach($user->roles as $r)
-                        <span class="badge bg-info-subtle text-info me-1">{{ $r->role_name }}</span>
-                    @endforeach
-                </td>
+                <td>{{ $user->address }}</td>
+                <td>{{ $user->user_type == 1 ? 'Super Admin' : 'Admin' }}</td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
-                <td>
-                    @if($user->status == '1')
-                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
-                    @else
-                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
-                    @endif
-                </td>
                 <td>
                     <div class="d-flex gap-2">
                         <a href="{{ route('super-admin.user-management.edit', $user->id) }}" class="btn btn-soft-primary btn-sm">Edit</a>
@@ -40,7 +28,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="8" class="text-center">No records found.</td>
+                <td colspan="6" class="text-center">No records found.</td>
             </tr>
         @endforelse
     </tbody>

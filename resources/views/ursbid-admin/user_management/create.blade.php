@@ -36,31 +36,22 @@
                             <div class="invalid-feedback" data-field="email"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control" required>
-                            <div class="invalid-feedback" data-field="phone"></div>
+                            <label class="form-label">User Type</label>
+                            <select name="user_type" class="form-select" required>
+                                <option value="1">Super Admin</option>
+                                <option value="2">Admin</option>
+                            </select>
+                            <div class="invalid-feedback" data-field="user_type"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Roles</label>
-                            <select name="roles[]" class="form-select" multiple>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->role_name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-field="roles"></div>
+                            <label class="form-label">Address</label>
+                            <input type="text" name="address" class="form-control">
+                            <div class="invalid-feedback" data-field="address"></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Joining Date</label>
                             <input type="text" name="created_at" class="form-control" placeholder="dd-mm-yyyy" required>
                             <div class="invalid-feedback" data-field="created_at"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Status</label>
-                            <select name="status" class="form-select" required>
-                                <option value="1">Active</option>
-                                <option value="2">Inactive</option>
-                            </select>
-                            <div class="invalid-feedback" data-field="status"></div>
                         </div>
                     </div>
                     <div class="card-footer text-end">
@@ -85,12 +76,15 @@ $(function(){
             $('[data-field="created_at"]').text('Date must be in dd-mm-yyyy format.');
             return;
         }
-        const roles = $('select[name="roles[]"]').val() || [];
-        for(let r of roles){
-            if(!/^\d+$/.test(r)){
-                $('[data-field="roles"]').text('Invalid role selected.');
-                return;
-            }
+        const userType = $('select[name="user_type"]').val();
+        if(!['1','2'].includes(userType)){
+            $('[data-field="user_type"]').text('Invalid user type selected.');
+            return;
+        }
+        const address = $('input[name="address"]').val();
+        if(address.length > 255){
+            $('[data-field="address"]').text('Address may not be greater than 255 characters.');
+            return;
         }
         $.ajax({
             url: '{{ route('super-admin.user-management.store') }}',
