@@ -364,6 +364,7 @@ use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\UserAccountController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UsermanagementController;
 
 
 
@@ -468,6 +469,16 @@ Route::prefix('super-admin/roles')->name('super-admin.roles.')->group(function (
     Route::get('/{id}/edit', [RoleController::class, 'edit'])->name('edit');
     Route::put('/{id}', [RoleController::class, 'update'])->name('update');
     Route::delete('/{id}', [RoleController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('super-admin/user-management')->name('super-admin.user-management.')->group(function () {
+    Route::get('/', [UsermanagementController::class, 'index'])->name('index');
+    Route::get('/list', [UsermanagementController::class, 'list'])->name('list');
+    Route::get('/create', [UsermanagementController::class, 'create'])->name('create');
+    Route::post('/', [UsermanagementController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [UsermanagementController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [UsermanagementController::class, 'update'])->name('update');
+    Route::delete('/{id}', [UsermanagementController::class, 'destroy'])->name('destroy');
 });
 
 
