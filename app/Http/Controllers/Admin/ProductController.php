@@ -7,21 +7,55 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'category' => 'nullable|integer',
+            'subcategory' => 'nullable|integer',
+            'name' => 'nullable|string|max:255',
+            'per_page' => 'nullable|integer'
+        ]);
+
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return back()->withErrors($validator)->withInput();
+        }
+
         $perPage = $request->get('per_page', 10);
 
-        $products = DB::table('product')
+        $query = DB::table('product')
             ->leftJoin('category', 'product.cat_id', '=', 'category.id')
             ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
             ->select('product.*', 'category.title as category_title', 'sub.title as sub_title')
-            ->orderBy('product.order_by')
-            ->paginate($perPage);
+            ->orderBy('product.order_by');
 
-        return view('ursbid-admin.products.list', compact('products', 'perPage'));
+        if ($request->filled('category')) {
+            $query->where('product.cat_id', $request->category);
+        }
+        if ($request->filled('subcategory')) {
+            $query->where('product.sub_id', $request->subcategory);
+        }
+        if ($request->filled('name')) {
+            $query->where('product.title', 'like', '%' . $request->name . '%');
+        }
+
+        $products = $query->paginate($perPage);
+
+        $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
+
+        if ($request->ajax()) {
+            $html = view('ursbid-admin.products.partials.table', compact('products'))->render();
+            $pagination = view('ursbid-admin.products.partials.pagination', compact('products'))->render();
+            return response()->json(['html' => $html, 'pagination' => $pagination]);
+        }
+
+        return view('ursbid-admin.products.list', compact('products', 'categories', 'perPage'));
     }
 
 

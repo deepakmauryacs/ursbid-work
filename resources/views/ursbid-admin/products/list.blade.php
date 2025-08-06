@@ -67,6 +67,44 @@
     </div>
     <!-- ========== Page Title End ========== -->
 
+    <!-- Filter Section Start -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Category</label>
+                                <select name="category" id="category" class="form-select">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Sub Category</label>
+                                <select name="subcategory" id="subcategory" class="form-select">
+                                    <option value="">Select Sub Category</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Product Name</label>
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Product Name">
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <button type="button" id="resetBtn" class="btn btn-secondary ms-2">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Filter Section End -->
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -89,49 +127,14 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse($products as $product)
-                            <tr id="row-{{ $product->id }}">
-                                <td>{{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div>
-                                            <img src="{{ $product->image ? asset('public/'.$product->image) : asset('public/uploads/no-image.jpg') }}" alt="{{ $product->title }}" class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
-                                        </div>
-                                        <div>
-                                            <a href="#!" class="text-dark fw-medium fs-15">{{ $product->title }}</a>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ $product->category_title }}</td>
-                                <td>{{ $product->sub_title }}</td>
-                                <td>
-                                    @if($product->status == 1)
-                                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <a href="{{ route('super-admin.products.edit', $product->id) }}" class="btn btn-soft-primary btn-sm">
-                                            <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
-                                        </a>
-                                        <button type="button" data-id="{{ $product->id }}" data-url="{{ route('super-admin.products.destroy', $product->id) }}" class="btn btn-soft-danger btn-sm deleteBtn">
-                                            <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="6" class="text-center">No products found.</td>
-                            </tr>
-                            @endforelse
+                        <tbody id="productTableBody">
+                            @include('ursbid-admin.products.partials.table')
                         </tbody>
                     </table>
                 </div>
-                <x-paginationwithlength :paginator="$products" />
+                <div id="paginationContainer">
+                    @include('ursbid-admin.products.partials.pagination')
+                </div>
 
             </div>
         </div>
@@ -142,7 +145,53 @@
 @push('scripts')
 <script>
 $(function(){
-    $('.deleteBtn').on('click', function(){
+    function loadSubCategories(catId){
+        $('#subcategory').html('<option value="">Select Sub Category</option>');
+        if(catId){
+            $.get('{{ route('super-admin.products.get-subcategories') }}', {cat_id: catId}, function(res){
+                res.forEach(function(item){
+                    $('#subcategory').append(`<option value="${item.id}">${item.title}</option>`);
+                });
+            });
+        }
+    }
+
+    $('#category').on('change', function(){
+        loadSubCategories($(this).val());
+    });
+
+    $('#filterForm').on('submit', function(e){
+        e.preventDefault();
+        const name = $('#name').val();
+        if(name.length > 255){
+            toastr.error('Product name may not be greater than 255 characters.');
+            return;
+        }
+        $.ajax({
+            url: '{{ route('super-admin.products.index') }}',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function(res){
+                $('#productTableBody').html(res.html);
+                $('#paginationContainer').html(res.pagination);
+            },
+            error: function(xhr){
+                if(xhr.status === 422){
+                    toastr.error('Please provide valid filter inputs.');
+                } else {
+                    toastr.error('Unable to fetch products.');
+                }
+            }
+        });
+    });
+
+    $('#resetBtn').on('click', function(){
+        $('#filterForm')[0].reset();
+        $('#subcategory').html('<option value="">Select Sub Category</option>');
+        $('#filterForm').trigger('submit');
+    });
+
+    $(document).on('click', '.deleteBtn', function(){
         if(!confirm('Are you sure want to delete?')) return;
         let id = $(this).data('id');
         let url = $(this).data('url');
