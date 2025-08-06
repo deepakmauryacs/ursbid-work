@@ -26,6 +26,5 @@ class Product extends Model
         'meta_description',
         'status',
         'order_by',
-        'post_date',
     ];
 }

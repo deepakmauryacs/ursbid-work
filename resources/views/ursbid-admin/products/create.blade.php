@@ -41,14 +41,6 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Post Date<span class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="post_date" id="post_date" class="form-control" placeholder="dd-mm-yyyy" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Order By</label>
                             </div>
                             <div class="col-md-8">
@@ -119,7 +111,6 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <style>
     .ql-toolbar.ql-snow {
@@ -132,39 +123,32 @@
 @endpush
 
 @push('scripts')
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 <script>
 $(function(){
-    $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
-
-       // Initialize Quill
-       var quill = new Quill('#editor', {
+    // Initialize Quill
+    var quill = new Quill('#editor', {
         theme: 'snow',
         placeholder: 'Write product description...',
         modules: {
             toolbar: [
-                [{'header': [1, 2, 3, 4, 5, 6, false]}], // Header dropdown
-                [{'font': []}], // Font dropdown
-                [{'size': ['small', false, 'large', 'huge']}], // Font size dropdown
-                ['bold', 'italic', 'underline', 'strike'], // Text formatting
-                [{'color': []}, {'background': []}], // Color and background
-                [{'align': []}], // Alignment
-                [{'list': 'ordered'}, {'list': 'bullet'}], // Lists
-                [{'indent': '-1'}, {'indent': '+1'}], // Indentation
-                [{'script': 'sub'}, {'script': 'super'}], // Subscript/superscript
-                ['blockquote', 'code-block'], // Blockquote and code block
-                ['link', 'image', 'video'], // Links, images, videos
-                [{'direction': 'rtl'}], // Text direction
-                ['clean'] // Clear formatting
+                [{'header': [1, 2, 3, 4, 5, 6, false]}],
+                [{'font': []}],
+                [{'size': ['small', false, 'large', 'huge']}],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{'color': []}, {'background': []}],
+                [{'align': []}],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                [{'indent': '-1'}, {'indent': '+1'}],
+                [{'script': 'sub'}, {'script': 'super'}],
+                ['blockquote', 'code-block'],
+                ['link', 'image', 'video'],
+                [{'direction': 'rtl'}],
+                ['clean']
             ]
-         }
-      });
-
-    $.validator.addMethod('dmy', function(value){
-        return /^\d{2}-\d{2}-\d{4}$/.test(value);
-    }, 'Please enter a date in the format dd-mm-yyyy');
+        }
+    });
 
     $('#cat_id').on('change', function(){
         $('#sub_id').html('<option value="">Select Sub Category</option>');
@@ -182,8 +166,7 @@ $(function(){
         rules:{
             title:{ required:true },
             cat_id:{ required:true },
-            sub_id:{ required:true },
-            post_date:{ required:true, dmy:true }
+            sub_id:{ required:true }
         },
         submitHandler:function(form){
             // Copy Quill content to textarea before submitting

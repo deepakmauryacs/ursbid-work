@@ -44,14 +44,6 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Post Date<span class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="post_date" id="post_date" value="{{ $product->post_date }}" class="form-control" placeholder="dd-mm-yyyy" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Order By</label>
                             </div>
                             <div class="col-md-8">
@@ -125,7 +117,6 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <style>
     .ql-toolbar.ql-snow {
@@ -138,7 +129,6 @@
 @endpush
 
 @push('scripts')
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 <script>
@@ -172,8 +162,6 @@ $(function(){
         quill.root.innerHTML = oldDesc;
     }
 
-    $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
-
     $('#cat_id').on('change', function(){
         $('#sub_id').html('<option value="">Select Sub Category</option>');
         var cat_id = $(this).val();
@@ -186,16 +174,11 @@ $(function(){
         }
     });
 
-    $.validator.addMethod('dmy', function(value){
-        return /^\d{2}-\d{2}-\d{4}$/.test(value);
-    }, 'Please enter a date in the format dd-mm-yyyy');
-
     $('#productForm').validate({
         rules:{
             title:{ required:true },
             cat_id:{ required:true },
-            sub_id:{ required:true },
-            post_date:{ required:true, dmy:true }
+            sub_id:{ required:true }
         },
         submitHandler:function(form){
             // Copy Quill content to textarea before submitting
