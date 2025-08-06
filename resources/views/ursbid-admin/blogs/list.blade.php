@@ -73,7 +73,7 @@
     <!-- ========== Page Title End ========== -->
 
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
@@ -86,6 +86,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Blog Title</th>
                                 <th>Post Date</th>
                                 <th>Status</th>
@@ -95,6 +96,7 @@
                         <tbody>
                             @forelse($blogs as $blog)
                             <tr id="row-{{ $blog->id }}">
+                                <td>{{ ($blogs->currentPage() - 1) * $blogs->perPage() + $loop->iteration }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div>
@@ -118,9 +120,9 @@
                                         <a href="{{ route('super-admin.blogs.edit', $blog->id) }}" class="btn btn-soft-primary btn-sm">
                                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </a>
-                                        <button type="button" 
-                                                data-id="{{ $blog->id }}" 
-                                                data-url="{{ route('super-admin.blogs.destroy', $blog->id) }}" 
+                                        <button type="button"
+                                                data-id="{{ $blog->id }}"
+                                                data-url="{{ route('super-admin.blogs.destroy', $blog->id) }}"
                                                 class="btn btn-soft-danger btn-sm deleteBtn">
                                             <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </button>
@@ -129,7 +131,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center">No blogs found.</td>
+                                <td colspan="5" class="text-center">No blogs found.</td>
                             </tr>
                             @endforelse
                         </tbody>

@@ -68,7 +68,7 @@
     <!-- ========== Page Title End ========== -->
 
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
@@ -81,6 +81,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Product Title</th>
                                 <th>Category</th>
                                 <th>Sub Category</th>
@@ -92,6 +93,7 @@
                         <tbody>
                             @forelse($products as $product)
                             <tr id="row-{{ $product->id }}">
+                                <td>{{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div>
@@ -104,7 +106,7 @@
                                 </td>
                                 <td>{{ $product->category_title }}</td>
                                 <td>{{ $product->sub_title }}</td>
-                                <td></td>
+                                <td>{{ $product->post_date ? \Carbon\Carbon::parse($product->post_date)->format('d-m-Y') : '' }}</td>
                                 <td>
                                     @if($product->status == 1)
                                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
@@ -125,7 +127,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="text-center">No products found.</td>
+                                <td colspan="7" class="text-center">No products found.</td>
                             </tr>
                             @endforelse
                         </tbody>
