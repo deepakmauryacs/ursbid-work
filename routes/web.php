@@ -465,6 +465,9 @@ Route::prefix('super-admin/roles')->name('super-admin.roles.')->group(function (
     Route::get('/list', [RoleController::class, 'list'])->name('list');
     Route::get('/create', [RoleController::class, 'create'])->name('create');
     Route::post('/', [RoleController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [RoleController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [RoleController::class, 'update'])->name('update');
+    Route::delete('/{id}', [RoleController::class, 'destroy'])->name('destroy');
 });
 
 
