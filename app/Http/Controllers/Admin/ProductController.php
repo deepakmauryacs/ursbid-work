@@ -14,8 +14,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category' => 'nullable|integer',
-            'subcategory' => 'nullable|integer',
+            'category' => 'nullable|integer|exists:categories,id',
+            'subcategory' => 'nullable|integer|exists:sub_categories,id',
             'name' => 'nullable|string|max:255',
             'per_page' => 'nullable|integer'
         ]);
@@ -30,9 +30,9 @@ class ProductController extends Controller
         $perPage = $request->get('per_page', 10);
 
         $query = DB::table('product')
-            ->leftJoin('category', 'product.cat_id', '=', 'category.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->select('product.*', 'category.title as category_title', 'sub.title as sub_title')
+            ->leftJoin('categories', 'product.cat_id', '=', 'categories.id')
+            ->leftJoin('sub_categories', 'product.sub_id', '=', 'sub_categories.id')
+            ->select('product.*', 'categories.name as category_name', 'sub_categories.name as sub_name')
             ->orderBy('product.order_by');
 
         if ($request->filled('category')) {
@@ -47,7 +47,7 @@ class ProductController extends Controller
 
         $products = $query->paginate($perPage);
 
-        $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
+        $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
 
         if ($request->ajax()) {
             $html = view('ursbid-admin.products.partials.table', compact('products'))->render();
@@ -62,16 +62,20 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
+        $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
         return view('ursbid-admin.products.create', compact('categories'));
     }
 
     public function getSubCategories(Request $request)
     {
-        $subs = DB::table('sub')
-            ->where('cat_id', $request->cat_id)
+        $request->validate([
+            'cat_id' => 'required|integer|exists:categories,id',
+        ]);
+
+        $subs = DB::table('sub_categories')
+            ->where('category_id', $request->cat_id)
             ->where('status', 1)
-            ->orderBy('title')
+            ->orderBy('name')
             ->get();
         return response()->json($subs);
     }
@@ -80,8 +84,8 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'cat_id' => 'required|integer',
-            'sub_id' => 'required|integer',
+            'cat_id' => 'required|integer|exists:categories,id',
+            'sub_id' => 'required|integer|exists:sub_categories,id',
             'post_date' => 'required|date_format:d-m-Y',
             'order_by' => 'nullable|integer',
             'status' => 'required|in:0,1',
@@ -150,8 +154,8 @@ class ProductController extends Controller
         if (!$product) {
             abort(404);
         }
-        $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
-        $subCategories = DB::table('sub')->where('cat_id', $product->cat_id)->where('status', 1)->orderBy('title')->get();
+        $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
+        $subCategories = DB::table('sub_categories')->where('category_id', $product->cat_id)->where('status', 1)->orderBy('name')->get();
         return view('ursbid-admin.products.edit', compact('product', 'categories', 'subCategories'));
     }
 
@@ -159,8 +163,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'cat_id' => 'required|integer',
-            'sub_id' => 'required|integer',
+            'cat_id' => 'required|integer|exists:categories,id',
+            'sub_id' => 'required|integer|exists:sub_categories,id',
+            'post_date' => 'required|date_format:d-m-Y',
             'order_by' => 'nullable|integer',
             'status' => 'required|in:0,1',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
@@ -193,6 +198,7 @@ class ProductController extends Controller
             'title' => $validated['title'],
             'cat_id' => $validated['cat_id'],
             'sub_id' => $validated['sub_id'],
+            'post_date' => $validated['post_date'],
             'order_by' => $validated['order_by'],
             'status' => $validated['status'],
             'description' => $request->description,

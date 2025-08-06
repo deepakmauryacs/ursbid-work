@@ -24,7 +24,7 @@
                                 <select name="cat_id" id="cat_id" class="form-control" required>
                                     <option value="">Select Category</option>
                                     @foreach($categories as $cat)
-                                        <option value="{{ $cat->id }}" {{ $product->cat_id == $cat->id ? 'selected' : '' }}>{{ $cat->title }}</option>
+                                        <option value="{{ $cat->id }}" {{ $product->cat_id == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -37,9 +37,17 @@
                                 <select name="sub_id" id="sub_id" class="form-control" required>
                                     <option value="">Select Sub Category</option>
                                     @foreach($subCategories as $sub)
-                                        <option value="{{ $sub->id }}" {{ $product->sub_id == $sub->id ? 'selected' : '' }}>{{ $sub->title }}</option>
+                                        <option value="{{ $sub->id }}" {{ $product->sub_id == $sub->id ? 'selected' : '' }}>{{ $sub->name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Post Date<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" name="post_date" id="post_date" value="{{ $product->post_date }}" class="form-control" placeholder="dd-mm-yyyy" required>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -164,13 +172,15 @@ $(function(){
         quill.root.innerHTML = oldDesc;
     }
 
+    $('#post_date').datepicker({ dateFormat: 'dd-mm-yy' });
+
     $('#cat_id').on('change', function(){
         $('#sub_id').html('<option value="">Select Sub Category</option>');
         var cat_id = $(this).val();
         if(cat_id){
             $.get('{{ route('super-admin.products.get-subcategories') }}', {cat_id:cat_id}, function(res){
                 $.each(res, function(i, item){
-                    $('#sub_id').append('<option value="'+item.id+'">'+item.title+'</option>');
+                    $('#sub_id').append('<option value="'+item.id+'">'+item.name+'</option>');
                 });
             });
         }

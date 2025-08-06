@@ -79,7 +79,7 @@
                                 <select name="category" id="category" class="form-select">
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -150,7 +150,7 @@ $(function(){
         if(catId){
             $.get('{{ route('super-admin.products.get-subcategories') }}', {cat_id: catId}, function(res){
                 res.forEach(function(item){
-                    $('#subcategory').append(`<option value="${item.id}">${item.title}</option>`);
+                    $('#subcategory').append(`<option value="${item.id}">${item.name}</option>`);
                 });
             });
         }

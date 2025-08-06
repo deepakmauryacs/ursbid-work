@@ -11,8 +11,8 @@
             </div>
         </div>
     </td>
-    <td>{{ $product->category_title }}</td>
-    <td>{{ $product->sub_title }}</td>
+    <td>{{ $product->category_name }}</td>
+    <td>{{ $product->sub_name }}</td>
     <td>
         @if($product->status == 1)
             <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
