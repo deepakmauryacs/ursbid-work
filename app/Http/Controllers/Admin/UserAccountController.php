@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class UserAccountController extends Controller
 {
@@ -35,12 +36,48 @@ class UserAccountController extends Controller
         ]);
     }
 
-    public function list(string $type)
+    public function list(Request $request, string $type)
     {
         $data = $this->getTypeData($type);
-        $users = UserAccount::where('user_type', $data['user_type'])
-            ->orderByDesc('id')
-            ->get();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'status' => 'nullable|in:1,2',
+            'from_date' => 'nullable|date_format:d-m-Y',
+            'to_date' => 'nullable|date_format:d-m-Y',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $query = UserAccount::where('user_type', $data['user_type']);
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d'));
+        }
+
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d'));
+        }
+
+        $users = $query->orderByDesc('id')->get();
 
         $html = view('ursbid-admin.user_accounts.partials.table', [
             'users' => $users,
@@ -50,6 +87,44 @@ class UserAccountController extends Controller
         return response()->json([
             'status' => 'success',
             'html' => $html,
+        ]);
+    }
+
+    public function create(string $type)
+    {
+        $data = $this->getTypeData($type);
+
+        return view('ursbid-admin.user_accounts.create', [
+            'type' => $type,
+            'userType' => $data['label'],
+        ]);
+    }
+
+    public function store(Request $request, string $type)
+    {
+        $data = $this->getTypeData($type);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:user_accounts,email',
+            'phone' => 'required|string|max:20|unique:user_accounts,phone',
+            'status' => 'required|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        UserAccount::create(array_merge($validator->validated(), [
+            'user_type' => $data['user_type'],
+        ]));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Account created successfully.',
         ]);
     }
 

@@ -452,6 +452,8 @@ Route::get('super-admin/get-subcategories', [AdminProductController::class, 'get
 Route::prefix('super-admin/accounts')->name('super-admin.accounts.')->group(function () {
     Route::get('{type}', [UserAccountController::class, 'index'])->name('index');
     Route::get('{type}/list', [UserAccountController::class, 'list'])->name('list');
+    Route::get('{type}/create', [UserAccountController::class, 'create'])->name('create');
+    Route::post('{type}', [UserAccountController::class, 'store'])->name('store');
     Route::get('{type}/{id}/edit', [UserAccountController::class, 'edit'])->name('edit');
     Route::get('{type}/{id}', [UserAccountController::class, 'show'])->name('show');
     Route::put('{type}/{id}', [UserAccountController::class, 'update'])->name('update');
