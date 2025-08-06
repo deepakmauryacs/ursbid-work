@@ -28,6 +28,7 @@ class UserAccount extends Model
         'is_verified',
         'product_and_services',
         'parent_id',
+        'created_at',
     ];
 
     protected $hidden = [
