@@ -362,6 +362,7 @@ use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialControll
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\ProductBrandController;
+use App\Http\Controllers\Admin\UserAccountController;
 
 
 
@@ -447,6 +448,14 @@ Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'ed
 Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])->name('super-admin.products.update');
 Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])->name('super-admin.products.destroy');
 Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])->name('super-admin.products.get-subcategories');
+
+Route::prefix('super-admin/accounts')->name('super-admin.accounts.')->group(function () {
+    Route::get('{type}', [UserAccountController::class, 'index'])->name('index');
+    Route::get('{type}/list', [UserAccountController::class, 'list'])->name('list');
+    Route::get('{type}/{id}/edit', [UserAccountController::class, 'edit'])->name('edit');
+    Route::get('{type}/{id}', [UserAccountController::class, 'show'])->name('show');
+    Route::put('{type}/{id}', [UserAccountController::class, 'update'])->name('update');
+});
 
 
 
