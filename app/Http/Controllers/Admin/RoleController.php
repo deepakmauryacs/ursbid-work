@@ -70,7 +70,6 @@ class RoleController extends Controller
         $validator = Validator::make($request->all(), [
             'role_name' => 'required|string|max:100',
             'status' => 'required|in:1,2',
-            'created_at' => 'required|date_format:d-m-Y',
         ]);
 
         if ($validator->fails()) {
@@ -81,7 +80,6 @@ class RoleController extends Controller
         }
 
         $validated = $validator->validated();
-        $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
         Role::create($validated);
 
         return response()->json([

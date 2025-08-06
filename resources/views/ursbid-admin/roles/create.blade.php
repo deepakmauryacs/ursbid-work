@@ -30,11 +30,6 @@
                             <div class="invalid-feedback" data-field="role_name"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Created Date</label>
-                            <input type="text" name="created_at" class="form-control" placeholder="dd-mm-yyyy" required>
-                            <div class="invalid-feedback" data-field="created_at"></div>
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select" required>
                                 <option value="1">Active</option>
@@ -59,10 +54,14 @@ $(function(){
     $('#roleForm').on('submit', function(e){
         e.preventDefault();
         $('.invalid-feedback').text('');
-        const datePattern = /^\d{2}-\d{2}-\d{4}$/;
-        const created = $('input[name="created_at"]').val();
-        if(!datePattern.test(created)){
-            $('[data-field="created_at"]').text('Date must be in dd-mm-yyyy format.');
+        const roleName = $('input[name="role_name"]').val().trim();
+        const status = $('select[name="status"]').val();
+        if(!roleName){
+            $('[data-field="role_name"]').text('Role name is required.');
+            return;
+        }
+        if(!status){
+            $('[data-field="status"]').text('Status is required.');
             return;
         }
         $.ajax({
