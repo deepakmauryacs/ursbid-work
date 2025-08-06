@@ -2,6 +2,7 @@
 use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\UserAccountController;
 
 
 /*
@@ -307,6 +308,11 @@ Route::get('/admin/register/contractorlist', [App\Http\Controllers\CategoryContr
 Route::get('/admin/register/sellerlist', [App\Http\Controllers\CategoryController::class, 'sellerlist']);
 Route::get('/admin/seller/active/{any}', [App\Http\Controllers\CategoryController::class, 'selleractive'])->name('admin.seller.active');
 Route::get('/admin/seller/deactive/{any}', [App\Http\Controllers\CategoryController::class, 'sellerdeactive'])->name('admin.seller.deactive');
+
+Route::get('/admin/accounts', [UserAccountController::class, 'index']);
+Route::get('/admin/accounts/list/{type}', [UserAccountController::class, 'list']);
+Route::get('/admin/accounts/{id}', [UserAccountController::class, 'show']);
+Route::post('/admin/accounts/{id}', [UserAccountController::class, 'update']);
 
 // Unit
 Route::get('/admin/unit/add', [App\Http\Controllers\UnitController::class, 'index']);
