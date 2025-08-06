@@ -73,6 +73,7 @@ $(function(){
             data: $('#filterForm').serialize(),
             success: function(res){
                 $('#listContainer').html(res.html);
+                bindDeleteEvents();
             },
             error: function(xhr){
                 if(xhr.status === 422){
@@ -106,6 +107,25 @@ $(function(){
     });
 
     loadList();
+
+    function bindDeleteEvents(){
+        $('.deleteBtn').on('click', function(){
+            if(!confirm('Are you sure want to delete?')) return;
+            const id = $(this).data('id');
+            $.ajax({
+                url: '/super-admin/roles/' + id,
+                type: 'DELETE',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(res){
+                    toastr.success(res.message);
+                    loadList();
+                },
+                error: function(){
+                    toastr.error('Unable to delete role');
+                }
+            });
+        });
+    }
 });
 </script>
 @endpush

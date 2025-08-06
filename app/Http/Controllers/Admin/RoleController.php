@@ -87,4 +87,47 @@ class RoleController extends Controller
             'message' => 'Role created successfully.',
         ]);
     }
+
+    public function edit(int $id)
+    {
+        $role = Role::findOrFail($id);
+        return view('ursbid-admin.roles.edit', [
+            'role' => $role,
+        ]);
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $role = Role::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'role_name' => 'required|string|max:100|unique:roles,role_name,' . $role->id,
+            'status' => 'required|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $role->update($validator->validated());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Role updated successfully.',
+        ]);
+    }
+
+    public function destroy(int $id)
+    {
+        $role = Role::findOrFail($id);
+        $role->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Role deleted successfully.',
+        ]);
+    }
 }
