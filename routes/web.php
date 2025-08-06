@@ -363,6 +363,7 @@ use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\UserAccountController;
+use App\Http\Controllers\Admin\RoleController;
 
 
 
@@ -457,6 +458,13 @@ Route::prefix('super-admin/accounts')->name('super-admin.accounts.')->group(func
     Route::get('{type}/{id}/edit', [UserAccountController::class, 'edit'])->name('edit');
     Route::get('{type}/{id}', [UserAccountController::class, 'show'])->name('show');
     Route::put('{type}/{id}', [UserAccountController::class, 'update'])->name('update');
+});
+
+Route::prefix('super-admin/roles')->name('super-admin.roles.')->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('index');
+    Route::get('/list', [RoleController::class, 'list'])->name('list');
+    Route::get('/create', [RoleController::class, 'create'])->name('create');
+    Route::post('/', [RoleController::class, 'store'])->name('store');
 });
 
 

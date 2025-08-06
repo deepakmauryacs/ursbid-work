@@ -6,6 +6,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>User Type</th>
+            <th>Roles</th>
             <th>Created Date</th>
             <th>Status</th>
             <th>Action</th>
@@ -19,6 +20,11 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
                 <td>{{ ucfirst($user->user_type) }}</td>
+                <td>
+                    @foreach($user->roles as $r)
+                        <span class="badge bg-info-subtle text-info me-1">{{ $r->role_name }}</span>
+                    @endforeach
+                </td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
                     @if($user->status == '1')
