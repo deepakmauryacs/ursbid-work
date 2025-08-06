@@ -44,14 +44,7 @@
                                 <label class="form-label">To Date</label>
                                 <input type="text" name="to_date" class="form-control" placeholder="dd-mm-yyyy">
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">User Types</label>
-                                <select name="user_types[]" class="form-select" multiple>
-                                    @foreach($userTypeOptions as $opt)
-                                        <option value="{{ $opt['code'] }}">{{ $opt['label'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                           
                             <div class="col-12 text-end">
                                 <button type="submit" class="btn btn-primary">Filter</button>
                                 <button type="button" id="resetBtn" class="btn btn-secondary ms-2">Reset</button>

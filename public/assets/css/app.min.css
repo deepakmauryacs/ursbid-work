@@ -2986,7 +2986,7 @@ progress {
     appearance: none;
     background-color: var(--bs-secondary-bg);
     background-clip: padding-box;
-    border: var(--bs-border-width) solid var(--bs-border-color);
+    border: var(--bs-border-width) solid #b6b8ba;
     border-radius: .35rem;
     -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
     transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
@@ -3012,7 +3012,7 @@ progress {
 .form-control:focus {
     color: var(--bs-body-color);
     background-color: var(--bs-secondary-bg);
-    border-color: var(--bs-border-color);
+    border-color: solid #b6b8ba;
     outline: 0;
     -webkit-box-shadow: none;
     box-shadow: none
@@ -3237,7 +3237,7 @@ textarea.form-control-lg {
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 14px 10px;
-    border: var(--bs-border-width) solid var(--bs-border-color);
+    border: var(--bs-border-width) solid #b6b8ba;
     border-radius: .35rem;
     -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
     transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;

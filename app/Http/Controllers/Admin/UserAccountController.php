@@ -11,10 +11,10 @@ use Carbon\Carbon;
 class UserAccountController extends Controller
 {
     protected array $types = [
-        'vendors' => ['user_type' => 'vendor', 'label' => 'Vendor'],
-        'buyers' => ['user_type' => 'buyer', 'label' => 'Buyer'],
-        'contractors' => ['user_type' => 'contractor', 'label' => 'Contractor'],
-        'clients' => ['user_type' => 'client', 'label' => 'Client'],
+        'vendors' => ['user_type' => '1', 'label' => 'Vendor'],
+        'buyers' => ['user_type' => '4', 'label' => 'Buyer'],
+        'contractors' => ['user_type' => '2', 'label' => 'Contractor'],
+        'clients' => ['user_type' => '3', 'label' => 'Client'],
     ];
 
     /**
@@ -81,7 +81,7 @@ class UserAccountController extends Controller
             $query->whereIn('user_type', $mapped);
         } else {
             $data = $this->getTypeData($type);
-            $query->where('user_type', $data['user_type']);
+            $query->whereRaw("FIND_IN_SET(?, user_type)", [$data['user_type']]);
         }
 
         if ($request->filled('name')) {
