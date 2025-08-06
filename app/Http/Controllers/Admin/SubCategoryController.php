@@ -17,13 +17,15 @@ class SubCategoryController extends Controller
     {
         $perPage = $request->get('per_page', 10);
 
-        $subs = DB::table('sub')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
-            ->select('sub.*', 'category.title as category_title')
-            ->orderBy('sub.order_by')
+        $subs = DB::table('sub_categories')
+            ->leftJoin('categories', 'sub_categories.category_id', '=', 'categories.id')
+            ->select('sub_categories.*', 'categories.name as category_name')
+            ->orderBy('sub_categories.order_by')
             ->paginate($perPage);
 
-        return view('ursbid-admin.sub_categories.list', compact('subs', 'perPage'));
+        $categories = DB::table('categories')->where('status', '1')->orderBy('name')->get();
+
+        return view('ursbid-admin.sub_categories.list', compact('subs', 'perPage','categories'));
     }
 
     /**
@@ -31,7 +33,7 @@ class SubCategoryController extends Controller
      */
     public function create()
     {
-        $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
+        $categories = DB::table('categories')->where('status', '1')->orderBy('name')->get();
         return view('ursbid-admin.sub_categories.create', compact('categories'));
     }
 
@@ -41,42 +43,44 @@ class SubCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'cat_id' => 'required|integer',
-            'post_date' => 'required|date_format:d-m-Y',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
             'order_by' => 'nullable|integer',
-            'status' => 'required|in:0,1',
+            'status' => 'required|in:1,2',
+            'description' => 'required|string',
+            'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
         ]);
 
-        $exists = DB::table('sub')
-            ->where('cat_id', $validated['cat_id'])
-            ->where('title', $validated['title'])
+        $exists = DB::table('sub_categories')
+            ->where('category_id', $validated['category_id'])
+            ->where('name', $validated['name'])
             ->exists();
 
         if ($exists) {
             return response()->json([
                 'message' => 'Sub category already exists for this category.',
-                'errors' => ['title' => ['Sub category already exists for this category.']],
+                'errors' => ['name' => ['Sub category already exists for this category.']],
             ], 422);
         }
 
         $data = [
-            'title' => $validated['title'],
-            'cat_id' => $validated['cat_id'],
-            'post_date' => $validated['post_date'],
+            'name' => $validated['name'],
+            'category_id' => $validated['category_id'],
             'order_by' => $validated['order_by'],
             'status' => $validated['status'],
-            'slug' => Str::slug($validated['title']),
+            'description' => $validated['description'],
+            'tags' => isset($validated['tags']) ? json_encode(array_map('trim', explode(',', $validated['tags']))) : json_encode([]),
+            'slug' => Str::slug($validated['name']),
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,
             'meta_description' => $request->meta_description,
         ];
 
-        $id = DB::table('sub')->insertGetId($data);
+        $id = DB::table('sub_categories')->insertGetId($data);
 
        // Handle image upload
         if ($request->hasFile('image')) {
@@ -93,7 +97,7 @@ class SubCategoryController extends Controller
             $file->move($uploadPath, $filename);
     
             // Update database with image path
-            DB::table('sub')->where('id', $id)->update([
+            DB::table('sub_categories')->where('id', $id)->update([
                 'image' => 'uploads/sub_category/' . $filename
             ]);
         }
@@ -109,11 +113,11 @@ class SubCategoryController extends Controller
      */
     public function edit($id)
     {
-        $sub = DB::table('sub')->where('id', $id)->first();
+        $sub = DB::table('sub_categories')->where('id', $id)->first();
         if (!$sub) {
             abort(404);
         }
-        $categories = DB::table('category')->where('status', 1)->orderBy('title')->get();
+        $categories = DB::table('categories')->where('status', '1')->orderBy('name')->get();
         return view('ursbid-admin.sub_categories.edit', compact('sub', 'categories'));
     }
 
@@ -123,42 +127,44 @@ class SubCategoryController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'cat_id' => 'required|integer',
-            'post_date' => 'required|date_format:d-m-Y',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
             'order_by' => 'nullable|integer',
-            'status' => 'required|in:0,1',
+            'status' => 'required|in:1,2',
+            'description' => 'required|string',
+            'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
         ]);
 
-        $exists = DB::table('sub')
-            ->where('cat_id', $validated['cat_id'])
-            ->where('title', $validated['title'])
+        $exists = DB::table('sub_categories')
+            ->where('category_id', $validated['category_id'])
+            ->where('name', $validated['name'])
             ->where('id', '!=', $id)
             ->exists();
 
         if ($exists) {
             return response()->json([
                 'message' => 'Sub category already exists for this category.',
-                'errors' => ['title' => ['Sub category already exists for this category.']],
+                'errors' => ['name' => ['Sub category already exists for this category.']],
             ], 422);
         }
 
-        $sub = DB::table('sub')->where('id', $id)->first();
+        $sub = DB::table('sub_categories')->where('id', $id)->first();
         if (!$sub) {
             return response()->json(['message' => 'Sub category not found.'], 404);
         }
 
         $data = [
-            'title' => $validated['title'],
-            'cat_id' => $validated['cat_id'],
-            'post_date' => $validated['post_date'],
+            'name' => $validated['name'],
+            'category_id' => $validated['category_id'],
             'order_by' => $validated['order_by'],
             'status' => $validated['status'],
-            'slug' => Str::slug($validated['title']),
+            'description' => $validated['description'],
+            'tags' => isset($validated['tags']) ? json_encode(array_map('trim', explode(',', $validated['tags']))) : json_encode([]),
+            'slug' => Str::slug($validated['name']),
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,
             'meta_description' => $request->meta_description,
@@ -188,7 +194,7 @@ class SubCategoryController extends Controller
         }
 
 
-        DB::table('sub')->where('id', $id)->update($data);
+        DB::table('sub_categories')->where('id', $id)->update($data);
 
         return response()->json([
             'status' => 'success',
@@ -201,7 +207,7 @@ class SubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $sub = DB::table('sub')->where('id', $id)->first();
+        $sub = DB::table('sub_categories')->where('id', $id)->first();
         if (!$sub) {
             return response()->json(['message' => 'Sub category not found.'], 404);
         }
@@ -213,7 +219,7 @@ class SubCategoryController extends Controller
             }
         }
 
-        DB::table('sub')->where('id', $id)->delete();
+        DB::table('sub_categories')->where('id', $id)->delete();
 
         return response()->json([
             'status' => 'success',
