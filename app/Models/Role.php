@@ -18,4 +18,9 @@ class Role extends Model
     {
         return $this->belongsToMany(UserAccount::class, 'role_user_account');
     }
+
+    public function admins()
+    {
+        return $this->belongsToMany(User::class, 'role_user');
+    }
 }

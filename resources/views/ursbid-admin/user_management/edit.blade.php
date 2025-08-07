@@ -45,6 +45,15 @@
                             <div class="invalid-feedback" data-field="user_type"></div>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Roles</label>
+                            <select name="roles[]" class="form-select" multiple>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}" {{ $user->roles->contains($role->id) ? 'selected' : '' }}>{{ $role->role_name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="invalid-feedback" data-field="roles"></div>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">Address</label>
                             <input type="text" name="address" class="form-control" value="{{ $user->address }}">
                             <div class="invalid-feedback" data-field="address"></div>
@@ -81,6 +90,13 @@ $(function(){
         if(!['1','2'].includes(userType)){
             $('[data-field="user_type"]').text('Invalid user type selected.');
             return;
+        }
+        const roles = $('select[name="roles[]"]').val() || [];
+        for(let r of roles){
+            if(!/^\d+$/.test(r)){
+                $('[data-field="roles"]').text('Invalid role selected.');
+                return;
+            }
         }
         const address = $('input[name="address"]').val();
         if(address.length > 255){

@@ -6,6 +6,7 @@
             <th>Email</th>
             <th>Address</th>
             <th>User Type</th>
+            <th>Roles</th>
             <th>Created Date</th>
             <th>Action</th>
         </tr>
@@ -18,6 +19,7 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->address }}</td>
                 <td>{{ $user->user_type == 1 ? 'Super Admin' : 'Admin' }}</td>
+                <td>{{ $user->roles->pluck('role_name')->implode(', ') }}</td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
                     <div class="d-flex gap-2">
@@ -28,7 +30,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="6" class="text-center">No records found.</td>
+                <td colspan="8" class="text-center">No records found.</td>
             </tr>
         @endforelse
     </tbody>
