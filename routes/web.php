@@ -284,12 +284,6 @@ Route::get('/admin/testimonial/edit/{any}', [App\Http\Controllers\TestimonialCon
 Route::post('/admin/testimonial/update/{any}', [App\Http\Controllers\TestimonialController::class, 'update'])->name('admin.testimonial.update');
 Route::get('/admin/testimonial/delete/{any}', [App\Http\Controllers\TestimonialController::class, 'delete'])->name('admin.testimonial.delete');
 
-
-
-
-
-
-
 Route::get('/get_sub_category', [App\Http\Controllers\ProductController::class, 'getSubCategories'])->name('get_sub_category');
 Route::get('/get_sup_category', [App\Http\Controllers\ProductController::class, 'getSupCategories'])->name('get_sup_category');
 
@@ -368,12 +362,9 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UsermanagementController;
 
 
-
 Route::get('super-admin', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('super-admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
-Route::post('super-admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
-
-
+Route::any('super-admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 Route::prefix('super-admin')->group(function () {
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
@@ -395,33 +386,27 @@ Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class
 Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('super-admin.sub-categories.update');
 Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('super-admin.sub-categories.destroy');
 
-Route::get('super-admin/units', [UnitController::class, 'index'])->name('super-admin.units.index');
-Route::get('super-admin/units/create', [UnitController::class, 'create'])->name('super-admin.units.create');
-Route::post('super-admin/units', [UnitController::class, 'store'])->name('super-admin.units.store');
-Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])->name('super-admin.units.edit');
-Route::put('super-admin/units/{id}', [UnitController::class, 'update'])->name('super-admin.units.update');
-Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])->name('super-admin.units.destroy');
-
-Route::get('super-admin/advertisements', [AdvertisementController::class, 'index'])->name('super-admin.advertisements.index');
-Route::get('super-admin/advertisements/create', [AdvertisementController::class, 'create'])->name('super-admin.advertisements.create');
-Route::post('super-admin/advertisements', [AdvertisementController::class, 'store'])->name('super-admin.advertisements.store');
-Route::get('super-admin/advertisements/{id}/edit', [AdvertisementController::class, 'edit'])->name('super-admin.advertisements.edit');
-Route::put('super-admin/advertisements/{id}', [AdvertisementController::class, 'update'])->name('super-admin.advertisements.update');
-Route::delete('super-admin/advertisements/{id}', [AdvertisementController::class, 'destroy'])->name('super-admin.advertisements.destroy');
-
-Route::get('super-admin/product-brands', [ProductBrandController::class, 'index'])->name('super-admin.product-brands.index');
-Route::get('super-admin/product-brands/create', [ProductBrandController::class, 'create'])->name('super-admin.product-brands.create');
-Route::post('super-admin/product-brands', [ProductBrandController::class, 'store'])->name('super-admin.product-brands.store');
-Route::get('super-admin/product-brands/{id}/edit', [ProductBrandController::class, 'edit'])->name('super-admin.product-brands.edit');
-Route::put('super-admin/product-brands/{id}', [ProductBrandController::class, 'update'])->name('super-admin.product-brands.update');
-Route::delete('super-admin/product-brands/{id}', [ProductBrandController::class, 'destroy'])->name('super-admin.product-brands.destroy');
-
 Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
 Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
 Route::post('super-admin/blogs', [AdminBlogController::class, 'store'])->name('super-admin.blogs.store');
 Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])->name('super-admin.blogs.edit');
 Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])->name('super-admin.blogs.update');
 Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])->name('super-admin.blogs.destroy');
+
+Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
+Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
+Route::post('super-admin/products', [AdminProductController::class, 'store'])->name('super-admin.products.store');
+Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'edit'])->name('super-admin.products.edit');
+Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])->name('super-admin.products.update');
+Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])->name('super-admin.products.destroy');
+Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])->name('super-admin.products.get-subcategories');
+
+Route::get('super-admin/units', [UnitController::class, 'index'])->name('super-admin.units.index');
+Route::get('super-admin/units/create', [UnitController::class, 'create'])->name('super-admin.units.create');
+Route::post('super-admin/units', [UnitController::class, 'store'])->name('super-admin.units.store');
+Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])->name('super-admin.units.edit');
+Route::put('super-admin/units/{id}', [UnitController::class, 'update'])->name('super-admin.units.update');
+Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])->name('super-admin.units.destroy');
 
 Route::get('super-admin/on-page-seo', [OnPageSeoController::class, 'index'])->name('super-admin.on-page-seo.index');
 Route::get('super-admin/on-page-seo/create', [OnPageSeoController::class, 'create'])->name('super-admin.on-page-seo.create');
@@ -444,13 +429,19 @@ Route::get('super-admin/testimonials/{id}/edit', [AdminTestimonialController::cl
 Route::post('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'update'])->name('super-admin.testimonials.update');
 Route::delete('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'destroy'])->name('super-admin.testimonials.destroy');
 
-Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
-Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
-Route::post('super-admin/products', [AdminProductController::class, 'store'])->name('super-admin.products.store');
-Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'edit'])->name('super-admin.products.edit');
-Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])->name('super-admin.products.update');
-Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])->name('super-admin.products.destroy');
-Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])->name('super-admin.products.get-subcategories');
+Route::get('super-admin/product-brands', [ProductBrandController::class, 'index'])->name('super-admin.product-brands.index');
+Route::get('super-admin/product-brands/create', [ProductBrandController::class, 'create'])->name('super-admin.product-brands.create');
+Route::post('super-admin/product-brands', [ProductBrandController::class, 'store'])->name('super-admin.product-brands.store');
+Route::get('super-admin/product-brands/{id}/edit', [ProductBrandController::class, 'edit'])->name('super-admin.product-brands.edit');
+Route::put('super-admin/product-brands/{id}', [ProductBrandController::class, 'update'])->name('super-admin.product-brands.update');
+Route::delete('super-admin/product-brands/{id}', [ProductBrandController::class, 'destroy'])->name('super-admin.product-brands.destroy');
+
+Route::get('super-admin/advertisements', [AdvertisementController::class, 'index'])->name('super-admin.advertisements.index');
+Route::get('super-admin/advertisements/create', [AdvertisementController::class, 'create'])->name('super-admin.advertisements.create');
+Route::post('super-admin/advertisements', [AdvertisementController::class, 'store'])->name('super-admin.advertisements.store');
+Route::get('super-admin/advertisements/{id}/edit', [AdvertisementController::class, 'edit'])->name('super-admin.advertisements.edit');
+Route::put('super-admin/advertisements/{id}', [AdvertisementController::class, 'update'])->name('super-admin.advertisements.update');
+Route::delete('super-admin/advertisements/{id}', [AdvertisementController::class, 'destroy'])->name('super-admin.advertisements.destroy');
 
 Route::prefix('super-admin/accounts')->name('super-admin.accounts.')->group(function () {
     Route::get('{type}', [UserAccountController::class, 'index'])->name('index');
@@ -483,6 +474,5 @@ Route::prefix('super-admin/user-management')->name('super-admin.user-management.
     Route::put('/{id}', [UsermanagementController::class, 'update'])->name('update');
     Route::delete('/{id}', [UsermanagementController::class, 'destroy'])->name('destroy');
 });
-
 
 
