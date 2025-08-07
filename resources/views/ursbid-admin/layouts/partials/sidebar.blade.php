@@ -142,21 +142,28 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('super-admin/roles*') ? 'active' : '' }}" href="{{ route('super-admin.roles.index') }}">
-                    <span class="nav-icon">
-                        <i class="ri-shield-user-line"></i>
-                    </span>
-                    <span class="nav-text">Roles</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('super-admin/user-management*') ? 'active' : '' }}" href="{{ route('super-admin.user-management.index') }}">
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/roles*') || request()->is('super-admin/user-management*') ? 'active' : '' }}"
+                   href="#sidebarUserRoles" data-bs-toggle="collapse" role="button"
+                   aria-expanded="{{ request()->is('super-admin/roles*') || request()->is('super-admin/user-management*') ? 'true' : 'false' }}"
+                   aria-controls="sidebarUserRoles">
                     <span class="nav-icon">
                         <i class="ri-user-settings-line"></i>
                     </span>
-                    <span class="nav-text">User Management</span>
+                    <span class="nav-text">Roles &amp; User Management</span>
                 </a>
+                <div class="collapse {{ request()->is('super-admin/roles*') || request()->is('super-admin/user-management*') ? 'show' : '' }}"
+                     id="sidebarUserRoles">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/roles*') ? 'active' : '' }}"
+                               href="{{ route('super-admin.roles.index') }}">Roles Management</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('super-admin/user-management*') ? 'active' : '' }}"
+                               href="{{ route('super-admin.user-management.index') }}">User Management</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <li class="nav-item">
