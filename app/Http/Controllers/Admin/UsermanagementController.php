@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ class UsermanagementController extends Controller
 
     public function list()
     {
-        $users = User::orderByDesc('id')->get();
+        $users = User::with('roles')->orderByDesc('id')->get();
         $html = view('ursbid-admin.user_management.partials.table', [
             'users' => $users,
         ])->render();
@@ -30,7 +31,9 @@ class UsermanagementController extends Controller
 
     public function create()
     {
-        return view('ursbid-admin.user_management.create');
+        return view('ursbid-admin.user_management.create', [
+            'roles' => Role::orderBy('role_name')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -40,6 +43,8 @@ class UsermanagementController extends Controller
             'email' => 'required|email|unique:users,email',
             'user_type' => 'required|in:1,2',
             'address' => 'nullable|string|max:255',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
             'created_at' => 'required|date_format:d-m-Y',
         ]);
 
@@ -55,7 +60,11 @@ class UsermanagementController extends Controller
         $validated['password'] = bcrypt('password');
         $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
 
-        User::create($validated);
+        $user = User::create($validated);
+
+        if ($request->filled('roles')) {
+            $user->roles()->sync($request->roles);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -65,9 +74,10 @@ class UsermanagementController extends Controller
 
     public function edit(int $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('roles')->findOrFail($id);
         return view('ursbid-admin.user_management.edit', [
             'user' => $user,
+            'roles' => Role::orderBy('role_name')->get(),
         ]);
     }
 
@@ -80,6 +90,8 @@ class UsermanagementController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'user_type' => 'required|in:1,2',
             'address' => 'nullable|string|max:255',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
             'created_at' => 'required|date_format:d-m-Y',
         ]);
 
@@ -93,6 +105,12 @@ class UsermanagementController extends Controller
         $validated = $validator->validated();
         $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
         $user->update($validated);
+
+        if ($request->filled('roles')) {
+            $user->roles()->sync($request->roles);
+        } else {
+            $user->roles()->detach();
+        }
 
         return response()->json([
             'status' => 'success',
