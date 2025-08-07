@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\SubCategory;
+use App\Models\Product;
+use App\Models\UserAccount;
+use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
@@ -14,14 +18,18 @@ class AdminDashboardController extends Controller
      */
     public function index()
     {
-       
         $stats = [
-            'monthlyEarnings' => 3548.09,
-            'earningsGrowth' => 67435.00,
-            'conversionRate' => 78.8,
-            'profitMargin' => 34.00
+            'categories'   => Category::count(),
+            'subCategories'=> SubCategory::count(),
+            'products'     => Product::count(),
+            'vendors'      => UserAccount::where('user_type', 'vendor')->count(),
+            'buyers'       => UserAccount::where('user_type', 'buyer')->count(),
+            'contractors'  => UserAccount::where('user_type', 'contractor')->count(),
+            'clients'      => UserAccount::where('user_type', 'client')->count(),
         ];
 
-        return view('ursbid-admin.dashboard', compact('stats'));
+        $currentDate = Carbon::now()->format('d-m-Y');
+
+        return view('ursbid-admin.dashboard', compact('stats', 'currentDate'));
     }
 }
