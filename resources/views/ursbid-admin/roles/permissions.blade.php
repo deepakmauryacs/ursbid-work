@@ -36,20 +36,31 @@
                             </thead>
                             <tbody>
                                 @foreach($modules as $module)
-                                    <tr>
-                                        <td><strong>{{ $module->name }}</strong></td>
-                                        <td colspan="4"></td>
-                                    </tr>
-                                    @foreach($module->children as $child)
-                                        @php $perm = $permissions[$child->id] ?? null; @endphp
+                                    @if($module->children->isEmpty())
+                                        @php $perm = $permissions[$module->id] ?? null; @endphp
                                         <tr>
-                                            <td class="ps-4">{{ $child->name }}</td>
-                                            <td><input type="checkbox" name="permissions[{{ $child->id }}][can_add]" {{ $perm && $perm->can_add ? 'checked' : '' }}></td>
-                                            <td><input type="checkbox" name="permissions[{{ $child->id }}][can_edit]" {{ $perm && $perm->can_edit ? 'checked' : '' }}></td>
-                                            <td><input type="checkbox" name="permissions[{{ $child->id }}][can_view]" {{ $perm && $perm->can_view ? 'checked' : '' }}></td>
-                                            <td><input type="checkbox" name="permissions[{{ $child->id }}][can_delete]" {{ $perm && $perm->can_delete ? 'checked' : '' }}></td>
+                                            <td><strong>{{ $module->name }}</strong></td>
+                                            <td><input type="checkbox" value="1" name="permissions[{{ $module->id }}][can_add]" {{ $perm && $perm->can_add ? 'checked' : '' }}></td>
+                                            <td><input type="checkbox" value="1" name="permissions[{{ $module->id }}][can_edit]" {{ $perm && $perm->can_edit ? 'checked' : '' }}></td>
+                                            <td><input type="checkbox" value="1" name="permissions[{{ $module->id }}][can_view]" {{ $perm && $perm->can_view ? 'checked' : '' }}></td>
+                                            <td><input type="checkbox" value="1" name="permissions[{{ $module->id }}][can_delete]" {{ $perm && $perm->can_delete ? 'checked' : '' }}></td>
                                         </tr>
-                                    @endforeach
+                                    @else
+                                        <tr>
+                                            <td><strong>{{ $module->name }}</strong></td>
+                                            <td colspan="4"></td>
+                                        </tr>
+                                        @foreach($module->children as $child)
+                                            @php $perm = $permissions[$child->id] ?? null; @endphp
+                                            <tr>
+                                                <td class="ps-4">{{ $child->name }}</td>
+                                                <td><input type="checkbox" value="1" name="permissions[{{ $child->id }}][can_add]" {{ $perm && $perm->can_add ? 'checked' : '' }}></td>
+                                                <td><input type="checkbox" value="1" name="permissions[{{ $child->id }}][can_edit]" {{ $perm && $perm->can_edit ? 'checked' : '' }}></td>
+                                                <td><input type="checkbox" value="1" name="permissions[{{ $child->id }}][can_view]" {{ $perm && $perm->can_view ? 'checked' : '' }}></td>
+                                                <td><input type="checkbox" value="1" name="permissions[{{ $child->id }}][can_delete]" {{ $perm && $perm->can_delete ? 'checked' : '' }}></td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
