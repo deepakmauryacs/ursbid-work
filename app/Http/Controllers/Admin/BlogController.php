@@ -18,7 +18,7 @@ class BlogController extends Controller
         $perPage = $request->get('per_page', 10);
 
         $blogs = DB::table('blogs')
-            ->orderBy('order_by')
+            ->orderByDesc('id')
             ->paginate($perPage);
 
         return view('ursbid-admin.blogs.list', compact('blogs', 'perPage'));
@@ -39,26 +39,25 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255|unique:blogs,title',
-            'post_date' => 'required|date_format:d-m-Y',
             'description' => 'required|string',
-            'order_by' => 'nullable|integer',
             'status' => 'required|in:0,1',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'custom_header_code' => 'nullable|string',
         ]);
 
         $data = [
             'title' => $validated['title'],
-            'post_date' => $validated['post_date'],
+            'post_date' => now()->format('d-m-Y'),
             'description' => $validated['description'],
-            'order_by' => $validated['order_by'],
             'status' => $validated['status'],
             'slug' => Str::slug($validated['title']),
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,
             'meta_description' => $request->meta_description,
+            'custom_header_code' => $request->custom_header_code,
         ];
 
         $id = DB::table('blogs')->insertGetId($data);
@@ -101,14 +100,13 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255|unique:blogs,title,' . $id,
-            'post_date' => 'required|date_format:d-m-Y',
             'description' => 'required|string',
-            'order_by' => 'nullable|integer',
             'status' => 'required|in:0,1',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
+            'custom_header_code' => 'nullable|string',
         ]);
 
         $blog = DB::table('blogs')->where('id', $id)->first();
@@ -118,14 +116,13 @@ class BlogController extends Controller
 
         $data = [
             'title' => $validated['title'],
-            'post_date' => $validated['post_date'],
             'description' => $validated['description'],
-            'order_by' => $validated['order_by'],
             'status' => $validated['status'],
             'slug' => Str::slug($validated['title']),
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,
             'meta_description' => $request->meta_description,
+            'custom_header_code' => $request->custom_header_code,
         ];
 
         if ($request->hasFile('image')) {

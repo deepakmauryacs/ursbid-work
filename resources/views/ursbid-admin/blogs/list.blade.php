@@ -107,7 +107,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ $blog->post_date ? \Carbon\Carbon::parse($blog->post_date)->format('d-m-Y') : '' }}</td>
+                                <td>{{ $blog->post_date ?? '' }}</td>
                                 <td>
                                     @if($blog->status == 1)
                                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>

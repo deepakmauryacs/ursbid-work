@@ -13,11 +13,11 @@ class Blog extends Model
         'description',
         'image',
         'slug',
-        'order_by',
         'status',
         'meta_title',
         'meta_keywords',
         'meta_description',
+        'custom_header_code',
     ];
     public $timestamps = false;
 }
