@@ -364,6 +364,7 @@ use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\UserAccountController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UsermanagementController;
 
 
@@ -469,6 +470,8 @@ Route::prefix('super-admin/roles')->name('super-admin.roles.')->group(function (
     Route::get('/{id}/edit', [RoleController::class, 'edit'])->name('edit');
     Route::put('/{id}', [RoleController::class, 'update'])->name('update');
     Route::delete('/{id}', [RoleController::class, 'destroy'])->name('destroy');
+    Route::get('/{id}/permissions', [RolePermissionController::class, 'edit'])->name('permissions.edit');
+    Route::post('/{id}/permissions', [RolePermissionController::class, 'update'])->name('permissions.update');
 });
 
 Route::prefix('super-admin/user-management')->name('super-admin.user-management.')->group(function () {

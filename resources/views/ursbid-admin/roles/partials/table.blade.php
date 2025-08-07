@@ -17,6 +17,7 @@
             <td>{{ $role->created_at->format('d-m-Y') }}</td>
             <td>
                 <div class="d-flex gap-2">
+                    <a href="{{ route('super-admin.roles.permissions.edit', $role->id) }}" class="btn btn-soft-secondary btn-sm" title="Permissions"><i class="ri-lock-line"></i></a>
                     <a href="{{ route('super-admin.roles.edit', $role->id) }}" class="btn btn-soft-primary btn-sm">Edit</a>
                     <button type="button" class="btn btn-soft-danger btn-sm deleteBtn" data-id="{{ $role->id }}">Delete</button>
                 </div>
