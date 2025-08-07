@@ -129,10 +129,13 @@
                      </a>
                      <div class="dropdown-menu dropdown-menu-end">
                           <!-- item-->
-                          <h6 class="dropdown-header">Welcome Gaston!</h6>
+                          <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
                   
-                          <a class="dropdown-item" href="pages-calendar.html">
-                               <iconify-icon icon="solar:calendar-broken" class="align-middle me-2 fs-18"></iconify-icon><span class="align-middle">Profile </span>
+                          <a class="dropdown-item" href="{{ route('super-admin.profile.edit') }}">
+                               <iconify-icon icon="solar:user-circle-line-duotone" class="align-middle me-2 fs-18"></iconify-icon><span class="align-middle">Edit Profile</span>
+                          </a>
+                          <a class="dropdown-item" href="{{ route('super-admin.password.edit') }}">
+                               <iconify-icon icon="solar:lock-password-outline" class="align-middle me-2 fs-18"></iconify-icon><span class="align-middle">Change Password</span>
                           </a>
 
                           <div class="dropdown-divider my-1"></div>
