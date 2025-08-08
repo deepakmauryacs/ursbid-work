@@ -412,6 +412,12 @@
 
                         
                         
+                        <li>
+                            <a href="{{ url('admin/accounts') }}" class="">
+                                <span data-feather="users" class="nav-icon"></span>
+                                <span class="menu-text">Account Module</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
