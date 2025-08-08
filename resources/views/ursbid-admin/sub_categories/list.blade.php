@@ -73,7 +73,9 @@
                     <div>
                         <h4 class="card-title mb-0">All Sub Categories List</h4>
                     </div>
+                    @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
                     <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#subCategoryModal">Add Sub Category</button>
+                    @endif
                 </div>
 
                 <div class="table-responsive">
@@ -113,12 +115,16 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
+                                        @if(auth()->user()->hasModulePermission('sub-categories','can_edit'))
                                         <a href="{{ route('super-admin.sub-categories.edit', $sub->id) }}" class="btn btn-soft-primary btn-sm">
                                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </a>
+                                        @endif
+                                        @if(auth()->user()->hasModulePermission('sub-categories','can_delete'))
                                         <button type="button" data-id="{{ $sub->id }}" data-url="{{ route('super-admin.sub-categories.destroy', $sub->id) }}" class="btn btn-soft-danger btn-sm deleteBtn">
                                             <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -137,6 +143,7 @@
     </div>
 </div>
 
+@if(auth()->user()->hasModulePermission('sub-categories','can_add'))
 <!-- Modal -->
 <div class="modal fade" id="subCategoryModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -209,6 +216,7 @@
     </div>
   </div>
 </div>
+@endif
 @endsection
 
 @push('scripts')
@@ -233,6 +241,7 @@ $(function(){
         });
     });
 
+    @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
     $('#subCategoryForm').validate({
         rules:{
             name:{ required:true },
@@ -266,6 +275,7 @@ $(function(){
             return false;
         }
     });
+    @endif
 });
 </script>
 @endpush

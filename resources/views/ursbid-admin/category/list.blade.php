@@ -25,7 +25,9 @@
                     <div>
                         <h4 class="card-title mb-0">All Categories List</h4>
                     </div>
+                     @if(auth()->user()->hasModulePermission('categories','can_add'))
                      <a href="{{ route('super-admin.categories.create') }}" class="btn  btn-sm btn-primary">Add Category</a>
+                     @endif
                 </div>
 
                 <div class="table-responsive">
@@ -63,12 +65,16 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
+                                        @if(auth()->user()->hasModulePermission('categories','can_edit'))
                                         <a href="{{ route('super-admin.categories.edit', $category->id) }}" class="btn btn-soft-primary btn-sm">
                                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </a>
+                                        @endif
+                                        @if(auth()->user()->hasModulePermission('categories','can_delete'))
                                         <button type="button" data-id="{{ $category->id }}" class="btn btn-soft-danger btn-sm deleteBtn">
                                             <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

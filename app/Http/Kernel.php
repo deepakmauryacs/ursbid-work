@@ -77,5 +77,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // Add this line:
         'SuperAdmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+        'module.permission' => \App\Http\Middleware\ModulePermissionMiddleware::class,
     ];
 }
