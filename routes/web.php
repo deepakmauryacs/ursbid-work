@@ -417,93 +417,237 @@ Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 
     ->name('super-admin.sub-categories.destroy')
     ->middleware('module.permission:sub-categories,can_delete');
 
-Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
-Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
-Route::post('super-admin/blogs', [AdminBlogController::class, 'store'])->name('super-admin.blogs.store');
-Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])->name('super-admin.blogs.edit');
-Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])->name('super-admin.blogs.update');
-Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])->name('super-admin.blogs.destroy');
+Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])
+    ->name('super-admin.blogs.index')
+    ->middleware('module.permission:blogs,can_view');
+Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])
+    ->name('super-admin.blogs.create')
+    ->middleware('module.permission:blogs,can_add');
+Route::post('super-admin/blogs', [AdminBlogController::class, 'store'])
+    ->name('super-admin.blogs.store')
+    ->middleware('module.permission:blogs,can_add');
+Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])
+    ->name('super-admin.blogs.edit')
+    ->middleware('module.permission:blogs,can_edit');
+Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])
+    ->name('super-admin.blogs.update')
+    ->middleware('module.permission:blogs,can_edit');
+Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])
+    ->name('super-admin.blogs.destroy')
+    ->middleware('module.permission:blogs,can_delete');
 
-Route::get('super-admin/products', [AdminProductController::class, 'index'])->name('super-admin.products.index');
-Route::get('super-admin/products/create', [AdminProductController::class, 'create'])->name('super-admin.products.create');
-Route::post('super-admin/products', [AdminProductController::class, 'store'])->name('super-admin.products.store');
-Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'edit'])->name('super-admin.products.edit');
-Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])->name('super-admin.products.update');
-Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])->name('super-admin.products.destroy');
-Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])->name('super-admin.products.get-subcategories');
+Route::get('super-admin/products', [AdminProductController::class, 'index'])
+    ->name('super-admin.products.index')
+    ->middleware('module.permission:products,can_view');
+Route::get('super-admin/products/create', [AdminProductController::class, 'create'])
+    ->name('super-admin.products.create')
+    ->middleware('module.permission:products,can_add');
+Route::post('super-admin/products', [AdminProductController::class, 'store'])
+    ->name('super-admin.products.store')
+    ->middleware('module.permission:products,can_add');
+Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'edit'])
+    ->name('super-admin.products.edit')
+    ->middleware('module.permission:products,can_edit');
+Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])
+    ->name('super-admin.products.update')
+    ->middleware('module.permission:products,can_edit');
+Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])
+    ->name('super-admin.products.destroy')
+    ->middleware('module.permission:products,can_delete');
+Route::get('super-admin/get-subcategories', [AdminProductController::class, 'getSubCategories'])
+    ->name('super-admin.products.get-subcategories')
+    ->middleware('module.permission:products,can_view');
 
-Route::get('super-admin/units', [UnitController::class, 'index'])->name('super-admin.units.index');
-Route::get('super-admin/units/create', [UnitController::class, 'create'])->name('super-admin.units.create');
-Route::post('super-admin/units', [UnitController::class, 'store'])->name('super-admin.units.store');
-Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])->name('super-admin.units.edit');
-Route::put('super-admin/units/{id}', [UnitController::class, 'update'])->name('super-admin.units.update');
-Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])->name('super-admin.units.destroy');
+Route::get('super-admin/units', [UnitController::class, 'index'])
+    ->name('super-admin.units.index')
+    ->middleware('module.permission:units,can_view');
+Route::get('super-admin/units/create', [UnitController::class, 'create'])
+    ->name('super-admin.units.create')
+    ->middleware('module.permission:units,can_add');
+Route::post('super-admin/units', [UnitController::class, 'store'])
+    ->name('super-admin.units.store')
+    ->middleware('module.permission:units,can_add');
+Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])
+    ->name('super-admin.units.edit')
+    ->middleware('module.permission:units,can_edit');
+Route::put('super-admin/units/{id}', [UnitController::class, 'update'])
+    ->name('super-admin.units.update')
+    ->middleware('module.permission:units,can_edit');
+Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])
+    ->name('super-admin.units.destroy')
+    ->middleware('module.permission:units,can_delete');
 
-Route::get('super-admin/on-page-seo', [OnPageSeoController::class, 'index'])->name('super-admin.on-page-seo.index');
-Route::get('super-admin/on-page-seo/create', [OnPageSeoController::class, 'create'])->name('super-admin.on-page-seo.create');
-Route::post('super-admin/on-page-seo', [OnPageSeoController::class, 'store'])->name('super-admin.on-page-seo.store');
-Route::get('super-admin/on-page-seo/{id}/edit', [OnPageSeoController::class, 'edit'])->name('super-admin.on-page-seo.edit');
-Route::post('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'update'])->name('super-admin.on-page-seo.update');
-Route::delete('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'destroy'])->name('super-admin.on-page-seo.destroy');
+Route::get('super-admin/on-page-seo', [OnPageSeoController::class, 'index'])
+    ->name('super-admin.on-page-seo.index')
+    ->middleware('module.permission:on-page-seo,can_view');
+Route::get('super-admin/on-page-seo/create', [OnPageSeoController::class, 'create'])
+    ->name('super-admin.on-page-seo.create')
+    ->middleware('module.permission:on-page-seo,can_add');
+Route::post('super-admin/on-page-seo', [OnPageSeoController::class, 'store'])
+    ->name('super-admin.on-page-seo.store')
+    ->middleware('module.permission:on-page-seo,can_add');
+Route::get('super-admin/on-page-seo/{id}/edit', [OnPageSeoController::class, 'edit'])
+    ->name('super-admin.on-page-seo.edit')
+    ->middleware('module.permission:on-page-seo,can_edit');
+Route::post('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'update'])
+    ->name('super-admin.on-page-seo.update')
+    ->middleware('module.permission:on-page-seo,can_edit');
+Route::delete('super-admin/on-page-seo/{id}', [OnPageSeoController::class, 'destroy'])
+    ->name('super-admin.on-page-seo.destroy')
+    ->middleware('module.permission:on-page-seo,can_delete');
 
-Route::get('super-admin/youtube-links', [YoutubeLinkController::class, 'index'])->name('super-admin.youtube-links.index');
-Route::get('super-admin/youtube-links/create', [YoutubeLinkController::class, 'create'])->name('super-admin.youtube-links.create');
-Route::post('super-admin/youtube-links', [YoutubeLinkController::class, 'store'])->name('super-admin.youtube-links.store');
-Route::get('super-admin/youtube-links/{id}/edit', [YoutubeLinkController::class, 'edit'])->name('super-admin.youtube-links.edit');
-Route::post('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'update'])->name('super-admin.youtube-links.update');
-Route::delete('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'destroy'])->name('super-admin.youtube-links.destroy');
+Route::get('super-admin/youtube-links', [YoutubeLinkController::class, 'index'])
+    ->name('super-admin.youtube-links.index')
+    ->middleware('module.permission:youtube-links,can_view');
+Route::get('super-admin/youtube-links/create', [YoutubeLinkController::class, 'create'])
+    ->name('super-admin.youtube-links.create')
+    ->middleware('module.permission:youtube-links,can_add');
+Route::post('super-admin/youtube-links', [YoutubeLinkController::class, 'store'])
+    ->name('super-admin.youtube-links.store')
+    ->middleware('module.permission:youtube-links,can_add');
+Route::get('super-admin/youtube-links/{id}/edit', [YoutubeLinkController::class, 'edit'])
+    ->name('super-admin.youtube-links.edit')
+    ->middleware('module.permission:youtube-links,can_edit');
+Route::post('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'update'])
+    ->name('super-admin.youtube-links.update')
+    ->middleware('module.permission:youtube-links,can_edit');
+Route::delete('super-admin/youtube-links/{id}', [YoutubeLinkController::class, 'destroy'])
+    ->name('super-admin.youtube-links.destroy')
+    ->middleware('module.permission:youtube-links,can_delete');
 
-Route::get('super-admin/testimonials', [AdminTestimonialController::class, 'index'])->name('super-admin.testimonials.index');
-Route::get('super-admin/testimonials/create', [AdminTestimonialController::class, 'create'])->name('super-admin.testimonials.create');
-Route::post('super-admin/testimonials', [AdminTestimonialController::class, 'store'])->name('super-admin.testimonials.store');
-Route::get('super-admin/testimonials/{id}/edit', [AdminTestimonialController::class, 'edit'])->name('super-admin.testimonials.edit');
-Route::post('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'update'])->name('super-admin.testimonials.update');
-Route::delete('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'destroy'])->name('super-admin.testimonials.destroy');
+Route::get('super-admin/testimonials', [AdminTestimonialController::class, 'index'])
+    ->name('super-admin.testimonials.index')
+    ->middleware('module.permission:testimonials,can_view');
+Route::get('super-admin/testimonials/create', [AdminTestimonialController::class, 'create'])
+    ->name('super-admin.testimonials.create')
+    ->middleware('module.permission:testimonials,can_add');
+Route::post('super-admin/testimonials', [AdminTestimonialController::class, 'store'])
+    ->name('super-admin.testimonials.store')
+    ->middleware('module.permission:testimonials,can_add');
+Route::get('super-admin/testimonials/{id}/edit', [AdminTestimonialController::class, 'edit'])
+    ->name('super-admin.testimonials.edit')
+    ->middleware('module.permission:testimonials,can_edit');
+Route::post('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'update'])
+    ->name('super-admin.testimonials.update')
+    ->middleware('module.permission:testimonials,can_edit');
+Route::delete('super-admin/testimonials/{id}', [AdminTestimonialController::class, 'destroy'])
+    ->name('super-admin.testimonials.destroy')
+    ->middleware('module.permission:testimonials,can_delete');
 
-Route::get('super-admin/product-brands', [ProductBrandController::class, 'index'])->name('super-admin.product-brands.index');
-Route::get('super-admin/product-brands/create', [ProductBrandController::class, 'create'])->name('super-admin.product-brands.create');
-Route::post('super-admin/product-brands', [ProductBrandController::class, 'store'])->name('super-admin.product-brands.store');
-Route::get('super-admin/product-brands/{id}/edit', [ProductBrandController::class, 'edit'])->name('super-admin.product-brands.edit');
-Route::put('super-admin/product-brands/{id}', [ProductBrandController::class, 'update'])->name('super-admin.product-brands.update');
-Route::delete('super-admin/product-brands/{id}', [ProductBrandController::class, 'destroy'])->name('super-admin.product-brands.destroy');
+Route::get('super-admin/product-brands', [ProductBrandController::class, 'index'])
+    ->name('super-admin.product-brands.index')
+    ->middleware('module.permission:product-brands,can_view');
+Route::get('super-admin/product-brands/create', [ProductBrandController::class, 'create'])
+    ->name('super-admin.product-brands.create')
+    ->middleware('module.permission:product-brands,can_add');
+Route::post('super-admin/product-brands', [ProductBrandController::class, 'store'])
+    ->name('super-admin.product-brands.store')
+    ->middleware('module.permission:product-brands,can_add');
+Route::get('super-admin/product-brands/{id}/edit', [ProductBrandController::class, 'edit'])
+    ->name('super-admin.product-brands.edit')
+    ->middleware('module.permission:product-brands,can_edit');
+Route::put('super-admin/product-brands/{id}', [ProductBrandController::class, 'update'])
+    ->name('super-admin.product-brands.update')
+    ->middleware('module.permission:product-brands,can_edit');
+Route::delete('super-admin/product-brands/{id}', [ProductBrandController::class, 'destroy'])
+    ->name('super-admin.product-brands.destroy')
+    ->middleware('module.permission:product-brands,can_delete');
 
-Route::get('super-admin/advertisements', [AdvertisementController::class, 'index'])->name('super-admin.advertisements.index');
-Route::get('super-admin/advertisements/create', [AdvertisementController::class, 'create'])->name('super-admin.advertisements.create');
-Route::post('super-admin/advertisements', [AdvertisementController::class, 'store'])->name('super-admin.advertisements.store');
-Route::get('super-admin/advertisements/{id}/edit', [AdvertisementController::class, 'edit'])->name('super-admin.advertisements.edit');
-Route::put('super-admin/advertisements/{id}', [AdvertisementController::class, 'update'])->name('super-admin.advertisements.update');
-Route::delete('super-admin/advertisements/{id}', [AdvertisementController::class, 'destroy'])->name('super-admin.advertisements.destroy');
+Route::get('super-admin/advertisements', [AdvertisementController::class, 'index'])
+    ->name('super-admin.advertisements.index')
+    ->middleware('module.permission:advertisements,can_view');
+Route::get('super-admin/advertisements/create', [AdvertisementController::class, 'create'])
+    ->name('super-admin.advertisements.create')
+    ->middleware('module.permission:advertisements,can_add');
+Route::post('super-admin/advertisements', [AdvertisementController::class, 'store'])
+    ->name('super-admin.advertisements.store')
+    ->middleware('module.permission:advertisements,can_add');
+Route::get('super-admin/advertisements/{id}/edit', [AdvertisementController::class, 'edit'])
+    ->name('super-admin.advertisements.edit')
+    ->middleware('module.permission:advertisements,can_edit');
+Route::put('super-admin/advertisements/{id}', [AdvertisementController::class, 'update'])
+    ->name('super-admin.advertisements.update')
+    ->middleware('module.permission:advertisements,can_edit');
+Route::delete('super-admin/advertisements/{id}', [AdvertisementController::class, 'destroy'])
+    ->name('super-admin.advertisements.destroy')
+    ->middleware('module.permission:advertisements,can_delete');
 
 Route::prefix('super-admin/accounts')->name('super-admin.accounts.')->group(function () {
-    Route::get('{type}', [UserAccountController::class, 'index'])->name('index');
-    Route::get('{type}/list', [UserAccountController::class, 'list'])->name('list');
-    Route::get('{type}/create', [UserAccountController::class, 'create'])->name('create');
-    Route::post('{type}', [UserAccountController::class, 'store'])->name('store');
-    Route::get('{type}/{id}/edit', [UserAccountController::class, 'edit'])->name('edit');
-    Route::get('{type}/{id}', [UserAccountController::class, 'show'])->name('show');
-    Route::put('{type}/{id}', [UserAccountController::class, 'update'])->name('update');
+    Route::get('{type}', [UserAccountController::class, 'index'])
+        ->name('index')
+        ->middleware('module.permission:accounts,can_view');
+    Route::get('{type}/list', [UserAccountController::class, 'list'])
+        ->name('list')
+        ->middleware('module.permission:accounts,can_view');
+    Route::get('{type}/create', [UserAccountController::class, 'create'])
+        ->name('create')
+        ->middleware('module.permission:accounts,can_add');
+    Route::post('{type}', [UserAccountController::class, 'store'])
+        ->name('store')
+        ->middleware('module.permission:accounts,can_add');
+    Route::get('{type}/{id}/edit', [UserAccountController::class, 'edit'])
+        ->name('edit')
+        ->middleware('module.permission:accounts,can_edit');
+    Route::get('{type}/{id}', [UserAccountController::class, 'show'])
+        ->name('show')
+        ->middleware('module.permission:accounts,can_view');
+    Route::put('{type}/{id}', [UserAccountController::class, 'update'])
+        ->name('update')
+        ->middleware('module.permission:accounts,can_edit');
 });
 
 Route::prefix('super-admin/roles')->name('super-admin.roles.')->group(function () {
-    Route::get('/', [RoleController::class, 'index'])->name('index');
-    Route::get('/list', [RoleController::class, 'list'])->name('list');
-    Route::get('/create', [RoleController::class, 'create'])->name('create');
-    Route::post('/', [RoleController::class, 'store'])->name('store');
-    Route::get('/{id}/edit', [RoleController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [RoleController::class, 'update'])->name('update');
-    Route::delete('/{id}', [RoleController::class, 'destroy'])->name('destroy');
-    Route::get('/{id}/permissions', [RolePermissionController::class, 'edit'])->name('permissions.edit');
-    Route::post('/{id}/permissions', [RolePermissionController::class, 'update'])->name('permissions.update');
+    Route::get('/', [RoleController::class, 'index'])
+        ->name('index')
+        ->middleware('module.permission:roles,can_view');
+    Route::get('/list', [RoleController::class, 'list'])
+        ->name('list')
+        ->middleware('module.permission:roles,can_view');
+    Route::get('/create', [RoleController::class, 'create'])
+        ->name('create')
+        ->middleware('module.permission:roles,can_add');
+    Route::post('/', [RoleController::class, 'store'])
+        ->name('store')
+        ->middleware('module.permission:roles,can_add');
+    Route::get('/{id}/edit', [RoleController::class, 'edit'])
+        ->name('edit')
+        ->middleware('module.permission:roles,can_edit');
+    Route::put('/{id}', [RoleController::class, 'update'])
+        ->name('update')
+        ->middleware('module.permission:roles,can_edit');
+    Route::delete('/{id}', [RoleController::class, 'destroy'])
+        ->name('destroy')
+        ->middleware('module.permission:roles,can_delete');
+    Route::get('/{id}/permissions', [RolePermissionController::class, 'edit'])
+        ->name('permissions.edit')
+        ->middleware('module.permission:roles,can_edit');
+    Route::post('/{id}/permissions', [RolePermissionController::class, 'update'])
+        ->name('permissions.update')
+        ->middleware('module.permission:roles,can_edit');
 });
 
 Route::prefix('super-admin/user-management')->name('super-admin.user-management.')->group(function () {
-    Route::get('/', [UsermanagementController::class, 'index'])->name('index');
-    Route::get('/list', [UsermanagementController::class, 'list'])->name('list');
-    Route::get('/create', [UsermanagementController::class, 'create'])->name('create');
-    Route::post('/', [UsermanagementController::class, 'store'])->name('store');
-    Route::get('/{id}/edit', [UsermanagementController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [UsermanagementController::class, 'update'])->name('update');
-    Route::delete('/{id}', [UsermanagementController::class, 'destroy'])->name('destroy');
+    Route::get('/', [UsermanagementController::class, 'index'])
+        ->name('index')
+        ->middleware('module.permission:user-management,can_view');
+    Route::get('/list', [UsermanagementController::class, 'list'])
+        ->name('list')
+        ->middleware('module.permission:user-management,can_view');
+    Route::get('/create', [UsermanagementController::class, 'create'])
+        ->name('create')
+        ->middleware('module.permission:user-management,can_add');
+    Route::post('/', [UsermanagementController::class, 'store'])
+        ->name('store')
+        ->middleware('module.permission:user-management,can_add');
+    Route::get('/{id}/edit', [UsermanagementController::class, 'edit'])
+        ->name('edit')
+        ->middleware('module.permission:user-management,can_edit');
+    Route::put('/{id}', [UsermanagementController::class, 'update'])
+        ->name('update')
+        ->middleware('module.permission:user-management,can_edit');
+    Route::delete('/{id}', [UsermanagementController::class, 'destroy'])
+        ->name('destroy')
+        ->middleware('module.permission:user-management,can_delete');
 });
 
 
