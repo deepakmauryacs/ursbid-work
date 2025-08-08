@@ -378,20 +378,44 @@ Route::prefix('super-admin')->group(function () {
     Route::get('web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
     Route::post('web-settings/save', [WebSettingsController::class, 'save'])->name('super-admin.web-settings.save');
 
-    Route::get('categories', [AdminCategoryController::class, 'index'])->name('super-admin.categories.index');
-    Route::get('categories/create', [AdminCategoryController::class, 'create'])->name('super-admin.categories.create');
-    Route::post('categories', [AdminCategoryController::class, 'store'])->name('super-admin.categories.store');
-    Route::get('categories/{id}/edit', [AdminCategoryController::class, 'edit'])->name('super-admin.categories.edit');
-    Route::put('categories/{id}', [AdminCategoryController::class, 'update'])->name('super-admin.categories.update');
-    Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy'])->name('super-admin.categories.destroy');
+    Route::get('categories', [AdminCategoryController::class, 'index'])
+        ->name('super-admin.categories.index')
+        ->middleware('module.permission:categories,can_view');
+    Route::get('categories/create', [AdminCategoryController::class, 'create'])
+        ->name('super-admin.categories.create')
+        ->middleware('module.permission:categories,can_add');
+    Route::post('categories', [AdminCategoryController::class, 'store'])
+        ->name('super-admin.categories.store')
+        ->middleware('module.permission:categories,can_add');
+    Route::get('categories/{id}/edit', [AdminCategoryController::class, 'edit'])
+        ->name('super-admin.categories.edit')
+        ->middleware('module.permission:categories,can_edit');
+    Route::put('categories/{id}', [AdminCategoryController::class, 'update'])
+        ->name('super-admin.categories.update')
+        ->middleware('module.permission:categories,can_edit');
+    Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy'])
+        ->name('super-admin.categories.destroy')
+        ->middleware('module.permission:categories,can_delete');
 });
 
-Route::get('super-admin/sub-categories', [SubCategoryController::class, 'index'])->name('super-admin.sub-categories.index');
-Route::get('super-admin/sub-categories/create', [SubCategoryController::class, 'create'])->name('super-admin.sub-categories.create');
-Route::post('super-admin/sub-categories', [SubCategoryController::class, 'store'])->name('super-admin.sub-categories.store');
-Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('super-admin.sub-categories.edit');
-Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('super-admin.sub-categories.update');
-Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('super-admin.sub-categories.destroy');
+Route::get('super-admin/sub-categories', [SubCategoryController::class, 'index'])
+    ->name('super-admin.sub-categories.index')
+    ->middleware('module.permission:sub-categories,can_view');
+Route::get('super-admin/sub-categories/create', [SubCategoryController::class, 'create'])
+    ->name('super-admin.sub-categories.create')
+    ->middleware('module.permission:sub-categories,can_add');
+Route::post('super-admin/sub-categories', [SubCategoryController::class, 'store'])
+    ->name('super-admin.sub-categories.store')
+    ->middleware('module.permission:sub-categories,can_add');
+Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])
+    ->name('super-admin.sub-categories.edit')
+    ->middleware('module.permission:sub-categories,can_edit');
+Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])
+    ->name('super-admin.sub-categories.update')
+    ->middleware('module.permission:sub-categories,can_edit');
+Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])
+    ->name('super-admin.sub-categories.destroy')
+    ->middleware('module.permission:sub-categories,can_delete');
 
 Route::get('super-admin/blogs', [AdminBlogController::class, 'index'])->name('super-admin.blogs.index');
 Route::get('super-admin/blogs/create', [AdminBlogController::class, 'create'])->name('super-admin.blogs.create');
