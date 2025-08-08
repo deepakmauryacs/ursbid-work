@@ -11,7 +11,7 @@ class ModulePermissionMiddleware
     {
         $user = Auth::user();
         if (!$user || !$user->hasModulePermission($moduleSlug, $permission)) {
-            abort(403);
+            abort(403, 'You have no permission to access this page.');
         }
         return $next($request);
     }
