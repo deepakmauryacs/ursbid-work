@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Carbon\Carbon;
 
@@ -21,20 +22,32 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'address' => 'nullable|string',
             'created_at' => 'required|date_format:d-m-Y',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->address = $request->address;
-        $user->created_at = Carbon::createFromFormat('d-m-Y', $request->created_at);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $data = $validator->validated();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->address = $data['address'] ?? null;
+        $user->created_at = Carbon::createFromFormat('d-m-Y', $data['created_at']);
         $user->save();
 
-        return response()->json(['message' => 'Profile updated successfully.']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully.',
+            'data' => $user,
+        ]);
     }
 
     public function editPassword()
@@ -46,20 +59,31 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'current_password' => 'required',
             'password' => ['required', 'confirmed', PasswordRule::min(6)],
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
-                'errors' => ['current_password' => ['Current password is incorrect.']]
+                'status' => 'error',
+                'errors' => ['current_password' => ['Current password is incorrect.']],
             ], 422);
         }
 
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return response()->json(['message' => 'Password updated successfully.']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password updated successfully.',
+        ]);
     }
 }

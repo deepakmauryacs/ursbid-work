@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="card-footer text-end">
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" id="saveBtn" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>
@@ -47,33 +47,50 @@
 @push('scripts')
 <script>
 $(function(){
-    $('#profileForm').on('submit', function(e){
-        e.preventDefault();
-        $('.invalid-feedback').text('');
-        const datePattern = /^\\d{2}-\\d{2}-\\d{4}$/;
-        const joinDate = $('input[name="created_at"]').val();
-        if(!datePattern.test(joinDate)){
-            $('[data-field="created_at"]').text('Date must be in dd-mm-yyyy format.');
-            return;
-        }
-        $.ajax({
-            url: '{{ route('super-admin.profile.update') }}',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function(res){
-                toastr.success(res.message);
-            },
-            error: function(xhr){
-                if(xhr.status === 422){
-                    let errors = xhr.responseJSON.errors;
-                    for (let field in errors) {
-                        $('[data-field="'+field+'"]').text(errors[field][0]);
+    $('#profileForm').validate({
+        rules:{
+            name:{ required:true },
+            email:{ required:true, email:true },
+            address:{},
+            created_at:{ required:true, pattern:/^\\d{2}-\\d{2}-\\d{4}$/ }
+        },
+        messages:{
+            created_at:{ pattern:'Date must be in dd-mm-yyyy format.' }
+        },
+        errorPlacement:function(error,element){
+            element.closest('.mb-3').find('.invalid-feedback').html(error.text());
+        },
+        submitHandler:function(form){
+            $('#saveBtn').prop('disabled',true).text('Saving...');
+            var formData = new FormData(form);
+            $.ajax({
+                url: '{{ route('super-admin.profile.update') }}',
+                type: 'POST',
+                data: formData,
+                processData:false,
+                contentType:false,
+                success:function(res){
+                    if(res.status === 'success'){
+                        toastr.success(res.message);
+                    }else{
+                        toastr.error(res.message || 'Update failed');
                     }
-                }else{
-                    toastr.error('Update failed');
+                    $('#saveBtn').prop('disabled',false).text('Update');
+                },
+                error:function(xhr){
+                    $('#saveBtn').prop('disabled',false).text('Update');
+                    if(xhr.status === 422){
+                        let errors = xhr.responseJSON.errors;
+                        for (let field in errors) {
+                            $('[data-field="'+field+'"]').html(errors[field][0]);
+                        }
+                    }else{
+                        toastr.error('Update failed');
+                    }
                 }
-            }
-        });
+            });
+            return false;
+        }
     });
 });
 </script>
