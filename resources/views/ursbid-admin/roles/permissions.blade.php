@@ -2,189 +2,394 @@
 @section('title', 'Permissions')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <h4 class="mb-0 fw-semibold">Permissions - {{ $role->role_name }}</h4>
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('super-admin.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('super-admin.roles.index') }}">Role List</a></li>
-                    <li class="breadcrumb-item active">Permissions</li>
-                </ol>
-            </div>
+<div class="container-fluid py-3" id="permissionsRoot">
+    <div class="row align-items-center mb-3">
+        <div class="col">
+            <h4 class="mb-1 fw-semibold">Permissions — {{ $role->role_name }}</h4>
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="{{ route('super-admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('super-admin.roles.index') }}">Role List</a></li>
+                <li class="breadcrumb-item active">Permissions</li>
+            </ol>
+        </div>
+        <div class="col-auto d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm" id="presetNone">None</button>
+            <button class="btn btn-outline-secondary btn-sm" id="presetReadOnly">Read Only</button>
+            <button class="btn btn-primary btn-sm" id="presetFull">Full Access</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header border-bottom">
-                    <h4 class="card-title mb-0">Manage Permissions</h4>
+
+    <div class="card border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-body border-0 pb-2">
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-lg-7 d-flex align-items-center flex-wrap gap-3">
+                    <label class="d-inline-flex align-items-center gap-2 m-0">
+                        <input class="form-check-input m-0" type="checkbox" id="checkAll">
+                        <span class="small">Toggle All</span>
+                    </label>
+
+                    <div class="vr d-none d-md-block"></div>
+
+                    <label class="d-inline-flex align-items-center gap-2 m-0">
+                        <input class="form-check-input column-check m-0" type="checkbox" id="colAdd" data-perm="can_add">
+                        <span class="small">Add</span>
+                    </label>
+                    <label class="d-inline-flex align-items-center gap-2 m-0">
+                        <input class="form-check-input column-check m-0" type="checkbox" id="colEdit" data-perm="can_edit">
+                        <span class="small">Edit</span>
+                    </label>
+                    <label class="d-inline-flex align-items-center gap-2 m-0">
+                        <input class="form-check-input column-check m-0" type="checkbox" id="colView" data-perm="can_view">
+                        <span class="small">View</span>
+                    </label>
+                    <label class="d-inline-flex align-items-center gap-2 m-0">
+                        <input class="form-check-input column-check m-0" type="checkbox" id="colDelete" data-perm="can_delete">
+                        <span class="small">Delete</span>
+                    </label>
                 </div>
-                <form id="permissionForm">
-                    @csrf
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" id="checkAll"> Module/Submodule
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" class="column-check" data-perm="can_add"> Add
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" class="column-check" data-perm="can_edit"> Edit
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" class="column-check" data-perm="can_view"> View
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" class="column-check" data-perm="can_delete"> Delete
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($modules as $module)
-                                    @if($module->children->isEmpty())
-                                        @php $perm = $permissions[$module->id] ?? null; @endphp
-                                        <tr data-module="{{ $module->id }}">
-                                            <td>
-                                                <input type="checkbox" class="row-check">
-                                                <strong>{{ $module->name }}</strong>
-                                            </td>
-                                            <td><input type="checkbox" class="permission-checkbox" data-perm="can_add" value="1" name="permissions[{{ $module->id }}][can_add]" {{ $perm && $perm->can_add ? 'checked' : '' }}></td>
-                                            <td><input type="checkbox" class="permission-checkbox" data-perm="can_edit" value="1" name="permissions[{{ $module->id }}][can_edit]" {{ $perm && $perm->can_edit ? 'checked' : '' }}></td>
-                                            <td><input type="checkbox" class="permission-checkbox" data-perm="can_view" value="1" name="permissions[{{ $module->id }}][can_view]" {{ $perm && $perm->can_view ? 'checked' : '' }}></td>
-                                            <td><input type="checkbox" class="permission-checkbox" data-perm="can_delete" value="1" name="permissions[{{ $module->id }}][can_delete]" {{ $perm && $perm->can_delete ? 'checked' : '' }}></td>
-                                        </tr>
-                                    @else
-                                        <tr class="module-row" data-module="{{ $module->id }}">
-                                            <td>
-                                                <input type="checkbox" class="module-check" data-module="{{ $module->id }}">
-                                                <strong>{{ $module->name }}</strong>
-                                            </td>
-                                            <td colspan="4"></td>
-                                        </tr>
-                                        @foreach($module->children as $child)
-                                            @php $perm = $permissions[$child->id] ?? null; @endphp
-                                            <tr data-parent="{{ $module->id }}">
-                                                <td class="ps-4">
-                                                    <input type="checkbox" class="row-check">
-                                                    {{ $child->name }}
-                                                </td>
-                                                <td><input type="checkbox" class="permission-checkbox" data-perm="can_add" value="1" name="permissions[{{ $child->id }}][can_add]" {{ $perm && $perm->can_add ? 'checked' : '' }}></td>
-                                                <td><input type="checkbox" class="permission-checkbox" data-perm="can_edit" value="1" name="permissions[{{ $child->id }}][can_edit]" {{ $perm && $perm->can_edit ? 'checked' : '' }}></td>
-                                                <td><input type="checkbox" class="permission-checkbox" data-perm="can_view" value="1" name="permissions[{{ $child->id }}][can_view]" {{ $perm && $perm->can_view ? 'checked' : '' }}></td>
-                                                <td><input type="checkbox" class="permission-checkbox" data-perm="can_delete" value="1" name="permissions[{{ $child->id }}][can_delete]" {{ $perm && $perm->can_delete ? 'checked' : '' }}></td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
+                <div class="col-12 col-lg-5 d-flex justify-content-lg-end">
+                    <div class="input-group input-group-sm" style="max-width:380px;">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" id="moduleSearch" class="form-control" placeholder="Search modules…">
                     </div>
-                    <div class="card-footer text-end">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
+
+        <form id="permissionForm">
+            @csrf
+
+            @php
+                $flat = $modules->filter(fn($m) => $m->children->isEmpty());
+                $parents = $modules->filter(fn($m) => $m->children->isNotEmpty());
+
+                $hiddenPermissions = [
+                    'vendor-list'      => ['can_edit','can_delete'],
+                    'on-page-seo'      => ['can_delete'],
+                    'general-settings' => ['can_delete'],
+                ];
+
+                $allPermissions = [
+                    'can_add'    => 'Add/Save',
+                    'can_edit'   => 'Edit/Update',
+                    'can_view'   => 'View',
+                    'can_delete' => 'Delete',
+                ];
+            @endphp
+
+            @if($flat->count())
+            <div class="px-3 pt-2">
+                <div class="section-title">Single Modules</div>
+                <div class="row g-2" id="flatContainer">
+                    @foreach($flat as $module)
+                        @php $perm = $permissions[$module->id] ?? null; @endphp
+                        <div class="col-12 col-md-6 col-xl-4 module-card" data-name="{{ strtolower($module->name) }}">
+                            <div class="simple-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <div class="title">{{ $module->name }}</div>
+                                        <div class="meta">Module</div>
+                                    </div>
+                                    <div class="ms-auto d-inline-flex align-items-center gap-2">
+                                        <span class="meta">Row</span>
+                                        <input type="checkbox" class="form-check-input row-check m-0">
+                                    </div>
+                                </div>
+
+                                <div class="perm-row">
+                                    @foreach($allPermissions as $permKey => $permLabel)
+                                        @if(!in_array($permKey, $hiddenPermissions[$module->slug] ?? []))
+                                            <label class="perm-item">
+                                                <input type="checkbox"
+                                                       class="form-check-input permission-checkbox m-0"
+                                                       data-perm="{{ $permKey }}"
+                                                       value="1"
+                                                       name="permissions[{{ $module->id }}][{{ $permKey }}]"
+                                                       {{ $perm && $perm->{$permKey} ? 'checked' : '' }}>
+                                                <span>{{ $permLabel }}</span>
+                                            </label>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            @if($parents->count())
+            <div class="px-3 py-2">
+                <div class="section-title">Modules with Submodules</div>
+                <div class="accordion" id="permAccordion">
+                    @foreach($parents as $module)
+                        <div class="accordion-item simple-acc module-card" data-name="{{ strtolower($module->name) }}">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#group-{{ $module->id }}">
+                                    <span class="title">{{ $module->name }}</span>
+                                    <span class="ms-auto d-inline-flex align-items-center gap-2">
+                                        <span class="meta d-none d-sm-inline">Toggle Group</span>
+                                        <input class="form-check-input module-check m-0" type="checkbox" data-module="{{ $module->id }}" id="modSwitch{{ $module->id }}">
+                                    </span>
+                                </button>
+                            </h2>
+                            <div id="group-{{ $module->id }}" class="accordion-collapse collapse" data-bs-parent="#permAccordion">
+                                <div class="accordion-body p-0">
+                                    <div class="list-group list-group-flush">
+                                        @foreach($module->children as $child)
+                                            @php $perm = $permissions[$child->id] ?? null; @endphp
+                                            <div class="list-group-item simple-row child-row" data-parent="{{ $module->id }}" data-name="{{ strtolower($child->name) }}">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-auto">
+                                                        <div class="sub-title">{{ $child->name }}</div>
+                                                        <div class="meta">Submodule</div>
+                                                    </div>
+                                                    <div class="d-inline-flex align-items-center gap-2">
+                                                        <span class="meta">Row</span>
+                                                        <input type="checkbox" class="form-check-input row-check m-0">
+                                                    </div>
+                                                </div>
+                                                <div class="perm-row mt-2">
+                                                    @foreach($allPermissions as $permKey => $permLabel)
+                                                        @if(!in_array($permKey, $hiddenPermissions[$child->slug] ?? []))
+                                                            <label class="perm-item">
+                                                                <input type="checkbox"
+                                                                       class="form-check-input permission-checkbox m-0"
+                                                                       data-perm="{{ $permKey }}"
+                                                                       value="1"
+                                                                       name="permissions[{{ $child->id }}][{{ $permKey }}]"
+                                                                       {{ $perm && $perm->{$permKey} ? 'checked' : '' }}>
+                                                                <span>{{ $permLabel }}</span>
+                                                            </label>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <div class="card-footer bg-body border-0 d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-light border" id="resetForm">Reset</button>
+                <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+/* ===== Minimal tokens (auto light/dark) ===== */
+:root{
+  --surface-0: var(--bs-body-bg);
+  --surface-1: color-mix(in oklab, var(--bs-body-bg) 94%, transparent);
+  --border-1: color-mix(in oklab, var(--bs-border-color) 75%, transparent);
+  --border-2: color-mix(in oklab, var(--bs-border-color) 55%, transparent);
+  --text-muted: var(--bs-secondary-color);
+  --radius-lg: 12px;
+  --radius-md: 10px;
+}
+.container-fluid{max-width:1280px;}
+.vr{width:1px;height:18px;background:var(--border-2);}
+
+/* ===== Headers ===== */
+h4{font-weight:600;letter-spacing:.2px;}
+.breadcrumb a{color:inherit;text-decoration:none;}
+.breadcrumb a:hover{color:var(--bs-primary);}
+
+/* ===== Simple card ===== */
+.simple-card{
+  background: var(--surface-0);
+  border:1px solid var(--border-1);
+  border-radius: var(--radius-lg);
+}
+.simple-card + .simple-card{margin-top:.5rem;}
+.title{font-weight:600; text-transform:uppercase; letter-spacing:.3px;}
+.sub-title{font-weight:600;}
+.meta{color:var(--text-muted); font-size:.825rem;}
+
+.section-title{
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.18rem;
+  color:var(--text-muted); padding: .25rem 0 .5rem;
+}
+
+/* Accordion minimal */
+.simple-acc{border:1px solid var(--border-1);}
+.accordion-button{background:var(--surface-0); border-radius: var(--radius-lg) var(--radius-lg) 0 0!important;}
+.accordion-button:not(.collapsed){background: var(--surface-1);}
+.accordion-item{border-radius: var(--radius-lg)!important; overflow:hidden; margin-bottom:.5rem;}
+.simple-row{background:var(--surface-0); border-top:1px solid var(--border-1);}
+
+/* Permission row & items */
+.perm-row{
+  display:flex; flex-wrap:wrap; gap:.5rem .75rem; margin-top:.5rem;
+}
+.perm-item{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.35rem .6rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border:1px solid var(--border-2);
+  font-size:.9rem;
+}
+.perm-item:hover{border-color: var(--border-1);}
+
+/* Switches – medium, unobtrusive */
+.form-check-input{ width:2.2em; height:1.2em; cursor:pointer; }
+.form-check-input:focus{ box-shadow: 0 0 0 .16rem rgba(var(--bs-primary-rgb), .15); }
+.form-check-input:not(:checked){ background-color: color-mix(in oklab, var(--bs-secondary-bg) 70%, transparent);}
+
+/* Inputs */
+.input-group-text{background:var(--surface-1); border-color:var(--border-1);}
+#moduleSearch{border-color:var(--border-1); border-left:0;}
+#moduleSearch:focus{box-shadow:0 0 0 .2rem rgba(var(--bs-primary-rgb), .12);}
+
+/* Spacing tweaks */
+.card-header{border-bottom:1px solid var(--border-1)!important;}
+.list-group-item{border-color:var(--border-1)!important;}
+</style>
+@endpush
+
 @push('scripts')
 <script>
 $(function(){
+    const $form = $('#permissionForm');
+
+    function setIndeterminate($checkbox, state){
+        const el = $checkbox.get(0);
+        if(!el) return;
+        el.indeterminate = !!state;
+    }
+
     function updateRowChecks(){
-        $('#permissionForm tbody tr').each(function(){
-            var row = $(this);
-            var boxes = row.find('.permission-checkbox');
-            if(boxes.length){
-                var allChecked = boxes.length === boxes.filter(':checked').length;
-                row.find('.row-check').prop('checked', allChecked);
-            }
+        $('[data-parent], .module-card').each(function(){
+            const $scope = $(this);
+            const $perm = $scope.find('.permission-checkbox');
+            if(!$perm.length) return;
+            const checked = $perm.filter(':checked').length;
+            const $row = $scope.find('.row-check');
+            $row.prop('checked', checked === $perm.length);
+            setIndeterminate($row, checked > 0 && checked < $perm.length);
         });
     }
 
     function updateColumnChecks(){
         $('.column-check').each(function(){
-            var perm = $(this).data('perm');
-            var boxes = $('.permission-checkbox[data-perm="'+perm+'"]');
-            var allChecked = boxes.length === boxes.filter(':checked').length;
-            $(this).prop('checked', allChecked);
+            const perm = $(this).data('perm');
+            const $boxes = $('.permission-checkbox[data-perm="'+perm+'"]');
+            const checked = $boxes.filter(':checked').length;
+            $(this).prop('checked', checked === $boxes.length);
+            setIndeterminate($(this), checked > 0 && checked < $boxes.length);
         });
-        var allBoxes = $('.permission-checkbox');
-        var allChecked = allBoxes.length === allBoxes.filter(':checked').length;
+        const $all = $('.permission-checkbox');
+        const allChecked = $all.length && $all.length === $all.filter(':checked').length;
         $('#checkAll').prop('checked', allChecked);
+        setIndeterminate($('#checkAll'), !allChecked && $all.filter(':checked').length > 0);
     }
 
     function updateModuleChecks(){
         $('.module-check').each(function(){
-            var moduleId = $(this).data('module');
-            var boxes = $('tr[data-parent="'+moduleId+'"] .permission-checkbox');
-            var allChecked = boxes.length && boxes.length === boxes.filter(':checked').length;
-            $(this).prop('checked', allChecked);
+            const id = $(this).data('module');
+            const $scope = $('#group-'+id);
+            const $perm = $scope.find('.permission-checkbox');
+            const checked = $perm.filter(':checked').length;
+            $(this).prop('checked', checked && checked === $perm.length);
+            setIndeterminate($(this), checked > 0 && checked < $perm.length);
         });
     }
 
-    updateRowChecks();
-    updateColumnChecks();
-    updateModuleChecks();
+    function refreshAll(){ updateRowChecks(); updateColumnChecks(); updateModuleChecks(); }
 
+    // Init
+    refreshAll();
+
+    // Master toggles
     $('#checkAll').on('change', function(){
-        var checked = this.checked;
-        $('.column-check, .row-check, .module-check, .permission-checkbox').prop('checked', checked);
+        const c = this.checked;
+        $('.permission-checkbox, .row-check, .module-check').prop('checked', c).each(function(){
+            setIndeterminate($(this), false);
+        });
     });
 
     $('.column-check').on('change', function(){
-        var perm = $(this).data('perm');
+        const perm = $(this).data('perm');
         $('.permission-checkbox[data-perm="'+perm+'"]').prop('checked', this.checked);
-        updateRowChecks();
-        updateModuleChecks();
-        updateColumnChecks();
+        refreshAll();
     });
 
-    $('.row-check').on('change', function(){
-        var row = $(this).closest('tr');
-        row.find('.permission-checkbox').prop('checked', this.checked);
-        updateColumnChecks();
-        updateModuleChecks();
+    // Row / Group toggles
+    $(document).on('change', '.row-check', function(){
+        const $card = $(this).closest('.module-card, .child-row');
+        $card.find('.permission-checkbox').prop('checked', this.checked);
+        refreshAll();
     });
 
-    $('.module-check').on('change', function(){
-        var moduleId = $(this).data('module');
-        $('tr[data-parent="'+moduleId+'"] .permission-checkbox, tr[data-parent="'+moduleId+'"] .row-check').prop('checked', this.checked);
-        updateColumnChecks();
+    $(document).on('change', '.module-check', function(){
+        const id = $(this).data('module');
+        const c = this.checked;
+        $('#group-'+id+' .permission-checkbox, #group-'+id+' .row-check').prop('checked', c).each(function(){
+            setIndeterminate($(this), false);
+        });
+        refreshAll();
     });
 
-    $('.permission-checkbox').on('change', function(){
-        updateRowChecks();
-        updateColumnChecks();
-        updateModuleChecks();
+    // Individual permission changed
+    $(document).on('change', '.permission-checkbox', refreshAll);
+
+    // Search filter
+    $('#moduleSearch').on('input', function(){
+        const q = $(this).val().toLowerCase().trim();
+        $('.module-card, .child-row').each(function(){
+            const name = $(this).data('name') || '';
+            $(this).toggle(name.includes(q));
+        });
     });
 
-    $('#permissionForm').on('submit', function(e){
+    // Presets
+    $('#presetNone').on('click', function(){
+        $('.permission-checkbox, .row-check, .module-check, #checkAll, .column-check').prop('checked', false);
+        $('input[type=checkbox]').each(function(){ setIndeterminate($(this), false); });
+    });
+
+    $('#presetReadOnly').on('click', function(){
+        $('.permission-checkbox').prop('checked', false);
+        $('.permission-checkbox[data-perm="can_view"]').prop('checked', true);
+        refreshAll();
+    });
+
+    $('#presetFull').on('click', function(){
+        $('.permission-checkbox, .row-check, .module-check, #checkAll, .column-check').prop('checked', true);
+        $('input[type=checkbox]').each(function(){ setIndeterminate($(this), false); });
+    });
+
+    // Reset (unsaved)
+    $('#resetForm').on('click', function(){
+        $('.permission-checkbox, .row-check, .module-check, #checkAll, .column-check').prop('checked', false);
+        $('input[type=checkbox]').each(function(){ setIndeterminate($(this), false); });
+        if (window.toastr) toastr.info('Cleared current selections (not saved).');
+    });
+
+    // Submit
+    $form.on('submit', function(e){
         e.preventDefault();
-        if($('#permissionForm .permission-checkbox:checked').length === 0){
-            toastr.error('Please select at least one permission.');
+        if($form.find('.permission-checkbox:checked').length === 0){
+            if (window.toastr) toastr.error('Please select at least one permission.');
             return;
         }
         $.ajax({
             url: '{{ route('super-admin.roles.permissions.update', $role->id) }}',
             type: 'POST',
-            data: $(this).serialize(),
-            success: function(res){
-                toastr.success(res.message);
-            },
-            error: function(xhr){
-                if(xhr.status === 422){
-                    toastr.error('Validation failed.');
-                } else {
-                    toastr.error('Unable to save permissions.');
-                }
-            }
+            data: $form.serialize(),
+            success: (res) => window.toastr ? toastr.success(res.message || 'Permissions updated.') : alert('Permissions updated.'),
+            error: (xhr) => window.toastr ? toastr.error(xhr.status === 422 ? 'Validation failed.' : 'Unable to save permissions.') : alert('Unable to save permissions.')
         });
     });
 });

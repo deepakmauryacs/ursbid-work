@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function hasModulePermission(string $moduleSlug, string $permission): bool
     {
-        if ($this->user_type == 1) {
+        if ($this->user_type == 1 &&  $this->parent_id == 0) {
             return true;
         }
 
