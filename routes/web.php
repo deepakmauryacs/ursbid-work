@@ -368,7 +368,8 @@ Route::post('super-admin/login', [AuthController::class, 'login'])->name('admin.
 Route::any('super-admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 Route::get('super-admin/profile', [ProfileController::class, 'edit'])->name('super-admin.profile.edit');
-Route::post('super-admin/profile', [ProfileController::class, 'update'])->name('super-admin.profile.update');
+// Use PUT to properly handle method spoofing from AJAX form submissions
+Route::put('super-admin/profile', [ProfileController::class, 'update'])->name('super-admin.profile.update');
 Route::get('super-admin/change-password', [ProfileController::class, 'editPassword'])->name('super-admin.password.edit');
 Route::post('super-admin/change-password', [ProfileController::class, 'updatePassword'])->name('super-admin.password.update');
 
