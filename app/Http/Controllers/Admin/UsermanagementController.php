@@ -18,7 +18,10 @@ class UsermanagementController extends Controller
 
     public function list()
     {
-        $users = User::with('roles')->orderByDesc('id')->get();
+        $users = User::with('roles')
+            ->where('parent_id', '!=', 0)
+            ->orderByDesc('id')
+            ->get();
         $html = view('ursbid-admin.user_management.partials.table', [
             'users' => $users,
         ])->render();
