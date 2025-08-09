@@ -10,134 +10,98 @@
     align-items: center;
     margin-top: 20px;
 }
-
 .pagination {
     display: flex;
     list-style: none;
     padding: 0;
     gap: 5px;
 }
-
-.page-item {
-    margin: 0;
-}
-
+.page-item { margin: 0; }
 .page-link {
     display: inline-block;
     padding: 5px 10px;
     color: #333;
     text-decoration: none;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #ddd; border-radius: 4px;
     background-color: #fff;
 }
-
 .page-item.active .page-link {
-    background-color: #614ce1;
-    color: #fff;
-    border-color: #614ce1;
+    background-color: #614ce1; color: #fff; border-color: #614ce1;
 }
-
 .page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    background-color: #fff;
-    border-color: #ddd;
+    color: #6c757d; pointer-events: none; background-color: #fff; border-color: #ddd;
 }
-
-.page-link:hover {
-    background-color: #f8f9fa;
-    color: #0056b3;
-}
+.page-link:hover { background-color: #f8f9fa; color: #0056b3; }
 </style>
-<div class="container-fluid">
 
-    <!-- ========== Page Title Start ========== -->
+<div class="container-fluid">
+    <!-- Page Title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
                 <h4 class="mb-0 fw-semibold">Sub Categories</h4>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('super-admin.dashboard') }}">Dashboard</a></li>
                     <li class="breadcrumb-item active">Sub Categories</li>
                 </ol>
             </div>
         </div>
     </div>
-    <!-- ========== Page Title End ========== -->
 
+    <!-- Filters -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form id="filterForm" action="{{ route('super-admin.sub-categories.index') }}" method="GET">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Category</label>
+                                <select name="category" id="category" class="form-select">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Sub Category Name</label>
+                                <input type="text" name="name" id="name" value="{{ request('name') }}" class="form-control" placeholder="Sub Category Name">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Per Page</label>
+                                <select id="perPage" class="form-select">
+                                    @php $pp = request('per_page', $perPage ?? 10); @endphp
+                                    @foreach([10,25,50,100] as $n)
+                                        <option value="{{ $n }}" {{ (int)$pp === $n ? 'selected' : '' }}>{{ $n }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end justify-content-end gap-2">
+                                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
+                                @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
+                                <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#subCategoryModal">Add Sub Category</button>
+                                @endif
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center border-bottom">
-                    <div>
-                        <h4 class="card-title mb-0">All Sub Categories List</h4>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div id="table-container">
+                        @include('ursbid-admin.sub_categories.partials.table', ['subs' => $subs])
                     </div>
-                    @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#subCategoryModal">Add Sub Category</button>
-                    @endif
                 </div>
-
-                <div class="table-responsive">
-                    <table class="table align-middle text-nowrap table-hover table-centered mb-0">
-                        <thead class="bg-light-subtle">
-                            <tr>
-                                <th>S.No</th>
-                                <th>Sub Category Name</th>
-                                <th>Category</th>
-                                <th>Created</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($subs as $sub)
-                            <tr id="row-{{ $sub->id }}">
-                                <td>{{ $subs->firstItem() + $loop->index }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div>
-                                            <img src="{{ $sub->image ? asset('public/'.$sub->image) : asset('public/uploads/no-image.jpg') }}" alt="{{ $sub->name }}" class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
-                                        </div>
-                                        <div>
-                                            <a href="#!" class="text-dark fw-medium fs-15">{{ $sub->name }}</a>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ $sub->category_name }}</td>
-                                <td>{{ $sub->created_at ? \Carbon\Carbon::parse($sub->created_at)->format('d-m-Y') : '' }}</td>
-                                <td>
-                                    @if($sub->status == '1')
-                                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        @if(auth()->user()->hasModulePermission('sub-categories','can_edit'))
-                                        <a href="{{ route('super-admin.sub-categories.edit', $sub->id) }}" class="btn btn-soft-primary btn-sm">
-                                            <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
-                                        </a>
-                                        @endif
-                                        @if(auth()->user()->hasModulePermission('sub-categories','can_delete'))
-                                        <button type="button" data-id="{{ $sub->id }}" data-url="{{ route('super-admin.sub-categories.destroy', $sub->id) }}" class="btn btn-soft-danger btn-sm deleteBtn">
-                                            <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
-                                        </button>
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="6" class="text-center">No sub categories found.</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-                <x-paginationwithlength :paginator="$subs" />
-                
             </div>
         </div>
     </div>
@@ -222,8 +186,9 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
-$(function(){
-    $('.deleteBtn').on('click', function(){
+(function(){
+    // Delete
+    $(document).on('click', '.deleteBtn', function(){
         if(!confirm('Are you sure want to delete?')) return;
         let id = $(this).data('id');
         let url = $(this).data('url');
@@ -233,12 +198,39 @@ $(function(){
             data: { _token: '{{ csrf_token() }}' },
             success: function(res){
                 toastr.success(res.message);
-                $('#row-'+id).remove();
+                $('#filterForm').trigger('submit');
             },
             error: function(){
                 toastr.error('Unable to delete record');
             }
         });
+    });
+
+    // Filter submit
+    $(document).on('submit', '#filterForm', function(e){
+        e.preventDefault();
+        const url = $(this).attr('action') + '?' + $(this).serialize() + '&per_page=' + $('#perPage').val();
+        loadTable(url);
+    });
+
+    // Pagination click
+    $(document).on('click', '.pagination a', function(e){
+        e.preventDefault();
+        loadTable($(this).attr('href'));
+    });
+
+    // per page change
+    $(document).on('change', '#perPage', function(){
+        const form = $('#filterForm');
+        const url = form.attr('action') + '?' + form.serialize() + '&per_page=' + $(this).val();
+        loadTable(url);
+    });
+
+    // Reset
+    $('#resetBtn').on('click', function(){
+        $('#filterForm')[0].reset();
+        const url = $('#filterForm').attr('action') + '?per_page=' + $('#perPage').val();
+        loadTable(url);
     });
 
     @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
@@ -261,7 +253,7 @@ $(function(){
                     toastr.success(res.message);
                     $('#saveSubBtn').prop('disabled',false).text('Save');
                     $('#subCategoryModal').modal('hide');
-                    location.reload();
+                    $('#filterForm').trigger('submit');
                 },
                 error: function(xhr){
                     let err = 'Error saving data';
@@ -276,6 +268,21 @@ $(function(){
         }
     });
     @endif
-});
+
+    function loadTable(url){
+        $.ajax({
+            url: url,
+            type: 'GET',
+            beforeSend: function(){
+                $('#table-container').html('<div class="text-center py-4">Loading...</div>');
+            },
+            success: function(html){
+                $('#table-container').html(html);
+                if(history.pushState){ history.pushState(null, null, url); }
+            },
+            error: function(){ toastr.error('Unable to load data.'); }
+        });
+    }
+})();
 </script>
 @endpush
