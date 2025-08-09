@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ProductBrand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -15,10 +15,10 @@ class ProductBrandController extends Controller
 {
     public function index()
     {
-        $brands = ProductBrand::leftJoin('category', 'product_brands.category_id', '=', 'category.id')
-            ->leftJoin('sub', 'product_brands.sub_category_id', '=', 'sub.id')
+        $brands = ProductBrand::leftJoin('categories', 'product_brands.category_id', '=', 'categories.id')
+            ->leftJoin('sub_categories', 'product_brands.sub_category_id', '=', 'sub_categories.id')
             ->leftJoin('product', 'product_brands.product_id', '=', 'product.id')
-            ->select('product_brands.*', 'category.title as category_title', 'sub.title as sub_title', 'product.title as product_title')
+            ->select('product_brands.*', 'categories.name as category_name', 'sub_categories.name as sub_name', 'product.title as product_title')
             ->orderByDesc('product_brands.id')
             ->paginate(10);
 
@@ -27,8 +27,8 @@ class ProductBrandController extends Controller
 
     public function create()
     {
-        $categories = Category::where('status', 1)->orderBy('title')->get();
-        $subs = DB::table('sub')->where('status', 1)->orderBy('title')->get();
+        $categories = Category::where('status', 1)->orderBy('name')->get();
+        $subs = SubCategory::where('status', 1)->orderBy('name')->get();
         $products = Product::where('status', 1)->orderBy('title')->get();
         return view('ursbid-admin.product_brands.create', compact('categories', 'subs', 'products'));
     }
@@ -66,8 +66,8 @@ class ProductBrandController extends Controller
     public function edit($id)
     {
         $brand = ProductBrand::findOrFail($id);
-        $categories = Category::where('status', 1)->orderBy('title')->get();
-        $subs = DB::table('sub')->where('status', 1)->orderBy('title')->get();
+        $categories = Category::where('status', 1)->orderBy('name')->get();
+        $subs = SubCategory::where('status', 1)->orderBy('name')->get();
         $products = Product::where('status', 1)->orderBy('title')->get();
         return view('ursbid-admin.product_brands.edit', compact('brand', 'categories', 'subs', 'products'));
     }

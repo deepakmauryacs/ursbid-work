@@ -89,8 +89,8 @@
                             @forelse($units as $unit)
                             <tr id="row-{{ $unit->id }}">
                                 <td>{{ $units->firstItem() + $loop->index }}</td>
-                                <td>{{ $unit->category_title }}</td>
-                                <td>{{ $unit->sub_title }}</td>
+                                <td>{{ $unit->category_name }}</td>
+                                <td>{{ $unit->sub_name }}</td>
                                 <td>{{ $unit->title }}</td>
                                 <td>{{ \Carbon\Carbon::parse($unit->created_at)->format('d-m-Y') }}</td>
                                 <td>

@@ -88,7 +88,7 @@
                             @forelse($advertisements as $ad)
                             <tr id="row-{{ $ad->id }}">
                                 <td>{{ $advertisements->firstItem() + $loop->index }}</td>
-                                <td>{{ $ad->category_title }}</td>
+                                <td>{{ $ad->category_name }}</td>
                                 <td>
                                     @if($ad->image)
                                         <img src="{{ asset($ad->image) }}" alt="image" width="80">

@@ -12,8 +12,8 @@ class AdvertisementController extends Controller
 {
     public function index()
     {
-        $advertisements = Advertisement::leftJoin('category', 'advertisements.category_id', '=', 'category.id')
-            ->select('advertisements.*', 'category.title as category_title')
+        $advertisements = Advertisement::leftJoin('categories', 'advertisements.category_id', '=', 'categories.id')
+            ->select('advertisements.*', 'categories.name as category_name')
             ->orderByDesc('advertisements.id')
             ->paginate(10);
 
@@ -22,7 +22,7 @@ class AdvertisementController extends Controller
 
     public function create()
     {
-        $categories = Category::where('status', 1)->orderBy('title')->get();
+        $categories = Category::where('status', 1)->orderBy('name')->get();
         return view('ursbid-admin.advertisement.create', compact('categories'));
     }
 
@@ -62,7 +62,7 @@ class AdvertisementController extends Controller
     public function edit($id)
     {
         $advertisement = Advertisement::findOrFail($id);
-        $categories = Category::where('status', 1)->orderBy('title')->get();
+        $categories = Category::where('status', 1)->orderBy('name')->get();
         return view('ursbid-admin.advertisement.edit', compact('advertisement', 'categories'));
     }
 

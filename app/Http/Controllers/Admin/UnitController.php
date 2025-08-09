@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Unit;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -14,9 +14,9 @@ class UnitController extends Controller
 {
     public function index()
     {
-        $units = Unit::leftJoin('category', 'unit.cat_id', '=', 'category.id')
-            ->leftJoin('sub', 'unit.sub_id', '=', 'sub.id')
-            ->select('unit.*', 'category.title as category_title', 'sub.title as sub_title')
+        $units = Unit::leftJoin('categories', 'unit.cat_id', '=', 'categories.id')
+            ->leftJoin('sub_categories', 'unit.sub_id', '=', 'sub_categories.id')
+            ->select('unit.*', 'categories.name as category_name', 'sub_categories.name as sub_name')
             ->orderByDesc('unit.id')
             ->paginate(10);
 
@@ -25,8 +25,8 @@ class UnitController extends Controller
 
     public function create()
     {
-        $categories = Category::where('status', 1)->orderBy('title')->get();
-        $subs = DB::table('sub')->where('status', 1)->orderBy('title')->get();
+        $categories = Category::where('status', 1)->orderBy('name')->get();
+        $subs = SubCategory::where('status', 1)->orderBy('name')->get();
         return view('ursbid-admin.unit.create', compact('categories', 'subs'));
     }
 
@@ -61,8 +61,8 @@ class UnitController extends Controller
     public function edit($id)
     {
         $unit = Unit::findOrFail($id);
-        $categories = Category::where('status', 1)->orderBy('title')->get();
-        $subs = DB::table('sub')->where('status', 1)->orderBy('title')->get();
+        $categories = Category::where('status', 1)->orderBy('name')->get();
+        $subs = SubCategory::where('status', 1)->orderBy('name')->get();
         return view('ursbid-admin.unit.edit', compact('unit', 'categories', 'subs'));
     }
 

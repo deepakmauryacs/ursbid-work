@@ -90,8 +90,8 @@
                             @forelse($brands as $brand)
                             <tr id="row-{{ $brand->id }}">
                                 <td>{{ $brands->firstItem() + $loop->index }}</td>
-                                <td>{{ $brand->category_title }}</td>
-                                <td>{{ $brand->sub_title }}</td>
+                                <td>{{ $brand->category_name }}</td>
+                                <td>{{ $brand->sub_name }}</td>
                                 <td>{{ $brand->product_title }}</td>
                                 <td>{{ $brand->brand_name }}</td>
                                 <td>{{ \Carbon\Carbon::parse($brand->created_at)->format('d-m-Y') }}</td>
