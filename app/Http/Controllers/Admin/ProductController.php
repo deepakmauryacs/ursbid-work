@@ -14,10 +14,10 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category' => 'nullable|integer|exists:categories,id',
+            'category'    => 'nullable|integer|exists:categories,id',
             'subcategory' => 'nullable|integer|exists:sub_categories,id',
-            'name' => 'nullable|string|max:255',
-            'per_page' => 'nullable|integer'
+            'name'        => 'nullable|string|max:255',
+            'per_page'    => 'nullable|integer'
         ]);
 
         if ($validator->fails()) {
@@ -27,7 +27,7 @@ class ProductController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->input('per_page', 10);
 
         $query = DB::table('product')
             ->leftJoin('categories', 'product.cat_id', '=', 'categories.id')
@@ -45,18 +45,16 @@ class ProductController extends Controller
             $query->where('product.title', 'like', '%' . $request->name . '%');
         }
 
-        $products = $query->paginate($perPage);
-
+        $products = $query->paginate($perPage)->appends($request->all());
         $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
 
         if ($request->ajax()) {
-            $html = view('ursbid-admin.products.partials.table', compact('products'))->render();
-            $pagination = view('ursbid-admin.products.partials.pagination', compact('products'))->render();
-            return response()->json(['html' => $html, 'pagination' => $pagination]);
+            return view('ursbid-admin.products.partials.table', compact('products'))->render();
         }
 
         return view('ursbid-admin.products.list', compact('products', 'categories', 'perPage'));
-    }
+      }
+
 
 
 

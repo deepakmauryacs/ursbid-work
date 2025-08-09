@@ -1,1 +1,0 @@
-<x-paginationwithlength :paginator="$products" />
