@@ -8,37 +8,34 @@
     <meta name="author" content="Techzaa" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('public/assets/images/apple-touch-icon.png?v=1.0.2') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('public/assets/images/favicon-32x32.png?v=1.0.2') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('public/assets/images/favicon-16x16.png?v=1.0.2') }}">
-    <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico?v=1.0.2') }}" type="image/x-icon">
-    <link rel="manifest" href="{{ asset('public/assets/images/site.webmanifest?v=1.0.2') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('public/assets/images/apple-touch-icon.png') }}?v={{ config('app.asset_version', '1.0.0') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('public/assets/images/favicon-32x32.png') }}?v={{ config('app.asset_version', '1.0.0') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('public/assets/images/favicon-16x16.png') }}?v={{ config('app.asset_version', '1.0.0') }}">
+    <link rel="shortcut icon" href="{{ asset('public/assets/images/favicon.ico') }}?v={{ config('app.asset_version', '1.0.0') }}" type="image/x-icon">
 
+    <!-- Vendor css -->
+    <link href="{{ asset('public/assets/css/vendor.min.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
 
+    <!-- Icons css -->
+    <link href="{{ asset('public/assets/css/icons.min.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
 
-    <!-- Vendor css (Require in all Page) -->
-    <link href="{{ asset('public/assets/css/vendor.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App css -->
+    <link href="{{ asset('public/assets/css/app.min.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
 
-    <!-- Icons css (Require in all Page) -->
-    <link href="{{ asset('public/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-
-    <!-- App css (Require in all Page) -->
-    <link href="{{ asset('public/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-
-    <!-- Theme Config js (Require in all Page) -->
-    <script src="{{ asset('public/assets/js/config.min.js') }}"></script>
+    <!-- Theme Config js -->
+    <script src="{{ asset('public/assets/js/config.min.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
+    <script src="{{ asset('public/assets/js/jquery-3.7.1.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Bootsrap Icon -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Bootstrap Icon -->
+    <link href="{{ asset('public/assets/css/bootstrap-icons.min.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
+    
     <!-- Toastr CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+    <link href="{{ asset('public/assets/css/toastr.min.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
     
+    <!-- Toastr JS -->
+    <script src="{{ asset('public/assets/js/toastr.min.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
+  
     @stack('styles')
 </head>
 
@@ -54,11 +51,11 @@
     </div>
     <!-- END Wrapper -->
 
-    <!-- Vendor Javascript (Require in all Page) -->
-    <script src="{{ asset('public/assets/js/vendor.js') }}"></script>
+    <!-- Vendor Javascript -->
+    <script src="{{ asset('public/assets/js/vendor.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
 
-    <!-- App Javascript (Require in all Page) -->
-    <script src="{{ asset('public/assets/js/app.js') }}"></script>
+    <!-- App Javascript -->
+    <script src="{{ asset('public/assets/js/app.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
 
     @stack('scripts')
 </body>
