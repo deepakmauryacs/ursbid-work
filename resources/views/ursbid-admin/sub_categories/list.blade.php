@@ -16,12 +16,44 @@
 .page-item.disabled .page-link{color:#6c757d;pointer-events:none;background-color:#fff;border-color:#ddd}
 .page-link:hover{background-color:#f8f9fa;color:#0056b3}
 
+/* ===== Theme Variables ===== */
+:root{
+  --filter-bg:#ffffff;
+  --filter-border:#000000;         
+  --filter-label:#6b7280;
+  --filter-field-bg:#ffffff;
+  --filter-shadow:0 2px 10px rgba(28,39,60,.06);
+  --filter-placeholder:#6b7280;
+}
+
+/* Dark theme override */
+[data-bs-theme="dark"], .dark, [data-theme="dark"], body.dark {
+  --filter-bg:#0f172a;             
+  --filter-border:#9aa4b2;         
+  --filter-label:#cbd5e1;          
+  --filter-field-bg:#0b1320;       
+  --filter-shadow:0 2px 10px rgba(0,0,0,.45);
+  --filter-placeholder:#94a3b8;    
+}
+
+/* Respect system dark preference */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-bs-theme]):not(.dark):not([data-theme="dark"]):not(body.dark){
+    --filter-bg:#0f172a;
+    --filter-border:#9aa4b2;
+    --filter-label:#cbd5e1;
+    --filter-field-bg:#0b1320;
+    --filter-shadow:0 2px 10px rgba(0,0,0,.45);
+    --filter-placeholder:#94a3b8;
+  }
+}
+
 /* ===== Filter bar ===== */
 .filter-wrap{
-    background:#fff;
-    border:1px solid #e9edf3;
+    background:var(--filter-bg);
+    border:1px solid var(--filter-border);
     border-radius:14px;
-    box-shadow:0 2px 10px rgba(28,39,60,.06);
+    box-shadow:var(--filter-shadow);
 }
 .filter-grid{row-gap:12px}
 @media(min-width:992px){
@@ -29,19 +61,19 @@
 } 
 .filter-label{
   font-size:12px;
-  color:#6b7280;
+  color:var(--filter-label);
   margin-bottom:6px;
 }
 
 /* unified bold border around icon + field */
 .input-group.pill-wrap{
-  border: 1px solid #000;
+  border: 1px solid var(--filter-border);
   border-radius: 12px;
   overflow: hidden;
-  background:#fff;
+  background:var(--filter-field-bg);
 }
 .input-group.pill-wrap .input-group-text{
-  background:#fff;
+  background:var(--filter-field-bg);
   border:0;
 }
 .input-group.pill-wrap .form-control,
@@ -49,10 +81,15 @@
   border:0 !important;
   height:42px;
   box-shadow:none;
+  background:var(--filter-field-bg);
+  color:inherit;
+}
+.input-group.pill-wrap .form-control::placeholder{
+  color:var(--filter-placeholder);
 }
 .input-group.pill-wrap:focus-within{
-  border-color:#000;
-  box-shadow:0 0 0 3px rgba(0,0,0,.06);
+  border-color:var(--filter-border);
+  box-shadow:0 0 0 3px rgba(148,163,184,.25);
 }
 
 /* action buttons area */
@@ -77,7 +114,7 @@
   <!-- FILTERS -->
   <div class="row mb-3">
     <div class="col-12">
-      <div class="card filter-wrap">
+      <div class="card">
         <div class="card-body py-3">
           <form id="filterForm" action="{{ route('super-admin.sub-categories.index') }}" method="GET">
             <div class="row g-3 filter-grid align-items-end">
@@ -147,7 +184,6 @@
     </div>
   </div>
 </div>
-
 
 @endsection
 
