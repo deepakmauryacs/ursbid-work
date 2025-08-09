@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class SubCategoryController extends Controller
@@ -15,17 +16,43 @@ class SubCategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 10);
+        $validator = Validator::make($request->all(), [
+            'category' => 'nullable|integer|exists:categories,id',
+            'name'     => 'nullable|string|max:255',
+            'per_page' => 'nullable|integer',
+        ]);
 
-        $subs = DB::table('sub_categories')
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $perPage = $request->input('per_page', 10);
+
+        $query = DB::table('sub_categories')
             ->leftJoin('categories', 'sub_categories.category_id', '=', 'categories.id')
             ->select('sub_categories.*', 'categories.name as category_name')
-            ->orderBy('sub_categories.order_by')
-            ->paginate($perPage);
+            ->orderBy('sub_categories.order_by');
+
+        if ($request->filled('category')) {
+            $query->where('sub_categories.category_id', $request->category);
+        }
+
+        if ($request->filled('name')) {
+            $query->where('sub_categories.name', 'like', '%' . $request->name . '%');
+        }
+
+        $subs = $query->paginate($perPage)->appends($request->all());
 
         $categories = DB::table('categories')->where('status', '1')->orderBy('name')->get();
 
-        return view('ursbid-admin.sub_categories.list', compact('subs', 'perPage','categories'));
+        if ($request->ajax()) {
+            return view('ursbid-admin.sub_categories.partials.table', compact('subs'))->render();
+        }
+
+        return view('ursbid-admin.sub_categories.list', compact('subs', 'perPage', 'categories'));
     }
 
     /**
