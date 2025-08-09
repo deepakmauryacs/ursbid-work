@@ -28,7 +28,7 @@
                                 <select name="cat_id" class="form-control">
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -41,7 +41,7 @@
                                 <select name="sub_id" class="form-control">
                                     <option value="">Select Sub Category</option>
                                     @foreach($subs as $sub)
-                                        <option value="{{ $sub->id }}">{{ $sub->title }}</option>
+                                        <option value="{{ $sub->id }}">{{ $sub->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
