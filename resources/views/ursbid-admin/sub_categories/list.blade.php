@@ -3,33 +3,98 @@
 
 @section('content')
 
+{{-- Bootstrap Icons --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 <style>
-.pagination-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+/* ===== pagination (unchanged) ===== */
+.pagination-container{display:flex;justify-content:center;align-items:center;margin-top:20px}
+.pagination{display:flex;list-style:none;padding:0;gap:5px}
+.page-item{margin:0}
+.page-link{display:inline-block;padding:5px 10px;color:#333;text-decoration:none;border:1px solid #ddd;border-radius:4px;background-color:#fff}
+.page-item.active .page-link{background-color:#614ce1;color:#fff;border-color:#614ce1}
+.page-item.disabled .page-link{color:#6c757d;pointer-events:none;background-color:#fff;border-color:#ddd}
+.page-link:hover{background-color:#f8f9fa;color:#0056b3}
+
+/* ===== Theme Variables ===== */
+:root{
+  --filter-bg:#ffffff;
+  --filter-border:#000000;         
+  --filter-label:#6b7280;
+  --filter-field-bg:#ffffff;
+  --filter-shadow:0 2px 10px rgba(28,39,60,.06);
+  --filter-placeholder:#6b7280;
 }
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    gap: 5px;
+
+/* Dark theme override */
+[data-bs-theme="dark"], .dark, [data-theme="dark"], body.dark {
+  --filter-bg:#0f172a;             
+  --filter-border:#9aa4b2;         
+  --filter-label:#cbd5e1;          
+  --filter-field-bg:#0b1320;       
+  --filter-shadow:0 2px 10px rgba(0,0,0,.45);
+  --filter-placeholder:#94a3b8;    
 }
-.page-item { margin: 0; }
-.page-link {
-    display: inline-block;
-    padding: 5px 10px;
-    border: 1px solid #ddd; border-radius: 4px;
-    background-color: #fff;
+
+/* Respect system dark preference */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-bs-theme]):not(.dark):not([data-theme="dark"]):not(body.dark){
+    --filter-bg:#0f172a;
+    --filter-border:#9aa4b2;
+    --filter-label:#cbd5e1;
+    --filter-field-bg:#0b1320;
+    --filter-shadow:0 2px 10px rgba(0,0,0,.45);
+    --filter-placeholder:#94a3b8;
+  }
 }
-.page-item.active .page-link {
-    background-color: #614ce1; color: #fff; border-color: #614ce1;
+
+/* ===== Filter bar ===== */
+.filter-wrap{
+    background:var(--filter-bg);
+    border:1px solid var(--filter-border);
+    border-radius:14px;
+    box-shadow:var(--filter-shadow);
 }
-.page-item.disabled .page-link {
-    color: #6c757d; pointer-events: none; background-color: #fff; border-color: #ddd;
+.filter-grid{row-gap:12px}
+@media(min-width:992px){
+  .filter-grid>[class*="col-"]{display:flex;align-items:flex-end}
+} 
+.filter-label{
+  font-size:12px;
+  color:var(--filter-label);
+  margin-bottom:6px;
 }
-.page-link:hover { background-color: #f8f9fa; color: #0056b3; }
+
+/* unified bold border around icon + field */
+.input-group.pill-wrap{
+  border: 1px solid var(--filter-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background:var(--filter-field-bg);
+}
+.input-group.pill-wrap .input-group-text{
+  background:var(--filter-field-bg);
+  border:0;
+}
+.input-group.pill-wrap .form-control,
+.input-group.pill-wrap .form-select{
+  border:0 !important;
+  height:42px;
+  box-shadow:none;
+  background:var(--filter-field-bg);
+  color:inherit;
+}
+.input-group.pill-wrap .form-control::placeholder{
+  color:var(--filter-placeholder);
+}
+.input-group.pill-wrap:focus-within{
+  border-color:var(--filter-border);
+  box-shadow:0 0 0 3px rgba(148,163,184,.25);
+}
+
+/* action buttons area */
+.btn-icon i{font-size:16px;margin-right:6px}
+.actions-bar{gap:8px}
 </style>
 
 <div class="container-fluid">
@@ -46,54 +111,59 @@
     </div>
   </div>
 
-  <!-- Filters -->
+  <!-- FILTERS -->
   <div class="row mb-3">
-    <div class="col-md-12">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body py-3">
           <form id="filterForm" action="{{ route('super-admin.sub-categories.index') }}" method="GET">
-            <div class="row g-3">
-              <div class="col-md-3">
-                <label class="form-label">Category</label>
-                <select name="category" id="category" class="form-select">
-                  <option value="">Select Category</option>
-                  @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                      {{ $category->name }}
-                    </option>
-                  @endforeach
-                </select>
+            <div class="row g-3 filter-grid align-items-end">
+
+              <!-- Category -->
+              <div class="col-xxl-3 col-lg-4 col-md-6">
+                <div class="w-100">
+                  <label class="filter-label">Category (optional):</label>
+                  <div class="input-group pill-wrap">
+                    <span class="input-group-text"><i class="bi bi-collection"></i></span>
+                    <select name="category" id="category" class="form-select">
+                      <option value="">All</option>
+                      @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                          {{ $category->name }}
+                        </option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-3">
-                <label class="form-label">Sub Category Name</label>
-                <input type="text" name="name" id="name" value="{{ request('name') }}" class="form-control" placeholder="Sub Category Name">
+
+              <!-- Search -->
+              <div class="col-xxl-4 col-lg-5 col-md-6">
+                <div class="w-100">
+                  <label class="filter-label">Search (optional):</label>
+                  <div class="input-group pill-wrap">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="name" id="name" value="{{ request('name') }}"
+                           class="form-control" placeholder="Enter sub category">
+                  </div>
+                </div>
               </div>
-              <div class="col-md-2">
-                <label class="form-label">From Date</label>
-                <input type="text" name="from_date" id="from_date" value="{{ request('from_date') }}" class="form-control" placeholder="dd-mm-yyyy">
+
+              <!-- Actions -->
+              <div class="col-xxl-5 col-lg-3 col-md-12">
+                <div class="d-flex justify-content-xxl-end justify-content-lg-end justify-content-start actions-bar flex-wrap w-100">
+                  <button type="submit" class="btn btn-primary btn-icon">
+                    <i class="bi bi-funnel"></i>Apply
+                  </button>
+                  <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-icon">
+                    <i class="bi bi-arrow-counterclockwise"></i>Reset
+                  </button>
+                  <a href="{{ route('super-admin.categories.create') }}" class="btn btn-success btn-icon">
+                    <i class="bi bi-plus-circle"></i>Add Sub Category
+                  </a>
+                </div>
               </div>
-              <div class="col-md-2">
-                <label class="form-label">To Date</label>
-                <input type="text" name="to_date" id="to_date" value="{{ request('to_date') }}" class="form-control" placeholder="dd-mm-yyyy">
-              </div>
-              <div class="col-md-1">
-                <label class="form-label">Per Page</label>
-                <select id="perPage" class="form-select">
-                  @php $pp = request('per_page', $perPage ?? 10); @endphp
-                  @foreach([10,25,50,100] as $n)
-                    <option value="{{ $n }}" {{ (int)$pp === $n ? 'selected' : '' }}>{{ $n }}</option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-md-1 d-flex align-items-end justify-content-end gap-2">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
-              </div>
-              <div class="col-12 text-end">
-                <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
-                @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
-                <a href="{{ route('super-admin.sub-categories.create') }}" class="btn btn-success ms-2">Add Sub Category</a>
-                @endif
-              </div>
+
             </div>
           </form>
         </div>
@@ -118,71 +188,80 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
 (function(){
+  // Delete
   $(document).on('click', '.deleteBtn', function(){
     if(!confirm('Are you sure want to delete?')) return;
     let url = $(this).data('url');
     $.ajax({
-      url: url, type: 'DELETE',
-      data: { _token: '{{ csrf_token() }}' },
-      success: function(res){ toastr.success(res.message); $('#filterForm').trigger('submit'); },
-      error: function(){ toastr.error('Unable to delete record'); }
+      url, type:'DELETE',
+      data:{ _token:'{{ csrf_token() }}' },
+      success(res){ toastr.success(res.message); loadTable(window.location.href.split('#')[0]); },
+      error(){ toastr.error('Unable to delete record'); }
     });
   });
 
+  // Filter submit (AJAX)
   $(document).on('submit', '#filterForm', function(e){
     e.preventDefault();
-    const name = $('#name').val();
-    const from = $('#from_date').val();
-    const to = $('#to_date').val();
-    const datePattern = /^\d{2}-\d{2}-\d{4}$/;
-
-    if(name.length > 255){
-      toastr.error('Sub category name may not be greater than 255 characters.');
-      return;
-    }
-    if(from && !datePattern.test(from)){
-      toastr.error('From date must be in dd-mm-yyyy format.');
-      return;
-    }
-    if(to && !datePattern.test(to)){
-      toastr.error('To date must be in dd-mm-yyyy format.');
-      return;
-    }
-
-    const url = $(this).attr('action') + '?' + $(this).serialize() + '&per_page=' + $('#perPage').val();
+    const url = $(this).attr('action') + '?' + $(this).serialize();
     loadTable(url);
   });
 
+  // Pagination click
   $(document).on('click', '.pagination a', function(e){
     e.preventDefault();
     loadTable($(this).attr('href'));
   });
 
-  $(document).on('change', '#perPage', function(){
-    const form = $('#filterForm');
-    const url = form.attr('action') + '?' + form.serialize() + '&per_page=' + $(this).val();
+  // Reset
+  $('#resetBtn').on('click', function(){
+    $('#filterForm')[0].reset();
+    const url = $('#filterForm').attr('action');
     loadTable(url);
   });
 
-  $('#resetBtn').on('click', function(){
-    $('#filterForm')[0].reset();
-    const url = $('#filterForm').attr('action') + '?per_page=' + $('#perPage').val();
-    loadTable(url);
+  @if(auth()->user()->hasModulePermission('sub-categories','can_add'))
+  // Add modal save
+  $('#subCategoryForm').validate({
+    rules:{ name:{required:true}, category_id:{required:true}, description:{required:true}, status:{required:true} },
+    submitHandler:function(form){
+      $('#saveSubBtn').prop('disabled',true).text('Saving...');
+      $.ajax({
+        url:"{{ route('super-admin.sub-categories.store') }}",
+        type:'POST',
+        data:new FormData(form), processData:false, contentType:false,
+        success(res){
+          toastr.success(res.message);
+          $('#saveSubBtn').prop('disabled',false).text('Save');
+          $('#subCategoryModal').modal('hide');
+          loadTable(window.location.href.split('#')[0]);
+        },
+        error(xhr){
+          let err='Error saving data';
+          if(xhr.responseJSON && xhr.responseJSON.errors){
+            err = Object.values(xhr.responseJSON.errors).map(e => e.join(', ')).join('<br>');
+          }
+          toastr.error(err);
+          $('#saveSubBtn').prop('disabled',false).text('Save');
+        }
+      });
+      return false;
+    }
   });
+  @endif
 
   function loadTable(url){
     $.ajax({
-      url: url, type: 'GET',
-      beforeSend: function(){
-        $('#table-container').html('<div class="text-center py-4">Loading...</div>');
-      },
-      success: function(html){
+      url, type:'GET',
+      beforeSend(){ $('#table-container').html('<div class="text-center py-4">Loading...</div>'); },
+      success(html){
         $('#table-container').html(html);
         if(history.pushState){ history.pushState(null, null, url); }
       },
-      error: function(){ toastr.error('Unable to load data.'); }
+      error(){ toastr.error('Unable to load data.'); }
     });
   }
 })();
