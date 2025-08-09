@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 class SubCategoryController extends Controller
 {
@@ -17,9 +18,11 @@ class SubCategoryController extends Controller
     public function index(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category' => 'nullable|integer|exists:categories,id',
-            'name'     => 'nullable|string|max:255',
-            'per_page' => 'nullable|integer',
+            'category'  => 'nullable|integer|exists:categories,id',
+            'name'      => 'nullable|string|max:255',
+            'from_date' => 'nullable|date_format:d-m-Y',
+            'to_date'   => 'nullable|date_format:d-m-Y|after_or_equal:from_date',
+            'per_page'  => 'nullable|integer',
         ]);
 
         if ($validator->fails()) {
@@ -42,6 +45,16 @@ class SubCategoryController extends Controller
 
         if ($request->filled('name')) {
             $query->where('sub_categories.name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('from_date')) {
+            $from = Carbon::createFromFormat('d-m-Y', $request->from_date)->startOfDay();
+            $query->whereDate('sub_categories.created_at', '>=', $from);
+        }
+
+        if ($request->filled('to_date')) {
+            $to = Carbon::createFromFormat('d-m-Y', $request->to_date)->endOfDay();
+            $query->whereDate('sub_categories.created_at', '<=', $to);
         }
 
         $subs = $query->paginate($perPage)->appends($request->all());
