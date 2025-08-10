@@ -40,11 +40,7 @@
                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                         </a>
                         @endif
-                        @if(auth()->user()->hasModulePermission('sub-categories','can_delete'))
-                        <button type="button" data-id="{{ $sub->id }}" data-url="{{ route('super-admin.sub-categories.destroy', $sub->id) }}" class="btn btn-soft-danger btn-sm deleteBtn">
-                            <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
-                        </button>
-                        @endif
+                       
                     </div>
                 </td>
             </tr>

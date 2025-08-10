@@ -30,6 +30,7 @@
                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                         <thead class="bg-light-subtle">
                             <tr>
+                                <th>S.No</th>
                                 <th>Youtube Link</th>
                                 <th>Created At</th>
                                 <th>Status</th>
@@ -37,8 +38,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($links as $link)
+                            @forelse($links as $index => $link)
                             <tr id="row-{{ $link->id }}">
+                                <td>{{ $links->firstItem() + $index }}</td>
                                 <td><a href="{{ $link->youtube_link }}" target="_blank">{{ $link->youtube_link }}</a></td>
                                 <td>{{ $link->created_at ? $link->created_at->format('d-m-Y') : '' }}</td>
                                 <td>
@@ -61,7 +63,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center">No links found.</td>
+                                <td colspan="5" class="text-center">No links found.</td>
                             </tr>
                             @endforelse
                         </tbody>

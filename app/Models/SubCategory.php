@@ -9,22 +9,11 @@ class SubCategory extends Model
     protected $table = 'sub_categories';
 
     protected $fillable = [
-        'category_id',
-        'slug',
-        'name',
-        'image',
-        'description',
-        'tags',
-        'meta_title',
-        'meta_keywords',
-        'meta_description',
-        'status',
-        'order_by',
+        'category_id','slug','name','image','description','tags',
+        'meta_title','meta_keywords','meta_description','status','order_by'
     ];
 
-    protected $casts = [
-        'tags' => 'array',
-    ];
+    protected $casts = ['tags' => 'array'];
 
     public function category()
     {

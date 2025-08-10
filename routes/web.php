@@ -2,6 +2,7 @@
 use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\HomeController;
 
 
 /*
@@ -22,7 +23,8 @@ Route::get('/test', [EmailController::class, 'showForm'])->name('email.form');
 Route::post('/send-email', [EmailController::class, 'sendEmail'])->name('email.send');
 
 
-Route::get('/', function () {return view('frontend/home');});  
+Route::get('/', [HomeController::class, 'index'])->name('front.home');
+
 Route::get('/advertise', function () {return view('frontend/advertise');});
 Route::get('/about', function () {return view('frontend/about');});
 Route::get('/terms-conditions', function () {return view('frontend/terms-conditions');});
