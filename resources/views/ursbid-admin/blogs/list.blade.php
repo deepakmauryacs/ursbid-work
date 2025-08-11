@@ -88,7 +88,6 @@
                             <tr>
                                 <th>S.No</th>
                                 <th>Blog Title</th>
-                                <th>Post Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -107,7 +106,6 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ $blog->post_date ? \Carbon\Carbon::parse($blog->post_date)->format('d-m-Y') : '' }}</td>
                                 <td>
                                     @if($blog->status == 1)
                                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
@@ -131,7 +129,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center">No blogs found.</td>
+                                <td colspan="4" class="text-center">No blogs found.</td>
                             </tr>
                             @endforelse
                         </tbody>
