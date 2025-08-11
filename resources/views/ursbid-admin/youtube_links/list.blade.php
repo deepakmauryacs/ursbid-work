@@ -17,7 +17,7 @@
     <!-- ========== Page Title End ========== -->
 
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <div>
