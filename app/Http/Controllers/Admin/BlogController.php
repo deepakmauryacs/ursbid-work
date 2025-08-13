@@ -50,7 +50,6 @@ class BlogController extends Controller
 
         $data = [
             'title' => $validated['title'],
-            'post_date' => now()->format('d-m-Y'),
             'description' => $validated['description'],
             'status' => $validated['status'],
             'slug' => Str::slug($validated['title']),

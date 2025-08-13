@@ -10,7 +10,7 @@ class Category extends Model
         'slug','name','image','description','tags',
         'meta_title','meta_keywords','meta_description','status'
     ];
-
+    
     protected $casts = ['tags' => 'array'];
 
     public function subCategories()

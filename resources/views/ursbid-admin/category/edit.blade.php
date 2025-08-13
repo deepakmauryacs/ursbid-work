@@ -9,8 +9,9 @@
             <div class="page-title-box">
                 <h4 class="mb-0 fw-semibold">Edit Category</h4>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Edit Category</li>
+                    <li class="breadcrumb-item"><a href="{{ route('super-admin.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('super-admin.categories.index') }}">Category List</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </div>
         </div>
@@ -32,6 +33,7 @@
                                 <input type="text" name="name" class="form-control" value="{{ $category->name }}" placeholder="Enter Name">
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Description</label>
@@ -40,14 +42,18 @@
                                 <textarea name="description" class="form-control" rows="3" placeholder="Enter Description">{{ $category->description }}</textarea>
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Tags</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="tags" class="form-control" value="{{ implode(',', $category->tags ?? []) }}" placeholder="tag1, tag2">
+                                <input type="text" name="tags" data-role="tagsinput" class="form-control"
+                                    value="{{ is_array($category->tags) ? implode(',', $category->tags) : $category->tags }}"
+                                    placeholder="tag1, tag2">
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Image</label>
@@ -61,6 +67,7 @@
                                 <input type="file" name="image" class="form-control">
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Meta Title</label>
@@ -69,6 +76,7 @@
                                 <input type="text" name="meta_title" class="form-control" value="{{ $category->meta_title }}" placeholder="Enter Meta Title">
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Meta Keywords</label>
@@ -77,6 +85,7 @@
                                 <input type="text" name="meta_keywords" class="form-control" value="{{ $category->meta_keywords }}" placeholder="Enter Meta Keywords">
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Meta Description</label>
@@ -85,6 +94,7 @@
                                 <textarea name="meta_description" class="form-control" rows="3" placeholder="Enter Meta Description">{{ $category->meta_description }}</textarea>
                             </div>
                         </div>
+
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Status</label>
@@ -96,6 +106,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-12 text-end">
                                 <button type="submit" id="updateBtn" class="btn btn-primary">Update</button>
@@ -110,12 +121,68 @@
 @endsection
 
 @push('styles')
+<!-- Bootstrap Tags Input CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+<style>
+/* ===== Light Theme ===== */
+.bootstrap-tagsinput {
+    width: 100%;
+    padding: 6px 12px;
+    line-height: 22px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.bootstrap-tagsinput .tag {
+    background: #614ce1;
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+    color: #fff;
+    font-size: 13px;
+}
+
+/* ===== Dark Theme (class-based) ===== */
+.dark-theme .bootstrap-tagsinput {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    color: #ddd;
+}
+.dark-theme .bootstrap-tagsinput input {
+    color: #ddd;
+}
+.dark-theme .bootstrap-tagsinput .tag {
+    background: #8a73ff;
+    color: #fff;
+}
+
+/* ===== Dark Mode (automatic using media query) ===== */
+@media (prefers-color-scheme: dark) {
+    .bootstrap-tagsinput {
+        background-color: #1e1e1e;
+        border: 1px solid #444;
+        color: #ddd;
+    }
+    .bootstrap-tagsinput input {
+        color: #ddd;
+    }
+    .bootstrap-tagsinput .tag {
+        background: #8a73ff;
+        color: #fff;
+    }
+}
+</style>
 @endpush
 
 @push('scripts')
+<!-- Bootstrap Tags Input JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
 $(function(){
+    $('input[data-role="tagsinput"]').tagsinput();
+
     $('#categoryForm').validate({
         rules:{
             name:{ required:true },
@@ -154,4 +221,4 @@ $(function(){
     });
 });
 </script>
-@endpush
+@endpush 

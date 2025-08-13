@@ -129,14 +129,18 @@ $(function(){
         placeholder: 'Write blog description...',
         modules: {
             toolbar: [
-                [{ 'font': [] }, { 'size': [] }],
+                [{'header': [1, 2, 3, 4, 5, 6, false]}],
+                [{'font': []}],
+                [{'size': ['small', false, 'large', 'huge']}],
                 ['bold', 'italic', 'underline', 'strike'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'script': 'super' }, { 'script': 'sub' }],
-                [{ 'header': 1 }, { 'header': 2 }, 'blockquote', 'code-block'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-                [{ 'direction': 'rtl' }, { 'align': [] }],
-                ['link', 'image', 'video', 'formula'],
+                [{'color': []}, {'background': []}],
+                [{'align': []}],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                [{'indent': '-1'}, {'indent': '+1'}],
+                [{'script': 'sub'}, {'script': 'super'}],
+                ['blockquote', 'code-block'],
+                ['link', 'image', 'video'],
+                [{'direction': 'rtl'}],
                 ['clean']
             ]
         }

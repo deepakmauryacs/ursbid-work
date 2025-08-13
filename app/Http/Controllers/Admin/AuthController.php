@@ -24,7 +24,7 @@ class AuthController extends Controller
 
         // Only allow Super Admin (user_type = 1)
         if (Auth::attempt(array_merge($credentials, ['user_type' => 1]))) {
-            return redirect()->route('admin.dashboard'); // your admin dashboard route
+            return redirect()->route('super-admin.dashboard'); // your admin dashboard route
         }
 
         return back()->withErrors(['email' => 'Invalid credentials or not a Super Admin']);

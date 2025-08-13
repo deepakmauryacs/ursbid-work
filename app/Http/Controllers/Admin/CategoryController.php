@@ -33,35 +33,35 @@ class CategoryController extends Controller
             'meta_description' => 'nullable|string',
             'status' => 'required|in:1,2',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+    
         $data = $validator->validated();
         $data['slug'] = Str::slug($data['name']);
-        if(isset($data['tags'])){
-            $data['tags'] = json_encode(array_map('trim', explode(',', $data['tags'])));
-        }
-
+    
+        // Handle image upload
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/category'), $filename);
             $data['image'] = 'uploads/category/' . $filename;
         }
-
+    
+        // Create new category
         $category = Category::create($data);
-
+    
         return response()->json([
             'status' => 'success',
             'message' => 'Category created successfully.',
             'data' => $category,
         ]);
-    }
+}
+
 
     public function edit($id)
     {
@@ -72,7 +72,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-
+    
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'required|string',
@@ -83,38 +83,39 @@ class CategoryController extends Controller
             'meta_description' => 'nullable|string',
             'status' => 'required|in:1,2',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+    
         $data = $validator->validated();
         $data['slug'] = Str::slug($data['name']);
-        if(isset($data['tags'])){
-            $data['tags'] = json_encode(array_map('trim', explode(',', $data['tags'])));
-        }
-
+    
+        // Handle image upload
         if ($request->hasFile('image')) {
             if ($category->image && file_exists(public_path($category->image))) {
                 @unlink(public_path($category->image));
             }
+    
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/category'), $filename);
             $data['image'] = 'uploads/category/' . $filename;
         }
-
+    
+        // Update category
         $category->update($data);
-
+    
         return response()->json([
             'status' => 'success',
             'message' => 'Category updated successfully.',
             'data' => $category,
         ]);
     }
+
 
     public function destroy($id)
     {

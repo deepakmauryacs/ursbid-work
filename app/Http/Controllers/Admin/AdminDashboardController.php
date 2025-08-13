@@ -17,7 +17,9 @@ class AdminDashboardController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    {
+    {   
+        
+        
         $stats = [
             'categories'   => Category::count(),
             'subCategories'=> SubCategory::count(),

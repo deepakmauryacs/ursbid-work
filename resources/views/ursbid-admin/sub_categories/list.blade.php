@@ -36,7 +36,7 @@
   --filter-placeholder:#94a3b8;    
 }
 
-/* Respect system dark preference */
+/* System dark preference */
 @media (prefers-color-scheme: dark) {
   :root:not([data-bs-theme]):not(.dark):not([data-theme="dark"]):not(body.dark){
     --filter-bg:#0f172a;
@@ -48,28 +48,43 @@
   }
 }
 
-/* ===== Filter bar ===== */
-.filter-wrap{
-    background:var(--filter-bg);
-    border:1px solid var(--filter-border);
-    border-radius:14px;
-    box-shadow:var(--filter-shadow);
+/* ===== Filter (UL/LI) ===== */
+.filter-card{
+  background:var(--filter-bg);
+  border:1px solid var(--filter-border);
+  border-radius:14px;
+  box-shadow:var(--filter-shadow);
 }
-.filter-grid{row-gap:12px}
-@media(min-width:992px){
-  .filter-grid>[class*="col-"]{display:flex;align-items:flex-end}
-} 
+.filter-ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.filter-ul li{
+  flex:1 1 auto;
+  min-width:220px;
+}
+.filter-ul li.actions-li{
+  flex:0 0 auto;
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+}
 .filter-label{
   font-size:12px;
   color:var(--filter-label);
   margin-bottom:6px;
+  display:block;
 }
 
-/* unified bold border around icon + field */
+/* Unified bold border around icon + field */
 .input-group.pill-wrap{
-  border: 1px solid var(--filter-border);
-  border-radius: 12px;
-  overflow: hidden;
+  border:1px solid var(--filter-border);
+  border-radius:12px;
+  overflow:hidden;
   background:var(--filter-field-bg);
 }
 .input-group.pill-wrap .input-group-text{
@@ -84,17 +99,19 @@
   background:var(--filter-field-bg);
   color:inherit;
 }
-.input-group.pill-wrap .form-control::placeholder{
-  color:var(--filter-placeholder);
-}
+.input-group.pill-wrap .form-control::placeholder{color:var(--filter-placeholder)}
 .input-group.pill-wrap:focus-within{
   border-color:var(--filter-border);
   box-shadow:0 0 0 3px rgba(148,163,184,.25);
 }
 
-/* action buttons area */
+/* Buttons */
 .btn-icon i{font-size:16px;margin-right:6px}
-.actions-bar{gap:8px}
+
+@media(max-width:768px){
+  .filter-ul li{min-width:100%}
+  .filter-ul li.actions-li{flex-wrap:wrap}
+}
 </style>
 
 <div class="container-fluid">
@@ -114,57 +131,48 @@
   <!-- FILTERS -->
   <div class="row mb-3">
     <div class="col-12">
-      <div class="card">
+      <div class="card filter-card border-0">
         <div class="card-body py-3">
           <form id="filterForm" action="{{ route('super-admin.sub-categories.index') }}" method="GET">
-            <div class="row g-3 filter-grid align-items-end">
+            <ul class="filter-ul">
 
-              <!-- Category -->
-              <div class="col-xxl-3 col-lg-4 col-md-6">
-                <div class="w-100">
-                  <label class="filter-label">Category (optional):</label>
-                  <div class="input-group pill-wrap">
-                    <span class="input-group-text"><i class="bi bi-collection"></i></span>
-                    <select name="category" id="category" class="form-select">
-                      <option value="">All</option>
-                      @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                          {{ $category->name }}
-                        </option>
-                      @endforeach
-                    </select>
-                  </div>
+              <li>
+                <label class="filter-label">Category (optional):</label>
+                <div class="input-group pill-wrap">
+                  <span class="input-group-text"><i class="bi bi-collection"></i></span>
+                  <select name="category" id="category" class="form-select">
+                    <option value="">All</option>
+                    @foreach($categories as $category)
+                      <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                      </option>
+                    @endforeach
+                  </select>
                 </div>
-              </div>
+              </li>
 
-              <!-- Search -->
-              <div class="col-xxl-4 col-lg-5 col-md-6">
-                <div class="w-100">
-                  <label class="filter-label">Search (optional):</label>
-                  <div class="input-group pill-wrap">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="name" id="name" value="{{ request('name') }}"
-                           class="form-control" placeholder="Enter sub category">
-                  </div>
+              <li>
+                <label class="filter-label">Search (optional):</label>
+                <div class="input-group pill-wrap">
+                  <span class="input-group-text"><i class="bi bi-search"></i></span>
+                  <input type="text" name="name" id="name" value="{{ request('name') }}"
+                         class="form-control" placeholder="Enter sub category">
                 </div>
-              </div>
+              </li>
 
-              <!-- Actions -->
-              <div class="col-xxl-5 col-lg-3 col-md-12">
-                <div class="d-flex justify-content-xxl-end justify-content-lg-end justify-content-start actions-bar flex-wrap w-100">
-                  <button type="submit" class="btn btn-primary btn-icon">
-                    <i class="bi bi-funnel"></i>Apply
-                  </button>
-                  <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-icon">
-                    <i class="bi bi-arrow-counterclockwise"></i>Reset
-                  </button>
-                  <a href="{{ route('super-admin.categories.create') }}" class="btn btn-success btn-icon">
-                    <i class="bi bi-plus-circle"></i>Add Sub Category
-                  </a>
-                </div>
-              </div>
+              <li class="actions-li">
+                <button type="submit" class="btn btn-primary btn-icon">
+                  <i class="bi bi-funnel"></i>Apply
+                </button>
+                <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-icon">
+                  <i class="bi bi-arrow-counterclockwise"></i>Reset
+                </button>
+                <a href="{{ route('super-admin.sub-categories.create') }}" class="btn btn-success btn-icon">
+                  <i class="bi bi-plus-circle"></i>Add Sub Category
+                </a>
+              </li>
 
-            </div>
+            </ul>
           </form>
         </div>
       </div>

@@ -26,7 +26,6 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'address' => 'nullable|string',
-            'created_at' => 'required|date_format:d-m-Y',
         ]);
 
         if ($validator->fails()) {
@@ -40,7 +39,6 @@ class ProfileController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->address = $data['address'] ?? null;
-        $user->created_at = Carbon::createFromFormat('d-m-Y', $data['created_at']);
         $user->save();
 
         return response()->json([

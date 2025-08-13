@@ -53,8 +53,7 @@ class ProductController extends Controller
         }
 
         return view('ursbid-admin.products.list', compact('products', 'categories', 'perPage'));
-      }
-
+    }
 
 
 

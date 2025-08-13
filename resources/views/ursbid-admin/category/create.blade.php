@@ -9,8 +9,9 @@
             <div class="page-title-box">
                 <h4 class="mb-0 fw-semibold">Add Category</h4>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Add Category</li>
+                    <li class="breadcrumb-item"><a href="{{ route('super-admin.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('super-admin.categories.index') }}">Category List</a></li>
+                    <li class="breadcrumb-item active">Add</li>
                 </ol>
             </div>
         </div>
@@ -44,7 +45,7 @@
                                 <label class="form-label fw-semibold">Tags</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="tags" class="form-control" placeholder="tag1, tag2">
+                                <input type="text" name="tags"   data-role="tagsinput"  class="form-control" placeholder="tag1, tag2">
                             </div>
                         </div>
                         <div class="row mb-3 align-items-center">
@@ -104,9 +105,60 @@
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
+<style>
+/* ===== Light Theme ===== */
+.bootstrap-tagsinput {
+    width: 100%;
+    padding: 6px 12px;
+    line-height: 22px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.bootstrap-tagsinput .tag {
+    background: #614ce1;
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+    color: #fff;
+    font-size: 13px;
+}
+
+/* ===== Dark Theme (class-based) ===== */
+.dark-theme .bootstrap-tagsinput {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    color: #ddd;
+}
+.dark-theme .bootstrap-tagsinput input {
+    color: #ddd;
+}
+.dark-theme .bootstrap-tagsinput .tag {
+    background: #8a73ff;
+    color: #fff;
+}
+
+/* ===== Dark Mode (automatic using media query) ===== */
+@media (prefers-color-scheme: dark) {
+    .bootstrap-tagsinput {
+        background-color: #1e1e1e;
+        border: 1px solid #444;
+        color: #ddd;
+    }
+    .bootstrap-tagsinput input {
+        color: #ddd;
+    }
+    .bootstrap-tagsinput .tag {
+        background: #8a73ff;
+        color: #fff;
+    }
+}
+</style>
 @endpush
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
 $(function(){

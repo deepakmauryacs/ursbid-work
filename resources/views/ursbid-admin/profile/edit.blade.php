@@ -8,19 +8,19 @@
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="row g-0">
                     <!-- Left: Profile summary -->
-                    <div class="col-md-4 bg-light-subtle p-4 d-flex flex-column justify-content-between border-end">
+                    <div class="col-md-4 p-4 d-flex flex-column justify-content-between border-end" style="background: var(--bs-tertiary-bg);">
                         <div>
                             <div class="d-flex align-items-center gap-3">
-                                <div class="rounded-circle overflow-hidden border" style="width:50px;height:50px;">
+                                <div class="rounded-circle overflow-hidden" style="border:1px solid var(--bs-border-color);">
                                     <img src="{{ $user->avatar_url ?? 'https://placehold.co/144x144?text=U' }}"
                                          alt="Avatar" class="w-100 h-100" style="object-fit:cover;">
                                 </div>
                                 <div>
                                     <div class="fw-semibold">{{ $user->name }}</div>
-                                    <div class="text-muted small">{{ $user->email }}</div>
+                                    <div class="small text-body-secondary user-email">{{ $user->email }}</div>
                                 </div>
                             </div>
-                            <div class="mt-4 small text-muted">
+                            <div class="mt-4 small text-body-secondary">
                                 Keep your details accurate. This info can be visible to other users.
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                     </div>
 
                     <!-- Right: Form -->
-                    <div class="col-md-8 bg-white">
+                    <div class="col-md-8" style="background: var(--bs-body-bg);">
                         <form id="profileForm" class="p-4">
                             @csrf
                             @method('PUT')
@@ -40,7 +40,7 @@
                             <div class="row g-3">
                                 <div class="col-12">
                                     <label class="form-label fw-semibold mb-2">Basic Information</label>
-                                    <div class="card bg-body-tertiary border-0 rounded-3 p-3">
+                                    <div class="card border-0 rounded-3 p-3" style="background: var(--bs-tertiary-bg);">
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <div class="form-floating has-icon">
@@ -67,7 +67,7 @@
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold mb-2">Contact</label>
-                                    <div class="card bg-body-tertiary border-0 rounded-3 p-3">
+                                    <div class="card border-0 rounded-3 p-3" style="background: var(--bs-tertiary-bg);">
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <div class="form-floating has-icon">
@@ -100,25 +100,45 @@
 
 @push('styles')
 <style>
-/* Floating-label with leading icon */
+/* Floating-label with trailing icon */
 .has-icon { position: relative; }
 .float-icon {
     position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
-    pointer-events: none; color: #9aa0a6;
+    pointer-events: none; color: var(--bs-secondary-color, #9aa0a6);
 }
-/* Softer inputs */
+/* Inputs use theme tokens so they adapt */
 .form-control {
-    border-color: #e7e7e9;
-    background-clip: padding-box;
+    border-color: var(--bs-border-color);
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
 }
 .form-control:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 .2rem rgba(13,110,253,.08);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 .2rem rgba(var(--bs-primary-rgb), .15);
 }
-/* Section card look */
-.bg-body-tertiary { background-color: #f8f9fb !important; }
-/* Fix floating labels cut-off when icons present */
+/* Fix floating labels when icons present */
 .has-icon .form-control { padding-right: 2.25rem; }
+
+/* Make muted text adapt in both themes */
+.text-muted { color: var(--bs-secondary-color) !important; }
+
+/* Email: keep on one line, ellipsis if too long */
+.user-email {
+    white-space: nowrap;
+    word-break: keep-all;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Outline button contrast in dark */
+[data-bs-theme="dark"] .btn-outline-secondary {
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+}
+[data-bs-theme="dark"] .btn-outline-secondary:hover {
+    background-color: var(--bs-secondary-bg);
+}
 </style>
 @endpush
 
