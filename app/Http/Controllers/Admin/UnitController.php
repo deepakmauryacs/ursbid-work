@@ -96,6 +96,29 @@ class UnitController extends Controller
         ]);
     }
 
+    public function toggleStatus(Request $request, $id)
+    {
+        $unit = Unit::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $unit->update(['status' => $request->status]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
     public function destroy($id)
     {
         $unit = Unit::findOrFail($id);

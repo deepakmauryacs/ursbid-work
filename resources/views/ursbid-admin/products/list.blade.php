@@ -272,6 +272,25 @@
     });
   });
 
+  $(document).on('change', '.status-toggle', function(){
+    const checkbox = $(this);
+    const id = checkbox.data('id');
+    const status = checkbox.is(':checked') ? 1 : 0;
+    const url = '{{ route('super-admin.products.toggle-status', ':id') }}'.replace(':id', id);
+    $.ajax({
+      url: url,
+      type: 'PATCH',
+      data: { status: status, _token: '{{ csrf_token() }}' },
+      success(res){
+        toastr.success(res.message);
+      },
+      error(){
+        toastr.error('Unable to update status');
+        checkbox.prop('checked', !checkbox.prop('checked'));
+      }
+    });
+  });
+
   function loadTable(url){
     $.ajax({
       url, type:'GET',

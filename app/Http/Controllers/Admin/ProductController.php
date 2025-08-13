@@ -224,6 +224,35 @@ class ProductController extends Controller
         ]);
     }
 
+    public function toggleStatus(Request $request, $id)
+    {
+        $product = DB::table('product')->where('id', $id)->first();
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found.'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:0,1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        DB::table('product')->where('id', $id)->update(['status' => $request->status]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
     public function destroy($id)
     {
         $product = DB::table('product')->where('id', $id)->first();

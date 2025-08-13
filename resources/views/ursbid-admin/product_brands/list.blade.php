@@ -96,11 +96,9 @@
                                 <td>{{ $brand->brand_name }}</td>
                                 <td>{{ \Carbon\Carbon::parse($brand->created_at)->format('d-m-Y') }}</td>
                                 <td>
-                                    @if($brand->status == '1')
-                                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
-                                    @else
-                                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
-                                    @endif
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input status-toggle" type="checkbox" data-id="{{ $brand->id }}" {{ $brand->status == '1' ? 'checked' : '' }}>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
@@ -145,6 +143,25 @@ $(function(){
             },
             error: function(){
                 toastr.error('Unable to delete record');
+            }
+        });
+    });
+
+    $(document).on('change', '.status-toggle', function(){
+        const checkbox = $(this);
+        const id = checkbox.data('id');
+        const status = checkbox.is(':checked') ? 1 : 2;
+        const url = '{{ route('super-admin.product-brands.toggle-status', ':id') }}'.replace(':id', id);
+        $.ajax({
+            url: url,
+            type: 'PATCH',
+            data: { status: status, _token: '{{ csrf_token() }}' },
+            success: function(res){
+                toastr.success(res.message);
+            },
+            error: function(){
+                toastr.error('Unable to update status');
+                checkbox.prop('checked', !checkbox.prop('checked'));
             }
         });
     });
