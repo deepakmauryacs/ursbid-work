@@ -462,6 +462,9 @@ Route::get('super-admin/products/{id}/edit', [AdminProductController::class, 'ed
 Route::post('super-admin/products/{id}', [AdminProductController::class, 'update'])
     ->name('super-admin.products.update')
     ->middleware('module.permission:products,can_edit');
+Route::patch('super-admin/products/{id}/status', [AdminProductController::class, 'toggleStatus'])
+    ->name('super-admin.products.toggle-status')
+    ->middleware('module.permission:products,can_edit');
 Route::delete('super-admin/products/{id}', [AdminProductController::class, 'destroy'])
     ->name('super-admin.products.destroy')
     ->middleware('module.permission:products,can_delete');
@@ -483,6 +486,9 @@ Route::get('super-admin/units/{id}/edit', [UnitController::class, 'edit'])
     ->middleware('module.permission:units,can_edit');
 Route::put('super-admin/units/{id}', [UnitController::class, 'update'])
     ->name('super-admin.units.update')
+    ->middleware('module.permission:units,can_edit');
+Route::patch('super-admin/units/{id}/status', [UnitController::class, 'toggleStatus'])
+    ->name('super-admin.units.toggle-status')
     ->middleware('module.permission:units,can_edit');
 Route::delete('super-admin/units/{id}', [UnitController::class, 'destroy'])
     ->name('super-admin.units.destroy')
@@ -559,6 +565,9 @@ Route::get('super-admin/product-brands/{id}/edit', [ProductBrandController::clas
     ->middleware('module.permission:product-brands,can_edit');
 Route::put('super-admin/product-brands/{id}', [ProductBrandController::class, 'update'])
     ->name('super-admin.product-brands.update')
+    ->middleware('module.permission:product-brands,can_edit');
+Route::patch('super-admin/product-brands/{id}/status', [ProductBrandController::class, 'toggleStatus'])
+    ->name('super-admin.product-brands.toggle-status')
     ->middleware('module.permission:product-brands,can_edit');
 Route::delete('super-admin/product-brands/{id}', [ProductBrandController::class, 'destroy'])
     ->name('super-admin.product-brands.destroy')
