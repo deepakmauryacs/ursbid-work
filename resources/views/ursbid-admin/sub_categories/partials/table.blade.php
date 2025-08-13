@@ -27,11 +27,9 @@
                 <td>{{ $sub->category_name }}</td>
                 <td>{{ $sub->created_at ? \Carbon\Carbon::parse($sub->created_at)->format('d-m-Y') : '' }}</td>
                 <td>
-                    @if($sub->status == '1')
-                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
-                    @else
-                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
-                    @endif
+                    <div class="form-check form-switch">
+                        <input class="form-check-input status-toggle" type="checkbox" data-id="{{ $sub->id }}" {{ $sub->status == '1' ? 'checked' : '' }}>
+                    </div>
                 </td>
                 <td>
                     <div class="d-flex gap-2">

@@ -395,6 +395,9 @@ Route::prefix('super-admin')->group(function () {
     Route::put('categories/{id}', [AdminCategoryController::class, 'update'])
         ->name('super-admin.categories.update')
         ->middleware('module.permission:categories,can_edit');
+    Route::patch('categories/{id}/status', [AdminCategoryController::class, 'toggleStatus'])
+        ->name('super-admin.categories.toggle-status')
+        ->middleware('module.permission:categories,can_edit');
     Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy'])
         ->name('super-admin.categories.destroy')
         ->middleware('module.permission:categories,can_delete');
@@ -414,6 +417,9 @@ Route::get('super-admin/sub-categories/{id}/edit', [SubCategoryController::class
     ->middleware('module.permission:sub-categories,can_edit');
 Route::post('super-admin/sub-categories/{id}', [SubCategoryController::class, 'update'])
     ->name('super-admin.sub-categories.update')
+    ->middleware('module.permission:sub-categories,can_edit');
+Route::patch('super-admin/sub-categories/{id}/status', [SubCategoryController::class, 'toggleStatus'])
+    ->name('super-admin.sub-categories.toggle-status')
     ->middleware('module.permission:sub-categories,can_edit');
 Route::delete('super-admin/sub-categories/{id}', [SubCategoryController::class, 'destroy'])
     ->name('super-admin.sub-categories.destroy')

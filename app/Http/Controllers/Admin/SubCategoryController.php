@@ -230,6 +230,30 @@ class SubCategoryController extends Controller
     }
 
     /**
+     * Toggle the status of the specified sub category.
+     */
+    public function toggleStatus(Request $request, $id)
+    {
+        $sub = DB::table('sub_categories')->where('id', $id)->first();
+        if (!$sub) {
+            return response()->json(['message' => 'Sub category not found.'], 404);
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|in:1,2',
+        ]);
+
+        DB::table('sub_categories')->where('id', $id)->update([
+            'status' => $validated['status'],
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
+    /**
      * Remove the specified sub category from storage.
      */
     public function destroy($id)

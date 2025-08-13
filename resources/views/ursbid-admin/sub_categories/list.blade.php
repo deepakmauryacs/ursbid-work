@@ -255,6 +255,26 @@
     });
   });
 
+  $(document).on('change', '.status-toggle', function(){
+    const checkbox = $(this);
+    const id = checkbox.data('id');
+    const status = checkbox.is(':checked') ? 1 : 2;
+    const url = '{{ route('super-admin.sub-categories.toggle-status', ':id') }}'.replace(':id', id);
+
+    $.ajax({
+      url: url,
+      type: 'PATCH',
+      data: { status: status, _token: '{{ csrf_token() }}' },
+      success(res){
+        toastr.success(res.message);
+      },
+      error(){
+        toastr.error('Unable to update status');
+        checkbox.prop('checked', !checkbox.prop('checked'));
+      }
+    });
+  });
+
   // Filter submit (AJAX)
   $(document).on('submit', '#filterForm', function(e){
     e.preventDefault();
