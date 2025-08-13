@@ -104,6 +104,29 @@ class ProductBrandController extends Controller
         ]);
     }
 
+    public function toggleStatus(Request $request, $id)
+    {
+        $brand = ProductBrand::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $brand->update(['status' => $request->status]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
     public function destroy($id)
     {
         $brand = ProductBrand::findOrFail($id);
