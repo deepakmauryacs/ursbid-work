@@ -71,7 +71,7 @@
                                         </a>
                                         @endif
                                         @if(auth()->user()->hasModulePermission('categories','can_delete'))
-                                        <button type="button" data-id="{{ $category->id }}" class="btn btn-soft-danger btn-sm deleteBtn">
+                                        <button type="button" data-id="{{ $category->id }}" data-url="{{ route('super-admin.categories.destroy', $category->id) }}" class="btn btn-soft-danger btn-sm deleteBtn">
                                             <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </button>
                                         @endif
@@ -90,27 +90,64 @@
                 <div class="card-footer">
                     {{ $categories->links() }}
                 </div>
-            </div>
-        </div>
     </div>
+</div>
+</div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-danger text-white rounded-top">
+        <h5 class="modal-title" id="deleteConfirmLabel">
+            <i class="ri-error-warning-line me-2"></i> Confirm Deletion
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="mb-3">
+          <i class="ri-alert-line text-danger" style="font-size: 40px;"></i>
+        </div>
+        <p class="mb-1 fs-5 fw-semibold">Are you sure you want to delete this item?</p>
+        <p class="text-muted">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer justify-content-center border-0">
+        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
+            <i class="ri-close-line me-1"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">
+            <i class="ri-delete-bin-line me-1"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
+let deleteId = null;
+let deleteUrl = null;
 $(function(){
     $('.deleteBtn').on('click', function(){
-        if(!confirm('Are you sure want to delete?')) return;
-        var id = $(this).data('id');
+        deleteId = $(this).data('id');
+        deleteUrl = $(this).data('url');
+        $('#deleteConfirmModal').modal('show');
+    });
+
+    $('#confirmDeleteBtn').on('click', function(){
         $.ajax({
-            url: '/super-admin/categories/'+id,
+            url: deleteUrl,
             type: 'DELETE',
             data: { _token: '{{ csrf_token() }}' },
             success: function(res){
+                $('#deleteConfirmModal').modal('hide');
                 toastr.success(res.message);
-                $('#row-'+id).remove();
+                $('#row-'+deleteId).remove();
             },
             error: function(){
+                $('#deleteConfirmModal').modal('hide');
                 toastr.error('Unable to delete record');
             }
         });
