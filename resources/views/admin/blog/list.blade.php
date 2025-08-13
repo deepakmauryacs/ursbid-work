@@ -97,9 +97,6 @@
                                                 <span class="projectDatatable-title">Title</span>
                                             </th>
                                             <th>
-                                                <span class="projectDatatable-title">Date</span>
-                                            </th>
-                                            <th>
                                                 <span class="projectDatatable-title">Image</span>
                                             </th>
                                             <th>
@@ -127,11 +124,6 @@
                                             <td>
                                                 <div class="userDatatable-content">
                                                     {{ $blog->title }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ \Carbon\Carbon::parse($blog->post_date)->format('d-m-Y') }}
                                                 </div>
                                             </td>
                                             <td>

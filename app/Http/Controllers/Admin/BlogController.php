@@ -147,6 +147,30 @@ class BlogController extends Controller
     }
 
     /**
+     * Toggle the status of the specified blog.
+     */
+    public function toggleStatus(Request $request, $id)
+    {
+        $blog = DB::table('blogs')->where('id', $id)->first();
+        if (!$blog) {
+            return response()->json(['message' => 'Blog not found.'], 404);
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|in:0,1',
+        ]);
+
+        DB::table('blogs')->where('id', $id)->update([
+            'status' => $validated['status'],
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
+    /**
      * Remove the specified blog from storage.
      */
     public function destroy($id)

@@ -63,30 +63,19 @@
                                 {{ csrf_field() }}
                                 <div class="row">
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="a8" class="il-gray fs-14 fw-500 align-center">
                                                 Title</label>
                                             <input type="text"
                                                 class="form-control ih-medium ip-light radius-xs b-light px-15" id="a8"
-                                                placeholder="Title" name="title" value="{{ $blog->title }}"> 
+                                                placeholder="Title" name="title" value="{{ $blog->title }}">
                                         </div>
                                         @if ($errors->has('title'))
                                         <span class="text-danger">{{ $errors->first('title') }}</span>
                                         @endif
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="a9" class="il-gray fs-14 fw-500 align-center">Date</label>
-                                            <input type="date"
-                                                class="form-control ih-medium ip-light radius-xs b-light px-15" id="a9"
-                                             name="post_date" placeholder="Date" value="{{ $blog->post_date }}">
-                                        </div>
-                                        @if ($errors->has('post_date'))
-                                        <span class="text-danger">{{ $errors->first('post_date') }}</span>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="a9" class="il-gray fs-14 fw-500 align-center">Image</label>
                                             <input type="file"

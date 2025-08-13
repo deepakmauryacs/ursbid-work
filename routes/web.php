@@ -434,6 +434,9 @@ Route::get('super-admin/blogs/{id}/edit', [AdminBlogController::class, 'edit'])
 Route::post('super-admin/blogs/{id}', [AdminBlogController::class, 'update'])
     ->name('super-admin.blogs.update')
     ->middleware('module.permission:blogs,can_edit');
+Route::patch('super-admin/blogs/{id}/status', [AdminBlogController::class, 'toggleStatus'])
+    ->name('super-admin.blogs.toggle-status')
+    ->middleware('module.permission:blogs,can_edit');
 Route::delete('super-admin/blogs/{id}', [AdminBlogController::class, 'destroy'])
     ->name('super-admin.blogs.destroy')
     ->middleware('module.permission:blogs,can_delete');
