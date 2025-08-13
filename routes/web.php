@@ -46,6 +46,9 @@ Route::post('contact_inc', [App\Http\Controllers\HomeController::class, 'contact
 Route::post('advertise_inc', [App\Http\Controllers\HomeController::class, 'advertise_inc'])->name('advertise_inc');
 Route::post('support_inc', [App\Http\Controllers\HomeController::class, 'support_inc'])->name('support_inc');
 
+Route::get('/blog/{slug}', [App\Http\Controllers\HomeController::class, 'blogDetail']);
+Route::post('/blog/{slug}/comment', [App\Http\Controllers\HomeController::class, 'blogComment'])->name('blog.comment');
+
 Route::get('/menu', function () {return view('frontend/menu');});
 // Route::get('/product-detail', function () {return view('frontend/product-detail');});
 // Route::get('/seller-login', function () {return view('frontend/seller-login');});

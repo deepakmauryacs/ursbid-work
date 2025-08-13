@@ -1311,4 +1311,76 @@ class HomeController extends Controller
             return redirect()->back();
         }
     }
+
+    public function blogDetail($slug)
+    {
+        $blog = DB::table('blogs')->where('slug', $slug)->where('status', 1)->first();
+        if (!$blog) {
+            abort(404);
+        }
+
+        $featurePost = DB::table('blogs')
+            ->where('status', 1)
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('id')
+            ->first();
+
+        $popularPosts = DB::table('blogs')
+            ->where('status', 1)
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('id')
+            ->skip(1)
+            ->take(3)
+            ->get();
+
+        $relatedPosts = DB::table('blogs')
+            ->where('status', 1)
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('id')
+            ->take(4)
+            ->get();
+
+        $categories = DB::table('categories')
+            ->leftJoin('sub_categories', 'sub_categories.category_id', '=', 'categories.id')
+            ->select('categories.name', DB::raw('COUNT(sub_categories.id) as total'))
+            ->groupBy('categories.id', 'categories.name')
+            ->get();
+
+        $comments = DB::table('blog_comments')
+            ->where('blog_id', $blog->id)
+            ->orderByDesc('id')
+            ->get();
+
+        $formattedDate = date('d-m-Y');
+
+        return view('frontend.blog-detail', compact('blog', 'featurePost', 'popularPosts', 'relatedPosts', 'categories', 'comments', 'formattedDate'));
+    }
+
+    public function blogComment(Request $request, $slug)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email',
+            'message' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        $blog = DB::table('blogs')->where('slug', $slug)->where('status', 1)->first();
+        if (!$blog) {
+            return response()->json(['status' => false, 'message' => 'Blog not found'], 404);
+        }
+
+        DB::table('blog_comments')->insert([
+            'blog_id' => $blog->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'message' => $request->message,
+            'created_at' => now(),
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Comment submitted successfully']);
+    }
 }
