@@ -143,70 +143,66 @@
 
         <div class="row">
             <div class="col-lg-12 mb-30">
-                <div class="card">
-                    <div class="col-md-12 mt-2">
-                        <form class="row" method="get" action="">
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <!-- <input type="text" name="category" class="form-control" placeholder="Category"
-                                        value="{{ isset($data['category']) ? $data['category'] : '' }}"> -->
-                                    <select name="category" id="" class="form-control">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h5 class="mb-0">Filter Enquiries</h5>
+                        <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#activeEnquiryFilters" aria-expanded="true" aria-controls="activeEnquiryFilters">
+                            Toggle Filters
+                        </button>
+                    </div>
+                    <div class="collapse show" id="activeEnquiryFilters">
+                        <div class="card-body">
+                            <form class="row g-3 align-items-end" method="get" action="">
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label for="category" class="form-label">Category</label>
+                                    <select name="category" id="category" class="form-select">
                                         <option value="">Select Category</option>
                                         @foreach($category_data as $cat)
-                                        <option value="{{ $cat->id }}"
-                                            {{ $data['category'] == $cat->id ? 'selected' : '' }}>{{ $cat->title }}
+                                        <option value="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
+                                            {{ $cat->title }}
                                         </option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="date" class="form-control" placeholder="Date"
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label for="filterDate" class="form-label">Date</label>
+                                    <input type="text" id="filterDate" name="date" class="form-control" placeholder="Date"
                                         value="{{ isset($data['date']) ? $data['date'] : '' }}">
                                 </div>
-                            </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="city" class="form-control" placeholder="City"
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label for="filterCity" class="form-label">City</label>
+                                    <input type="text" id="filterCity" name="city" class="form-control" placeholder="City"
                                         value="{{ isset($data['city']) ? $data['city'] : '' }}">
                                 </div>
-                            </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="quantity" class="form-control" placeholder="Quantity"
-                                        value="{{ isset($data['quantity']) ? $data['quantity'] : '' }}">
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label for="filterQuantity" class="form-label">Quantity</label>
+                                    <input type="text" id="filterQuantity" name="quantity" class="form-control"
+                                        placeholder="Quantity" value="{{ isset($data['quantity']) ? $data['quantity'] : '' }}">
                                 </div>
-                            </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="product_name" class="form-control"
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label for="filterProduct" class="form-label">Product Name</label>
+                                    <input type="text" id="filterProduct" name="product_name" class="form-control"
                                         placeholder="Product Name"
                                         value="{{ isset($data['product_name']) ? $data['product_name'] : '' }}">
                                 </div>
-                            </div>
-
-                            <div class="col-md-1 no-padding-left">
-                                <div class="form-group">
-                                    <select class="form-control select2" name="r_page">
-                                        <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}> 25 Records Per
-                                            Page</option>
-                                        <option value="50" {{ $data['r_page'] == 50 ? 'selected' : '' }}> 50 Records Per
-                                            Page</option>
-                                        <option value="100" {{ $data['r_page'] == 100 ? 'selected' : '' }}> 100 Records
-                                            Per Page</option>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label for="recordsPerPage" class="form-label">Records Per Page</label>
+                                    <select class="form-select select2" id="recordsPerPage" name="r_page">
+                                        <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}>25</option>
+                                        <option value="50" {{ $data['r_page'] == 50 ? 'selected' : '' }}>50</option>
+                                        <option value="100" {{ $data['r_page'] == 100 ? 'selected' : '' }}>100</option>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="col-md-1 no-padding-left">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                    <label class="form-label d-none d-lg-block">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
                                 </div>
-                            </div>
-                        </form>
-
+                            </form>
+                        </div>
                     </div>
+                </div>
+                <div class="card shadow-sm">
                     <div class="card-body">
 
                         @if(Session::has('success'))
@@ -234,7 +230,7 @@
 
                         <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
                             <div class="table-responsive">
-                            <table class="table mb-0">
+                                <table class="table table-hover align-middle mb-0">
                                     <thead>
                                         <tr class="userDatatable-header">
                                             <th>
