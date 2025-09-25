@@ -41,73 +41,69 @@
         </div>
 
      
-        <div class="row">
-            <div class="col-lg-12 mb-30">
-                <div class="card">
-                <div class="col-md-12 mt-2">
-                        <form class="row" method="get" action="">
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <!-- <input type="text" name="category" class="form-control" placeholder="Category"
-                                        value="{{ isset($data['category']) ? $data['category'] : '' }}"> -->
-                                    <select name="category" id="" class="form-control">
-                                        <option value="">Select Category</option>
-                                        @foreach($category_data as $cat)
-                                        <option value="{{ $cat->id }}"
-                                            {{ $datas['category'] == $cat->id ? 'selected' : '' }}>
-                                            {{ $cat->title }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-0 pb-0">
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between">
+                            <div class="d-flex align-items-center mb-2 mb-md-0">
+                                <span data-feather="sliders" class="me-2 text-primary"></span>
+                                <h5 class="mb-0">Filter Accepted Bids</h5>
                             </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="date" class="form-control" placeholder="Date"
-                                        value="{{ isset($datas['date']) ? $datas['date'] : '' }}">
-                                </div>
+                            <p class="text-muted small mb-0">Find accepted bids faster with responsive filter controls.</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form class="row g-3" method="get" action="">
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <label for="category" class="form-label mb-1">Category</label>
+                                <select name="category" id="category" class="form-select">
+                                    <option value="">Select Category</option>
+                                    @foreach($category_data as $cat)
+                                    <option value="{{ $cat->id }}" {{ ($datas['category'] ?? '') == $cat->id ? 'selected' : '' }}>
+                                        {{ $cat->title }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="city" class="form-control" placeholder="City"
-                                        value="{{ isset($datas['city']) ? $datas['city'] : '' }}">
-                                </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <label for="filter-date" class="form-label mb-1">Date</label>
+                                <input type="text" name="date" id="filter-date" class="form-control" placeholder="DD/MM/YYYY"
+                                    value="{{ $datas['date'] ?? '' }}">
                             </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="quantity" class="form-control" placeholder="Quantity"
-                                        value="{{ isset($datas['quantity']) ? $datas['quantity'] : '' }}">
-                                </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <label for="filter-city" class="form-label mb-1">City</label>
+                                <input type="text" name="city" id="filter-city" class="form-control" placeholder="City"
+                                    value="{{ $datas['city'] ?? '' }}">
                             </div>
-                            <div class="col-md-2 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="product_name" class="form-control"
-                                        placeholder="Product Name"
-                                        value="{{ isset($datas['product_name']) ? $datas['product_name'] : '' }}">
-                                </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <label for="filter-quantity" class="form-label mb-1">Quantity</label>
+                                <input type="text" name="quantity" id="filter-quantity" class="form-control"
+                                    placeholder="Quantity" value="{{ $datas['quantity'] ?? '' }}">
                             </div>
-
-                            <!-- <div class="col-md-1 no-padding-left">
-                                <div class="form-group">
-                                    <select class="form-control select2" name="r_page">
-                                        <option value="25" {{ $datas['r_page'] == 25 ? 'selected' : '' }}> 25 Records Per
-                                            Page</option>
-                                        <option value="50" {{ $datas['r_page'] == 50 ? 'selected' : '' }}> 50 Records Per
-                                            Page</option>
-                                        <option value="100" {{ $datas['r_page'] == 100 ? 'selected' : '' }}> 100 Records
-                                            Per Page</option>
-                                    </select>
-                                </div>
-                            </div> -->
-
-                            <div class="col-md-1 no-padding-left">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
-                                </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <label for="filter-product" class="form-label mb-1">Product Name</label>
+                                <input type="text" name="product_name" id="filter-product" class="form-control"
+                                    placeholder="Product Name" value="{{ $datas['product_name'] ?? '' }}">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                                    <span data-feather="filter" class="me-2"></span>
+                                    Apply Filters
+                                </button>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 d-flex align-items-end">
+                                <a href="{{ url()->current() }}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
+                                    <span data-feather="rotate-ccw" class="me-2"></span>
+                                    Reset
+                                </a>
                             </div>
                         </form>
-
                     </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
                     <div class="card-body">
 
                         @if(Session::has('success'))
