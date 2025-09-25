@@ -1,4 +1,4 @@
-@extends ('seller.layout')
+@extends('seller.layouts.app')
 @section('title', 'Update Details')
 
 @section('content')

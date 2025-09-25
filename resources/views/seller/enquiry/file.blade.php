@@ -1,4 +1,4 @@
-@extends ('seller.layout')
+@extends('seller.layouts.app')
 @section('title', 'Enquiry List')
 <!--  -->
 @section('content')
