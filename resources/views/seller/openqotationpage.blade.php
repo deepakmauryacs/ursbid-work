@@ -108,7 +108,7 @@ table tbody th:last-child {
                                 $grandTotal =   $platformFee - $discount ;
                                 @endphp
 
-                                <table>
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                                     <tbody>
                                         <tr>
                                             <th>Quotation Rate</th>

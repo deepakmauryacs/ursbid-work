@@ -111,7 +111,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table align-middle mb-0">
+                            <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                                 <tbody>
                                     <tr>
                                         <th scope="row" class="fw-semibold text-muted">Name</th>

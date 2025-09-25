@@ -83,7 +83,7 @@
 
                         <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
                             <div class="table-responsive">
-                                <table class="table mb-0">
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0">
 
                                     <tr class="userDatatable-header">
                                         <td>
