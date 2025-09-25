@@ -149,8 +149,12 @@ class BuyerloginController extends Controller
     // echo "<pre>";
     // // Print (dump) all session data and stop execution
     // print_r($allSessionData); die();
-        //$buyer_email = $request->session()->get('seller')->email;
-        $buyer_email = $request->session()->get('buyer')->email;
+        $seller = $request->session()->get('seller');
+        if (!$seller) {
+            return redirect()->route('seller-login');
+        }
+
+        $buyer_email = $seller->email;
         // $data = DB::table('qutation_form')->where('email',  $buyer_email)->get();
 
 
@@ -408,7 +412,11 @@ class BuyerloginController extends Controller
 
 
     public function mylist(Request $request){
-        $buyer_email = $request->session()->get('seller')->email;
+        $seller = $request->session()->get('seller');
+        if (!$seller) {
+            return redirect()->route('seller-login');
+        }
+        $buyer_email = $seller->email;
         $keyword = $request->input('keyword');
         $category = $request->input('category');
         $date = $request->input('date');
@@ -560,7 +568,11 @@ class BuyerloginController extends Controller
 
         $category_data=DB::table('category')->get();
         $recordsPerPage = $request->input('r_page', 25);
-        $buyer_email = $request->session()->get('seller')->email;
+        $seller = $request->session()->get('seller');
+        if (!$seller) {
+            return redirect()->route('seller-login');
+        }
+        $buyer_email = $seller->email;
         
 
         $data = DB::table('bidding_price')
@@ -703,7 +715,11 @@ class BuyerloginController extends Controller
 
 
     public function price_list(Request $request, $data_id){
-        $buyer_email = $request->session()->get('seller')->email;
+        $seller = $request->session()->get('seller');
+        if (!$seller) {
+            return redirect()->route('seller-login');
+        }
+        $buyer_email = $seller->email;
         
       
 
@@ -929,7 +945,11 @@ class BuyerloginController extends Controller
 
 
     public function accepted_list(Request $request, $data_id){
-        $buyer_email = $request->session()->get('seller')->email;
+        $seller = $request->session()->get('seller');
+        if (!$seller) {
+            return redirect()->route('seller-login');
+        }
+        $buyer_email = $seller->email;
         
       
 
