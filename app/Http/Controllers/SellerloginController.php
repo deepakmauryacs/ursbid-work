@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class SellerloginController extends Controller
 {
@@ -34,14 +35,30 @@ class SellerloginController extends Controller
 
     public function update_details(Request $request, $id)
     {
-        $validator = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'gst' => 'required',
             'phone' => 'required',
             'acc_type' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Please correct the highlighted errors and try again.',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         $acc_type = is_array($request->acc_type) ? implode(',', $request->acc_type) : $request->acc_type;
         $pro_ser = is_array($request->pro_ser) ? implode(',', $request->pro_ser) : "";
+
         $updateData = [
             'name' => $request->name,
             'gst' => $request->gst,
@@ -49,20 +66,44 @@ class SellerloginController extends Controller
             'acc_type' => $acc_type,
             'pro_ser' => $pro_ser,
         ];
+
         $updated = DB::table('seller')
             ->where('id', $id)
             ->update($updateData);
-        if ($updated) {
-            $new_data = DB::table('seller')
-                ->where('id', $id)
-                ->first();
-            $request->session()->put('seller', $new_data);
-            return back()->with('success', 'updated successfully.');
-        } else {
+
+        $newData = DB::table('seller')
+            ->where('id', $id)
+            ->first();
+
+        if ($newData) {
+            $request->session()->put('seller', $newData);
+        }
+
+        if ($request->ajax()) {
+            if ($updated === false) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Update failed. Please try again.',
+                ], 500);
+            }
+
+            $message = $updated ? 'Account details updated successfully.' : 'No changes were necessary.';
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+            ]);
+        }
+
+        if ($updated === false) {
             return back()
                 ->withErrors(['error' => 'Update failed.'])
                 ->withInput();
         }
+
+        $message = $updated ? 'updated successfully.' : 'No changes were necessary.';
+
+        return back()->with('success', $message);
     }
 
     public function delete_account(Request $request)
