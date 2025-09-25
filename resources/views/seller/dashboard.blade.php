@@ -143,7 +143,8 @@
                                                     </div>
                                                     <div class="d-flex flex-column gap-2">
                                                         <span class="fw-medium">{{ $referralCode }}</span>
-                                                        <div class="btn-group" role="group">
+                                                        
+                                                        <div class="d-flex gap-2">
                                                             <a class="btn btn-outline-success btn-sm" href="https://wa.me/?text={{ urlencode($referralUrl) }}" target="_blank" rel="noopener">
                                                                 Share on WhatsApp
                                                             </a>
@@ -151,6 +152,7 @@
                                                                 Copy Link
                                                             </button>
                                                         </div>
+
                                                         <input type="text" class="visually-hidden" value="{{ $referralUrl }}" id="referralLink" readonly>
                                                     </div>
                                                 </div>
