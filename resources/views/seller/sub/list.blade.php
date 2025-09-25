@@ -1,4 +1,4 @@
-@extends ('admin.layout')
+@extends('seller.layouts.app')
 @section('title', 'Sub Category List')
 <!--  -->
 @section('content')

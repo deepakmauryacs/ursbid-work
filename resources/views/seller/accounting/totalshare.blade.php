@@ -1,4 +1,4 @@
-@extends ('seller.layout')
+@extends('seller.layouts.app')
 @section('title', 'My share List')
 <!--  -->
 @section('content')
