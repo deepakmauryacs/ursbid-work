@@ -25,30 +25,24 @@
 
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-                    <form method="post" action="{{ url('/update_details/' . $blog->id) }}" enctype="multipart/form-data">
+                    <form id="updateAccountForm" method="post" action="{{ url('/update_details/' . $blog->id) }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <label for="seller-name" class="form-label text-capitalize">Name</label>
                                 <input type="text" class="form-control" id="seller-name" placeholder="Enter your name" name="name" value="{{ $blog->name }}">
-                                @if ($errors->has('name'))
-                                    <div class="text-danger small mt-1">{{ $errors->first('name') }}</div>
-                                @endif
+                                <div class="text-danger small mt-1 error-text" data-error="name" style="{{ $errors->has('name') ? '' : 'display:none;' }}">{{ $errors->first('name') }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="seller-phone" class="form-label text-capitalize">Phone</label>
                                 <input type="text" class="form-control" id="seller-phone" placeholder="Enter your phone number" name="phone" value="{{ $blog->phone }}">
-                                @if ($errors->has('phone'))
-                                    <div class="text-danger small mt-1">{{ $errors->first('phone') }}</div>
-                                @endif
+                                <div class="text-danger small mt-1 error-text" data-error="phone" style="{{ $errors->has('phone') ? '' : 'display:none;' }}">{{ $errors->first('phone') }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="seller-gst" class="form-label text-uppercase">GST</label>
                                 <input type="text" class="form-control" id="seller-gst" placeholder="Enter GST number" name="gst" value="{{ $blog->gst }}">
-                                @if ($errors->has('gst'))
-                                    <div class="text-danger small mt-1">{{ $errors->first('gst') }}</div>
-                                @endif
+                                <div class="text-danger small mt-1 error-text" data-error="gst" style="{{ $errors->has('gst') ? '' : 'display:none;' }}">{{ $errors->first('gst') }}</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="seller-email" class="form-label text-capitalize">Email</label>
@@ -82,9 +76,7 @@
                                         <label class="form-check-label" for="acc_type_buyer">Buyer</label>
                                     </div>
                                 </div>
-                                @if ($errors->has('acc_type'))
-                                    <div class="text-danger small mt-1">{{ $errors->first('acc_type') }}</div>
-                                @endif
+                                <div class="text-danger small mt-1 error-text" data-error="acc_type" style="{{ $errors->has('acc_type') ? '' : 'display:none;' }}">{{ $errors->first('acc_type') }}</div>
                             </div>
 
                             <div class="col-12">
@@ -93,10 +85,13 @@
                                     <div id="checkboxContainer" class="row g-2"></div>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <div class="text-danger small mt-1 error-text" data-error="pro_ser" style="display:none;"></div>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary" id="updateAccountSubmit">Save Changes</button>
                         </div>
                     </form>
                 </div>
@@ -105,41 +100,111 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    function updateDropdown() {
-        var selectedCategories = [];
-        if ($('#acc_type_seller').is(':checked')) {
-            selectedCategories.push(9);
-        }
-        if ($('#acc_type_contractor').is(':checked')) {
-            selectedCategories.push(10);
-        }
-        if (selectedCategories.length > 0) {
-            $('#gstField').show();
-            $.ajax({
-                url: '{{ route("fetch.optionsback") }}',
-                type: 'POST',
-                data: {
-                    categories: selectedCategories,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#checkboxContainer').html(response);
+@push('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKM265AxtUtKeAoD0UDiP0wQmgFDBDsG/T7InhxiZx4nU+uGHVxgAhWYoS4JT3KjIP9ezefK1z6LXm4O0hZrXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@endpush
+
+@push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-HHV3Pk2VYK9ER5iq90aqw2GUlycvIbwkWNAv8hBlC9yxy0OTUUkLR53Lcs7Vp1IU7DqDZr1P0N6xJbVQfE3d3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function() {
+            function updateDropdown() {
+                var selectedCategories = [];
+                if ($('#acc_type_seller').is(':checked')) {
+                    selectedCategories.push(9);
                 }
+                if ($('#acc_type_contractor').is(':checked')) {
+                    selectedCategories.push(10);
+                }
+                if (selectedCategories.length > 0) {
+                    $('#gstField').show();
+                    $.ajax({
+                        url: '{{ route("fetch.optionsback") }}',
+                        type: 'POST',
+                        data: {
+                            categories: selectedCategories,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            $('#checkboxContainer').html(response);
+                        }
+                    });
+                } else {
+                    $('#gstField').hide();
+                    $('#checkboxContainer').html('');
+                }
+            }
+
+            function clearErrors() {
+                $('#updateAccountForm').find('.error-text').each(function() {
+                    $(this).text('').hide();
+                });
+            }
+
+            function showFieldError(field, message) {
+                var $target = $('#updateAccountForm').find('.error-text[data-error="' + field + '"]');
+                if ($target.length) {
+                    $target.text(message).show();
+                } else {
+                    toastr.error(message);
+                }
+            }
+
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                timeOut: 4000,
+                positionClass: 'toast-top-right'
+            };
+
+            $('#updateAccountForm').on('submit', function(event) {
+                event.preventDefault();
+
+                var $form = $(this);
+                var $submitButton = $('#updateAccountSubmit');
+
+                clearErrors();
+
+                $submitButton.prop('disabled', true).addClass('disabled');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: 'POST',
+                    data: $form.serialize(),
+                    success: function(response) {
+                        if (response && response.status === 'success') {
+                            toastr.success(response.message || 'Account details updated successfully.');
+                        } else {
+                            toastr.success('Account details updated successfully.');
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON ? xhr.responseJSON.errors : {};
+                            $.each(errors, function(field, messages) {
+                                if ($.isArray(messages) && messages.length) {
+                                    showFieldError(field, messages[0]);
+                                }
+                            });
+                            var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Please correct the highlighted errors and try again.';
+                            toastr.error(errorMessage);
+                        } else {
+                            var generalMessage = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Something went wrong. Please try again.';
+                            toastr.error(generalMessage);
+                        }
+                    },
+                    complete: function() {
+                        $submitButton.prop('disabled', false).removeClass('disabled');
+                    }
+                });
             });
-        } else {
-            $('#gstField').hide();
-            $('#checkboxContainer').html('');
-        }
-    }
 
-    $('input[name="acc_type[]"]').change(function() {
-        updateDropdown();
-    });
+            $('input[name="acc_type[]"]').change(function() {
+                updateDropdown();
+            });
 
-    updateDropdown();
-});
-</script>
+            updateDropdown();
+        });
+    </script>
+@endpush
 @endsection
