@@ -1,6 +1,7 @@
 @php
     $seller = session('seller');
     $accTypeValues = [];
+    $sellerHashId = null;
 
     if ($seller) {
         $uid = $seller->id ?? null;
@@ -9,12 +10,15 @@
             if ($account && $account->acc_type) {
                 $accTypeValues = array_filter(explode(',', $account->acc_type));
             }
+            $sellerHashId = $account->hash_id ?? null;
         } elseif (!empty($seller->acc_type)) {
             $accTypeValues = array_filter(explode(',', $seller->acc_type));
         }
+        $sellerHashId = $sellerHashId ?? ($seller->hash_id ?? null);
     }
 
     $accTypeValues = array_map('intval', $accTypeValues);
+    $currentShareView = request()->query('view');
 @endphp
 
 <div class="main-nav">
@@ -130,11 +134,38 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('seller/accounting/totalshare') ? 'active' : '' }}" href="{{ url('seller/accounting/totalshare') }}">
+                <a class="nav-link {{ request()->is('seller/accounting/totalshare') && $currentShareView !== 'users' ? 'active' : '' }}" href="{{ url('seller/accounting/totalshare') }}">
                     <span class="nav-icon">
                         <i class="ri-share-forward-line"></i>
                     </span>
                     <span class="nav-text">Share Profile</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('seller/accounting/totalshare') && $currentShareView === 'users' ? 'active' : '' }}" href="{{ url('seller/accounting/totalshare') }}?view=users">
+                    <span class="nav-icon">
+                        <i class="ri-message-3-line"></i>
+                    </span>
+                    <span class="nav-text">Users List</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('delete-account') ? 'active' : '' }}" href="{{ url('delete-account') }}">
+                    <span class="nav-icon">
+                        <i class="ri-delete-bin-line"></i>
+                    </span>
+                    <span class="nav-text">Delete Account</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('update-account*') ? 'active' : '' }}" href="{{ $sellerHashId ? url('update-account/' . $sellerHashId) : 'javascript:void(0);' }}">
+                    <span class="nav-icon">
+                        <i class="ri-user-settings-line"></i>
+                    </span>
+                    <span class="nav-text">Update Account</span>
                 </a>
             </li>
         </ul>
