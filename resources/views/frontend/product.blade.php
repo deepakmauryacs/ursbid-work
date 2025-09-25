@@ -89,10 +89,10 @@
                                         <div class="item">
                                             <a href="{{url('product-detail/' .$product->slug)}}">
                                                 <div class="img">
-                                                    <img src="{{ url('public/uploads/'.$product->image) }}">
+                                                    <img src="{{ url('public/'.$product->image) }}">
                                                 </div>
                                                 <div class="hd_name">
-                                                    <h3>{{ $product->title }}</h3>
+                                                    <h3>{{ $product->brand_name }}</h3>
                                                 </div>
                                             </a>
                                         </div>

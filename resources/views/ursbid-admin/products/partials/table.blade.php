@@ -35,9 +35,11 @@
                 <td>{{ $product->category_name }}</td>
                 <td>{{ $product->sub_name }}</td>
                 <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input status-toggle" type="checkbox" data-id="{{ $product->id }}" {{ $product->status == 1 ? 'checked' : '' }}>
-                    </div>
+                    @if($product->status == 1)
+                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
+                    @else
+                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
+                    @endif
                 </td>
                 <td>
                     <div class="d-flex gap-2">

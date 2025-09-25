@@ -1,211 +1,201 @@
-<!doctype html>
-<html class="no-js" lang="zxx">
+@extends('frontend.layouts.app')
+@section('title', 'URSBID | Contact Detail')
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>URSBID: A platform for Construction material seller and buyer</title>
+@section('content')
+<div class="body-wrapper">
+    <div class="ltn__utilize-overlay"></div>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <meta name="description"
-        content="URSBID is a virtual hub for all types of Building materials, hardware, suppliers and contractors. It deals in various materials like cement, concrete, rebar etc.">
-    <meta name="keywords"
-        content="Building material Supplier, Construction Company, Wholesaler, plateform for cunstruction material" />
-
-
-    <link rel="canonical" href="https://ursbid.com/" />
-
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://ursbid.com/”/">
-    <meta property=" og:site_name" content="URSBID" />
-    <meta property="og:title" content="URSBID: A platform for Construction material seller and buyer" />
-    <meta property="og:description"
-        content="URSBID is a virtual hub for all types of Building materials, hardware, suppliers and contractors. It deals in various materials like cement, concrete, rebar etc" />
-    <meta property="og:image" content="https://ursbid.com/assets/front/img/logo.png”/">
-    <meta property=" og:image:width" content="200" />
-    <meta property="og:image:height" content="200" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@URSBID" />
-    <meta name="twitter:title" content="URSBID: A platform for Construction material seller and buyer" />
-    <meta name="twitter:description"
-        content="URSBID is a virtual hub for all types of Building materials, hardware, suppliers and contractors. It deals in various materials like cement, concrete, rebar etc" />
-
-    <meta name="robots" content="index, follow" />
-
-    <meta name="google-site-verification" content="9Pleoer4kggTobWWTw9a8e2ZIppNa5I8ZG5PUIG5zYY" />
-
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKTR2ETT26"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-GKTR2ETT26');
-    </script>
-    @include('frontend.inc.header-links')
-
-</head>
-
-<body>
-
-
-    <!-- Body main wrapper start -->
-    <div class="body-wrapper">
-
-        @include('frontend.inc.header')
-
-        <div class="ltn__utilize-overlay"></div>
-
-        <div class="ltn__breadcrumb-area text-left">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="ltn__breadcrumb-inner">
-                            <h1 class="page-title">Contact Detail</h1>
-                            <div class="ltn__breadcrumb-list">
-                                <ul>
-                                    <li><a href="{{url('/')}}"><span class="ltn__secondary-color"><i
-                                                    class="fas fa-home"></i></span> Home</a></li>
-                                    <li>Contact Detail</li>
-                                </ul>
-                            </div>
+    <!-- Breadcrumb -->
+    <div class="ltn__breadcrumb-area text-left" style="padding:50px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner">
+                        <h1 class="page-title fw-bold">Contact Detail</h1>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li>
+                                    <a href="{{ url('/') }}">
+                                        <span class="ltn__secondary-color"><i class="fas fa-home"></i></span> Home
+                                    </a>
+                                </li>
+                                <li>Contact Detail</li>
+                            </ul>
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
-        </div>
-
-        <div class="ltn__contact-address-area pd-60">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 mb-2">
-                        <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow">
-                            <div class="ltn__contact-address-icon">
-                                <img src="{{url('assets/front/img/inner/10.png')}}" alt="Icon Image">
-                            </div>
-                            <h3 class="animated fadeIn">Email Address</h3>
-                            <p>support@ursbid.com</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-2">
-                        <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow">
-                            <div class="ltn__contact-address-icon">
-                                <img src="{{url('assets/front/img/inner/11.png')}}" alt="Icon Image">
-                            </div>
-                            <h3 class="animated fadeIn">Phone Number</h3>
-                            <p>+91 9984555400</p>
-                            <p>+91 9984555300</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow">
-                            <div class="ltn__contact-address-icon">
-                                <img src="{{url('assets/front/img/inner/12.png')}}" alt="Icon Image">
-                            </div>
-                            <h3 class="animated fadeIn">Office Address</h3>
-                            <p>Village - Parewpur, Post - Dharshawa, District - Shrawasti, Uttar Pradesh, 271835</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="ltn__contact-message-area mb-120 mb--100">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="ltn__form-box contact-form-box box-shadow white-bg">
-                            <h4 class="title-2">Get In Touch</h4>
-                            @if(Session::has('success'))
-                            <div class="alert alert-success">
-                                {{ Session::get('success') }}
-                            </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-                            @endif
-
-                            @if(Session::has('error'))
-                            <div class="alert alert-danger">
-                                {{ Session::get('error') }}
-                            </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-                            @endif
-                            <form name="fmn" action="{{ url('/contact_inc') }}" method="post">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="input-item input-item-name ltn__custom-icon">
-                                            <input type="text" required name="name" placeholder="Enter your name">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="input-item input-item-email ltn__custom-icon">
-                                            <input type="email" required name="email" placeholder="Enter email address">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="input-item">
-                                            <select required name="service" class="nice-select" style="width: 100%;">
-                                                <option>Select Service Type</option>
-                                                <option value="Seller">Seller </option>
-                                                <option value="Buyer">Buyer </option>
-                                                <option value="Contractor">Contractor </option>
-                                                <option value="Client">Client </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="input-item input-item-phone ltn__custom-icon">
-                                            <input type="text" required name="phone" placeholder="Enter phone number">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-item input-item-textarea ltn__custom-icon">
-                                    <textarea required name="message" placeholder="Enter message"></textarea>
-                                </div>
-                                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                                @error('g-recaptcha-response') <span style="color:red">{{ $message }}</span><br> @enderror
-
-                                <div class="btn-wrapper mt-0">
-                                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">Send
-                                        Message</button>
-                                </div>
-
-
-                                <p class="form-messege mb-0 mt-20"></p>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-        @include('frontend.inc.footer')
-
-
+        </div> 
     </div>
-    <!-- Body main wrapper end -->
-    @include('frontend.inc.footer-links')
 
+    <!-- Content -->
+    <section class="privacy">
+        <div class="container">
+            <div class="contact-card rounded shadow-sm" style="background:#fff;border:1px solid #e6eaf0;margin-bottom:75px;">
+                <div class="row g-4 p-3 p-md-4 p-lg-5 align-items-start">
+                    <!-- Left: Contact info -->
+                    <div class="col-lg-5">
+                        <div class="d-grid gap-3">
+                            <!-- Email -->
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <img src="{{ url('assets/front/img/inner/10.png') }}" alt="Email">
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold">Email Address</h5>
+                                    <p class="mb-0">
+                                        <a href="mailto:support@ursbid.com">support@ursbid.com</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Phone -->
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <img src="{{ url('assets/front/img/inner/11.png') }}" alt="Phone">
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold">Phone Number</h5>
+                                    <p class="mb-1"><a href="tel:+919984555400">+91 9984555400</a></p>
+                                    <p class="mb-0"><a href="tel:+919984555300">+91 9984555300</a></p>
+                                </div>
+                            </div>
+                            <!-- Address -->
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <img src="{{ url('assets/front/img/inner/12.png') }}" alt="Address">
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold">Office Address</h5>
+                                    <p class="mb-0">
+                                        Village - Parewpur, Post - Dharshawa, District - Shrawasti,<br>
+                                        Uttar Pradesh, 271835
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-</body>
+                    <!-- Right: Form -->
+                    <div class="col-lg-7">
+                        <h2 class="fw-bold mb-2" style="color:#0c1117;">Get In Touch</h2>
+                        <p class="text-muted mb-4">Fill the form and our team will reach out to you shortly.</p>
 
-</html>
+                        @if(Session::has('success'))
+                            <div class="alert alert-success d-flex justify-content-between align-items-center">
+                                <span>{{ Session::get('success') }}</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+                        @if(Session::has('error'))
+                            <div class="alert alert-danger d-flex justify-content-between align-items-center">
+                                <span>{{ Session::get('error') }}</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        <form action="{{ url('/contact_inc') }}" method="post" novalidate>
+                            @csrf
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating has-icon">
+                                        <input type="text" name="name" id="ct_name" class="form-control form-control-lg" placeholder=" " required>
+                                        <label for="ct_name">Enter your name</label>
+                                        <i class="bi bi-person icon"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating has-icon">
+                                        <input type="email" name="email" id="ct_email" class="form-control form-control-lg" placeholder=" " required>
+                                        <label for="ct_email">Enter email address</label>
+                                        <i class="bi bi-envelope icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select name="service" id="ct_service" class="form-select form-select-lg" required aria-label="Select service type">
+                                            <option value="" selected>Select Service Type</option>
+                                            <option value="Seller">Seller</option>
+                                            <option value="Buyer">Buyer</option>
+                                            <option value="Contractor">Contractor</option>
+                                            <option value="Client">Client</option>
+                                        </select>
+                                        <label for="ct_service">Service Type</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating has-icon">
+                                        <input type="text" name="phone" id="ct_phone" class="form-control form-control-lg" placeholder=" " required>
+                                        <label for="ct_phone">Enter phone number</label>
+                                        <i class="bi bi-telephone icon"></i>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-floating has-icon">
+                                        <textarea name="message" id="ct_message" class="form-control form-control-lg" placeholder=" " style="height:130px" required></textarea>
+                                        <label for="ct_message">Enter message</label>
+                                        <i class="bi bi-chat-left-text icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 mb-3">
+                                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                @error('g-recaptcha-response')
+                                    <span class="text-danger d-block mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <button class="btn btn-primary btn-lg px-4 cs-btn my_bnty" type="submit">
+                                <span>Send Message</span>
+                                <i class="bi bi-arrow-right-short ms-1"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{-- reCAPTCHA (if not globally loaded) --}}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{{-- Page-local styles to match support page --}}
+<style>
+  /* Info cards */
+  .info-card{
+    display:flex; gap:14px; align-items:flex-start;
+    background:#fff; border:1px solid #e6eaf0; border-radius:16px;
+    padding:16px; box-shadow:0 6px 20px rgba(2,6,23,.06);
+  }
+  .info-icon{
+    width:52px; height:52px; border-radius:14px; background:#f8fafc;
+    display:flex; align-items:center; justify-content:center; border:1px solid #eef2f7;
+  }
+  .info-icon img{ width:26px; height:26px; object-fit:contain; }
+  .info-card a{ color:#0f172a; text-decoration:none; }
+  .info-card a:hover{ text-decoration:underline; }
+
+  /* Icon+floating inputs (same as support) */
+  .has-icon{ position:relative; }
+  .has-icon .icon{
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    font-size:1.05rem; color:#94a3b8; pointer-events:none; z-index:3;
+  }
+  .form-floating.has-icon > .form-control,
+  .form-floating.has-icon > textarea.form-control{
+    padding-left:52px; border-radius:16px; border:1px solid #e6eaf0;
+  }
+  .form-floating.has-icon > label{ padding-left:52px; color:#6b7280; }
+  .form-control:focus, .form-select:focus{
+    border-color:#bfdbfe; box-shadow:0 0 0 .2rem rgba(59,130,246,.15);
+  }
+
+  /* Submit button */
+  .cs-btn{ border-radius:999px; box-shadow:0 10px 24px rgba(2,6,23,.10); }
+  .cs-btn:hover{ transform:translateY(-1px); box-shadow:0 14px 30px rgba(2,6,23,.16); }
+</style>
+@endsection

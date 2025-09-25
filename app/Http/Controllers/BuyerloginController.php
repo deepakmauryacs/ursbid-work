@@ -144,8 +144,13 @@ class BuyerloginController extends Controller
 
         $category_data=DB::table('category')->get();
         $recordsPerPage = $request->input('r_page', 25);
-        
-        $buyer_email = $request->session()->get('seller')->email;
+        // Get all session data as an associative array
+    // $allSessionData = $request->session()->all();
+    // echo "<pre>";
+    // // Print (dump) all session data and stop execution
+    // print_r($allSessionData); die();
+        //$buyer_email = $request->session()->get('seller')->email;
+        $buyer_email = $request->session()->get('buyer')->email;
         // $data = DB::table('qutation_form')->where('email',  $buyer_email)->get();
 
 

@@ -24,77 +24,53 @@
                 <div class="card-body">
                     <form id="categoryForm" enctype="multipart/form-data">
                         @csrf
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Name</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="name" class="form-control" placeholder="Enter Name">
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter Name" required>
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Description</label>
-                            </div>
-                            <div class="col-md-8">
-                                <textarea name="description" class="form-control" rows="3" placeholder="Enter Description"></textarea>
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                            {{-- CKEditor binds to this id --}}
+                            <textarea name="description" id="description" class="form-control" rows="4" placeholder="Enter Description" required></textarea>
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Tags</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="tags"   data-role="tagsinput"  class="form-control" placeholder="tag1, tag2">
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tags</label>
+                            <input type="text" name="tags" data-role="tagsinput" class="form-control" placeholder="tag1, tag2">
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Image</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="file" name="image" class="form-control">
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Meta Title</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="meta_title" class="form-control" placeholder="Enter Meta Title">
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Meta Title</label>
+                            <input type="text" name="meta_title" class="form-control" placeholder="Enter Meta Title">
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Meta Keywords</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" name="meta_keywords" class="form-control" placeholder="Enter Meta Keywords">
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Meta Keywords</label>
+                            <input type="text" name="meta_keywords" class="form-control" placeholder="Enter Meta Keywords">
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Meta Description</label>
-                            </div>
-                            <div class="col-md-8">
-                                <textarea name="meta_description" class="form-control" rows="3" placeholder="Enter Meta Description"></textarea>
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Meta Description</label>
+                            <textarea name="meta_description" class="form-control" rows="3" placeholder="Enter Meta Description"></textarea>
                         </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Status</label>
-                            </div>
-                            <div class="col-md-8">
-                                <select name="status" class="form-control">
-                                    <option value="1">Active</option>
-                                    <option value="2">Inactive</option>
-                                </select>
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Status</label>
+                            <select name="status" class="form-control">
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                            </select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 text-end">
-                                <button type="submit" id="saveBtn" class="btn btn-primary">Save</button>
-                            </div>
+
+                        <div class="text-end">
+                            <button type="submit" id="saveBtn" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                 </div>
@@ -126,33 +102,15 @@
 }
 
 /* ===== Dark Theme (class-based) ===== */
-.dark-theme .bootstrap-tagsinput {
-    background-color: #1e1e1e;
-    border: 1px solid #444;
-    color: #ddd;
-}
-.dark-theme .bootstrap-tagsinput input {
-    color: #ddd;
-}
-.dark-theme .bootstrap-tagsinput .tag {
-    background: #8a73ff;
-    color: #fff;
-}
+.dark-theme .bootstrap-tagsinput { background-color: #1e1e1e; border: 1px solid #444; color: #ddd; }
+.dark-theme .bootstrap-tagsinput input { color: #ddd; }
+.dark-theme .bootstrap-tagsinput .tag { background: #8a73ff; color: #fff; }
 
-/* ===== Dark Mode (automatic using media query) ===== */
+/* ===== Auto Dark Mode ===== */
 @media (prefers-color-scheme: dark) {
-    .bootstrap-tagsinput {
-        background-color: #1e1e1e;
-        border: 1px solid #444;
-        color: #ddd;
-    }
-    .bootstrap-tagsinput input {
-        color: #ddd;
-    }
-    .bootstrap-tagsinput .tag {
-        background: #8a73ff;
-        color: #fff;
-    }
+    .bootstrap-tagsinput { background-color: #1e1e1e; border: 1px solid #444; color: #ddd; }
+    .bootstrap-tagsinput input { color: #ddd; }
+    .bootstrap-tagsinput .tag { background: #8a73ff; color: #fff; }
 }
 </style>
 @endpush
@@ -160,6 +118,22 @@
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+
+{{-- CKEditor (same setup as other pages) --}}
+<script src="{{ asset('public/assets/ckeditor/ckeditor.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
+<script>
+CKEDITOR.replace('description', {
+    height: 300,
+    contentsCss: [
+        'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap',
+        CKEDITOR.basePath + 'contents.css'
+    ],
+    bodyClass: 'dm-sans-body',
+    font_names: 'DM Sans/DM Sans;' + CKEDITOR.config.font_names,
+    font_defaultLabel: 'DM Sans',
+});
+</script>
+
 <script>
 $(function(){
     $('#categoryForm').validate({
@@ -169,6 +143,11 @@ $(function(){
             status:{ required:true }
         },
         submitHandler:function(form){
+            // Sync CKEditor -> textarea before submit
+            for (var instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+
             $('#saveBtn').prop('disabled',true).text('Saving...');
             var formData = new FormData(form);
             $.ajax({

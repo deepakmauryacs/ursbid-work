@@ -26,12 +26,13 @@ class HomeController extends Controller
             ->where('status', '1')
             ->with(['subCategories:id,category_id,slug,name,image,order_by,status'])
             ->orderBy('name')
-            ->get(['id','slug','name','image','status']);
+            ->get(['id', 'slug', 'name', 'image', 'status']);
 
         return view('frontend.home', compact('categories'));
     }
 
-    public function biddlist(Request $request){
+    public function biddlist(Request $request)
+    {
         $keyword      = $request->input('keyword');
         $category     = $request->input('category');
         $date         = $request->input('date');
@@ -48,7 +49,7 @@ class HomeController extends Controller
             ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
             ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
-            ->where('bidding_price.payment_status','success')
+            ->where('bidding_price.payment_status', 'success')
             ->orderByDesc('bidding_price.id')
             ->select(
                 // bidding_price
@@ -155,7 +156,7 @@ class HomeController extends Controller
 
         $total = $query->count();
 
-        return view('admin/enquiry/biddlist',  compact('blogs', 'datas','category_data'));
+        return view('admin/enquiry/biddlist',  compact('blogs', 'datas', 'category_data'));
     }
 
     public function filter($cat_slug, $sub_slug)
@@ -169,6 +170,7 @@ class HomeController extends Controller
 
         $cid = $category->id;
         $sid = $subcat->id;
+        $sub_category_description = $subcat->description;
 
         $subcategories = DB::table('sub_categories')
             ->where('status', '1')
@@ -187,10 +189,10 @@ class HomeController extends Controller
 
         if ($productCount === 0) {
             $message = 'No data found';
-            return view('frontend.filter', compact('subcategories', 'products', 'sub_slug', 'cat_slug' , 'message','sid'));
+            return view('frontend.filter', compact('subcategories', 'products', 'sub_slug', 'cat_slug', 'message', 'sid','sub_category_description'));
         }
 
-        return view('frontend.filter', compact('subcategories', 'products', 'sub_slug', 'cat_slug','sid'));
+        return view('frontend.filter', compact('subcategories', 'products', 'sub_slug', 'cat_slug', 'sid','sub_category_description'));
     }
 
     public function product($cat_slug, $sub_slug, $sup_slug)
@@ -213,15 +215,15 @@ class HomeController extends Controller
             ->get();
 
         $units = DB::table('unit')
-            ->where('sub_id', $supcat->sub_id)
-            ->where('status',1)
+            ->where('sub_category_id', $supcat->sub_id)
+            ->where('status', 1)
             ->get();
 
-        $products = DB::table('super')
+        $products = DB::table('product_brands')
             ->where('status', 1)
-            ->where('cat_id', $cid)
-            ->where('sub_id', $sid)
-            ->where('super_id', $supid)
+            ->where('category_id',$cid)
+            ->where('sub_category_id',$sid)
+            ->where('product_id', $supid)
             ->get();
 
         $productCount = $products->count();
@@ -229,15 +231,16 @@ class HomeController extends Controller
         if ($productCount === 0) {
             $products = $supcat;
             $message = 'No data found';
-            return view('frontend.product-detail', compact('supcategories','category', 'products','sid', 'sub_slug','units', 'cat_slug' , 'message', 'sup_slug'));
+            return view('frontend.product-detail', compact('supcategories', 'category', 'products', 'sid', 'sub_slug', 'units', 'cat_slug', 'message', 'sup_slug'));
         }
 
-        return view('frontend.product', compact('supcategories', 'units','products', 'sid','sub_slug', 'cat_slug', 'sup_slug'));
+        return view('frontend.product', compact('supcategories', 'units', 'products', 'sid', 'sub_slug', 'cat_slug', 'sup_slug'));
     }
 
-    public function productdetailsearch($slug){
+    public function productdetailsearch($slug)
+    {
         $products = DB::table('product')
-            ->where('status',1)
+            ->where('status', 1)
             ->first();
 
         $super       = $products->super_id;
@@ -245,48 +248,49 @@ class HomeController extends Controller
 
         $superproducts = DB::table('super')
             ->where('id', $super)
-            ->where('status',1)
+            ->where('status', 1)
             ->first();
 
         $category = DB::table('categories')
             ->where('id', $category_id)
-            ->where('status',1)
+            ->where('status', 1)
             ->first();
 
         $sid = $products->sub_id;
 
         $units = DB::table('unit')
-            ->where('sub_id', $sid)
-            ->where('status',1)
+            ->where('sub_category_id', $sid)
+            ->where('status', 1)
             ->get();
 
-        return view('frontend/product-detail' , compact('products', 'units','category', 'superproducts','sid'));
+        return view('frontend/product-detail', compact('products', 'units', 'category', 'superproducts', 'sid'));
     }
 
-    public function product_detail($slug){
-        $superproducts = DB::table('super')
+    public function product_detail($slug)
+    {
+        $superproducts = DB::table('product_brands')
             ->where('slug', $slug)
-            ->where('status',1)
+            ->where('status', 1)
             ->first();
 
         $products = DB::table('product')
-            ->where('id', $superproducts->super_id)
-            ->where('status',1)
+            ->where('id', $superproducts->product_id)
+            ->where('status', 1)
             ->first();
 
         $category = DB::table('categories')
-            ->where('id', $superproducts->cat_id)
-            ->where('status',1)
+            ->where('id', $superproducts->category_id)
+            ->where('status', 1)
             ->first();
 
-        $sid = $superproducts->sub_id;
+        $sid = $superproducts->sub_category_id;
 
         $units = DB::table('unit')
-            ->where('sub_id', $sid)
-            ->where('status',1)
+            ->where('sub_category_id', $sid)
+            ->where('status', 1)
             ->get();
 
-        return view('frontend/product-detail' , compact('products','sid', 'units','category', 'superproducts'));
+        return view('frontend/product-detail', compact('products', 'sid', 'units', 'category', 'superproducts'));
     }
 
     public function qutation_form(Request $request)
@@ -431,7 +435,7 @@ class HomeController extends Controller
 
             $options = '';
             foreach ($subcategories as $sub) {
-                $options .= '<label><input type="checkbox" name="pro_ser[]" value="'.$sub->name.'"> '.$sub->name.'</label><br>';
+                $options .= '<label><input type="checkbox" name="pro_ser[]" value="' . $sub->name . '"> ' . $sub->name . '</label><br>';
             }
 
             return response()->json($options);
@@ -456,7 +460,7 @@ class HomeController extends Controller
             $options = '';
             foreach ($subcategories as $sub) {
                 $checked = in_array($sub->name, $selectedServices) ? 'checked' : '';
-                $options .= '<label><input type="checkbox" name="pro_ser[]" value="'.$sub->name.'" '.$checked.'> '.$sub->name.'</label><br>';
+                $options .= '<label><input type="checkbox" name="pro_ser[]" value="' . $sub->name . '" ' . $checked . '> ' . $sub->name . '</label><br>';
             }
 
             return response()->json($options);
@@ -465,12 +469,13 @@ class HomeController extends Controller
         return response()->json('<p>No subcategories available</p>');
     }
 
-    // forget
-    public function forgot_password(){
+    public function forgot_password()
+    {
         return view('frontend.forgot-password');
     }
 
-    public function c_update(Request $request){
+    public function c_update(Request $request)
+    {
         return view('frontend.update-pass');
     }
 
@@ -552,7 +557,7 @@ class HomeController extends Controller
 
         if ($productCount === 0) {
             $message = 'No data found';
-            return view('frontend.search', compact('message' , 'data'));
+            return view('frontend.search', compact('message', 'data'));
         }
 
         return view('frontend.search', compact('products', 'data'));
@@ -644,19 +649,19 @@ class HomeController extends Controller
                 'c.status as category_status'
             );
 
-        if ($category){
+        if ($category) {
             $query->where('c.id', $category);
         }
         if ($date) {
             $query->where('date_time', 'like', '%' . $date . '%');
         }
-        if ($city){
+        if ($city) {
             $query->where('city', 'like', '%' . $city . '%');
         }
-        if ($quantity){
+        if ($quantity) {
             $query->where('quantity', 'like', '%' . $quantity . '%');
         }
-        if ($product_name){
+        if ($product_name) {
             $query->where('product_name', 'like', '%' . $product_name . '%');
         }
 
@@ -672,7 +677,7 @@ class HomeController extends Controller
             'r_page' => $recordsPerPage,
         ];
 
-        return view('admin.enquiry.list', compact('blogs', 'data','category_data'));
+        return view('admin.enquiry.list', compact('blogs', 'data', 'category_data'));
     }
 
     public function deactivelist(Request $request)
@@ -761,19 +766,19 @@ class HomeController extends Controller
                 'c.status as category_status'
             );
 
-        if ($category){
+        if ($category) {
             $query->where('c.id', $category);
         }
         if ($date) {
             $query->where('date_time', 'like', '%' . $date . '%');
         }
-        if ($city){
+        if ($city) {
             $query->where('city', 'like', '%' . $city . '%');
         }
-        if ($quantity){
+        if ($quantity) {
             $query->where('quantity', 'like', '%' . $quantity . '%');
         }
-        if ($product_name){
+        if ($product_name) {
             $query->where('product_name', 'like', '%' . $product_name . '%');
         }
 
@@ -789,10 +794,11 @@ class HomeController extends Controller
             'r_page' => $recordsPerPage,
         ];
 
-        return view('admin.enquiry.deactivelist', compact('blogs', 'data','category_data'));
+        return view('admin.enquiry.deactivelist', compact('blogs', 'data', 'category_data'));
     }
 
-    public function vewsell($id){
+    public function vewsell($id)
+    {
         $query = DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
@@ -1311,7 +1317,7 @@ class HomeController extends Controller
             return redirect()->back();
         }
     }
-
+    
     public function blogDetail($slug)
     {
         $blog = DB::table('blogs')->where('slug', $slug)->where('status', 1)->first();

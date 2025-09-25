@@ -36,30 +36,69 @@ class ProductBrandController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required|integer',
+            'category_id'     => 'required|integer',
             'sub_category_id' => 'required|integer',
-            'product_id' => 'required|integer',
-            'brand_name' => 'required|string|max:255|unique:product_brands,brand_name,NULL,id,category_id,' . $request->category_id . ',sub_category_id,' . $request->sub_category_id . ',product_id,' . $request->product_id,
-            'description' => 'nullable|string',
-            'status' => 'required|in:1,2',
+            'product_id'      => 'required|integer',
+            'brand_name'      => [
+                'required','string','max:255',
+                // unique per (category, sub_category, product)
+                // product_brands table must have these columns
+                'unique:product_brands,brand_name,NULL,id,category_id,'
+                  . $request->category_id . ',sub_category_id,'
+                  . $request->sub_category_id . ',product_id,'
+                  . $request->product_id,
+            ],
+            'description'     => 'nullable|string',
+            'status'          => 'required|in:1,2',
+            'image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
+        ], [
+            'brand_name.unique' => 'Brand already exists for the selected Category/Sub Category/Product.',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+    
         $data = $validator->validated();
         $data['slug'] = Str::slug($data['brand_name']);
-
-        $brand = ProductBrand::create($data);
-
+    
+        // Create first (without image path)
+        $brand = ProductBrand::create([
+            'category_id'     => $data['category_id'],
+            'sub_category_id' => $data['sub_category_id'],
+            'product_id'      => $data['product_id'],
+            'brand_name'      => $data['brand_name'],
+            'slug'            => $data['slug'],
+            'description'     => $data['description'] ?? null,
+            'status'          => $data['status'],
+        ]);
+    
+        // Handle image upload (optional)
+        if ($request->hasFile('image')) {
+            $file     = $request->file('image');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+    
+            // Ensure directory exists
+            $uploadPath = public_path('uploads/product_brand');
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+    
+            // Move file
+            $file->move($uploadPath, $filename);
+    
+            // Save relative path (public/)
+            $brand->image = 'uploads/product_brand/' . $filename;  // change to 'logo' if your column is named logo
+            $brand->save();
+        }
+    
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Product Brand created successfully.',
-            'data' => $brand,
+            'data'    => $brand,
         ]);
     }
 
@@ -74,58 +113,79 @@ class ProductBrandController extends Controller
 
     public function update(Request $request, $id)
     {
+    
         $brand = ProductBrand::findOrFail($id);
-
+    
+        // Validation (image optional, but if present then validate like store)
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required|integer',
+            'category_id'     => 'required|integer',
             'sub_category_id' => 'required|integer',
-            'product_id' => 'required|integer',
-            'brand_name' => 'required|string|max:255|unique:product_brands,brand_name,' . $brand->id . ',id,category_id,' . $request->category_id . ',sub_category_id,' . $request->sub_category_id . ',product_id,' . $request->product_id,
-            'description' => 'nullable|string',
-            'status' => 'required|in:1,2',
+            'product_id'      => 'required|integer',
+            'brand_name'      => 'required|string|max:255|unique:product_brands,brand_name,' 
+                                    . $brand->id . ',id,category_id,' . $request->category_id 
+                                    . ',sub_category_id,' . $request->sub_category_id 
+                                    . ',product_id,' . $request->product_id,
+            'description'     => 'nullable|string',
+            'status'          => 'required|in:1,2',
+            'image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
+        ], [
+            'brand_name.unique' => 'Brand already exists for the selected Category/Sub Category/Product.',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+    
         $data = $validator->validated();
         $data['slug'] = Str::slug($data['brand_name']);
-
-        $brand->update($data);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product Brand updated successfully.',
-            'data' => $brand,
-        ]);
-    }
-
-    public function toggleStatus(Request $request, $id)
-    {
-        $brand = ProductBrand::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
-            'status' => 'required|in:1,2',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors(),
-            ], 422);
+    
+        // First update base fields (without image path)
+        $brand->category_id     = $data['category_id'];
+        $brand->sub_category_id = $data['sub_category_id'];
+        $brand->product_id      = $data['product_id'];
+        $brand->brand_name      = $data['brand_name'];
+        $brand->slug            = $data['slug'];
+        $brand->description     = $data['description'] ?? null;
+        $brand->status          = $data['status'];
+        $brand->save();
+    
+        // Handle image upload (optional)
+        if ($request->hasFile('image')) {
+            $file     = $request->file('image');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+    
+            // Ensure directory exists
+            $uploadPath = public_path('uploads/product_brand');
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+    
+            // (Optional) delete old image if exists and is local
+            if (!empty($brand->image)) {
+                $oldPath = public_path($brand->image);
+                if (is_file($oldPath)) {
+                    @unlink($oldPath);
+                }
+            }
+    
+            // Move new file
+            $file->move($uploadPath, $filename);
+    
+            // Save relative path (public/)
+            $brand->image = 'uploads/product_brand/' . $filename; // change to 'logo' if your column name is 'logo'
+            $brand->save();
         }
-
-        $brand->update(['status' => $request->status]);
-
+    
         return response()->json([
-            'status' => 'success',
-            'message' => 'Status updated successfully.',
+            'status'  => 'success',
+            'message' => 'Product Brand updated successfully.',
+            'data'    => $brand,
         ]);
     }
+
 
     public function destroy($id)
     {

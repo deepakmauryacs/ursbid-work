@@ -21,12 +21,14 @@ class BlogController extends Controller
     {
       $validator = $request->validate([
         'title'=>'required|unique:blogs',
+        'post_date'=>'required',
         'description'=>'required',
         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
     $uniqSlug = Str::slug($request->title);
      $blogId = DB::table('blogs')->insertGetId([
         'title' => $request->title,
+        'post_date' => $request->post_date,
         'description' => $request->description,
         'slug'=> $uniqSlug,
     ]);
@@ -118,6 +120,7 @@ class BlogController extends Controller
 {
     $validator = $request->validate([
         'title' => 'required|unique:blogs,title,' . $id,
+        'post_date' => 'required',
         'description' => 'required',
         'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
@@ -134,6 +137,7 @@ class BlogController extends Controller
     }
     $updateData = [
         'title' => $request->title,
+        'post_date' => $request->post_date,
         'description' => $request->description,
         'slug' => $uniqSlug,
     ];

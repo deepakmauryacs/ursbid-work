@@ -91,9 +91,10 @@
                                 <td>{{ $ad->category_name }}</td>
                                 <td>
                                     @if($ad->image)
-                                        <img src="{{ asset($ad->image) }}" alt="image" width="80">
+                                        <img src="{{ asset('public/' . $ad->image) }}" alt="image" width="80">
                                     @endif
                                 </td>
+
                                 <td>{{ \Carbon\Carbon::parse($ad->created_at)->format('d-m-Y') }}</td>
                                 <td>
                                     @if($ad->status == '1')

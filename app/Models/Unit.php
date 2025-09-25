@@ -9,8 +9,8 @@ class Unit extends Model
     protected $table = 'unit';
 
     protected $fillable = [
-        'cat_id',
-        'sub_id',
+        'category_id',
+        'sub_category_id',
         'title',
         'slug',
         'status',

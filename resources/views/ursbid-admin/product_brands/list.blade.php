@@ -1,54 +1,7 @@
 @extends('ursbid-admin.layouts.app')
 @section('title', 'Product Brands')
-
 @section('content')
-<style>
-.pagination-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
 
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    gap: 5px;
-}
-
-.page-item {
-    margin: 0;
-}
-
-.page-link {
-    display: inline-block;
-    padding: 5px 10px;
-    color: #333;
-    text-decoration: none;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-}
-
-.page-item.active .page-link {
-    background-color: #614ce1;
-    color: #fff;
-    border-color: #614ce1;
-}
-
-.page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    background-color: #fff;
-    border-color: #ddd;
-}
-
-.page-link:hover {
-    background-color: #f8f9fa;
-    color: #0056b3;
-}
-</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -80,7 +33,7 @@
                                 <th>Category</th>
                                 <th>Sub Category</th>
                                 <th>Product</th>
-                                <th>Brand Name</th>
+                                <th>Brand</th> {{-- image + name --}}
                                 <th>Created Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -88,24 +41,49 @@
                         </thead>
                         <tbody>
                             @forelse($brands as $brand)
+                            @php
+                                $img = $brand->image ?? null;
+                                $imgSrc = '';
+                                if ($img) {
+                                    // If full URL keep as-is, else prefix with /public/
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($img, ['http://','https://'])
+                                        ? $img
+                                        : asset('public/'.$img);
+                                }
+                            @endphp
                             <tr id="row-{{ $brand->id }}">
                                 <td>{{ $brands->firstItem() + $loop->index }}</td>
                                 <td>{{ $brand->category_name }}</td>
                                 <td>{{ $brand->sub_name }}</td>
                                 <td>{{ $brand->product_title }}</td>
-                                <td>{{ $brand->brand_name }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if($imgSrc)
+                                            <img src="{{ $imgSrc }}" alt="{{ $brand->brand_name }}"  class="avatar-md rounded border border-light border-3" style="object-fit: cover;">
+                                        @else
+                                            <span class="badge bg-secondary-subtle text-secondary">No image</span>
+                                        @endif
+                                        <span class="fw-semibold">{{ $brand->brand_name }}</span>
+                                    </div>
+                                </td>
                                 <td>{{ \Carbon\Carbon::parse($brand->created_at)->format('d-m-Y') }}</td>
                                 <td>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input status-toggle" type="checkbox" data-id="{{ $brand->id }}" {{ $brand->status == '1' ? 'checked' : '' }}>
-                                    </div>
+                                    @if($brand->status == '1')
+                                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
+                                    @else
+                                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('super-admin.product-brands.edit', $brand->id) }}" class="btn btn-soft-primary btn-sm">
+                                        <a href="{{ route('super-admin.product-brands.edit', $brand->id) }}" class="btn btn-soft-primary btn-sm" title="Edit">
                                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </a>
-                                        <button type="button" data-id="{{ $brand->id }}" data-url="{{ route('super-admin.product-brands.destroy', $brand->id) }}" class="btn btn-soft-danger btn-sm deleteBtn">
+                                        <button type="button"
+                                                data-id="{{ $brand->id }}"
+                                                data-url="{{ route('super-admin.product-brands.destroy', $brand->id) }}"
+                                                class="btn btn-soft-danger btn-sm deleteBtn"
+                                                title="Delete">
                                             <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
                                         </button>
                                     </div>
@@ -138,30 +116,13 @@ $(function(){
             type: 'DELETE',
             data: { _token: '{{ csrf_token() }}' },
             success: function(res){
-                toastr.success(res.message);
+                toastr.success(res.message || 'Deleted');
                 $('#row-'+id).remove();
             },
-            error: function(){
-                toastr.error('Unable to delete record');
-            }
-        });
-    });
-
-    $(document).on('change', '.status-toggle', function(){
-        const checkbox = $(this);
-        const id = checkbox.data('id');
-        const status = checkbox.is(':checked') ? 1 : 2;
-        const url = '{{ route('super-admin.product-brands.toggle-status', ':id') }}'.replace(':id', id);
-        $.ajax({
-            url: url,
-            type: 'PATCH',
-            data: { status: status, _token: '{{ csrf_token() }}' },
-            success: function(res){
-                toastr.success(res.message);
-            },
-            error: function(){
-                toastr.error('Unable to update status');
-                checkbox.prop('checked', !checkbox.prop('checked'));
+            error: function(xhr){
+                let msg = 'Unable to delete record';
+                if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                toastr.error(msg);
             }
         });
     });

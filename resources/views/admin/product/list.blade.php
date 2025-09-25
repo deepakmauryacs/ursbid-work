@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="social-dash-wrap">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-lg-12">
 
                 <div class="breadcrumb-main">
                     <h4 class="text-capitalize breadcrumb-title">Product List</h4>
@@ -39,7 +39,7 @@
 
         </div>
         <div class="row">
-            <div class="col-md-12 mb-30">
+            <div class="col-lg-12 mb-30">
                 <div class="card">
                     <div class="col-md-12 mt-2">
                         <form class="row" method="get" action="">
@@ -92,7 +92,7 @@
                                     <thead>
                                         <tr class="userDatatable-header">
                                             <th>
-                                                <span class="projectDatatable-title">S.No</span>
+                                                <span class="projectDatatable-title">Sr no</span>
                                             </th>
                                             <th>
                                                 <span class="projectDatatable-title">Category</span>
@@ -125,12 +125,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                        $i=1;
+                                        @endphp
                                         @foreach ($blogs as $blog)
 
                                         <tr>
                                             <td>
                                                 <div class="userDatatable-content text-center">
-                                                    {{ $loop->iteration }}
+                                                    {{ $i++ }}
                                                 </div>
                                             </td>
                                             <td>

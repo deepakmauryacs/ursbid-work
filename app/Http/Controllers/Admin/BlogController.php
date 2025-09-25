@@ -102,8 +102,8 @@ class BlogController extends Controller
             'description' => 'required|string',
             'status' => 'required|in:0,1',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_keywords' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:1000',
+            'meta_keywords' => 'nullable|string|max:1000',
             'meta_description' => 'nullable|string',
             'custom_header_code' => 'nullable|string',
         ]);

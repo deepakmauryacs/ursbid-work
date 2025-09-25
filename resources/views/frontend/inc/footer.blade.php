@@ -1,335 +1,186 @@
+<style>
+/* Custom button class matching Bootstrap's btn-primary */
+.urs-btn-primary {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background-color: #0d6efd;
+  border: 1px solid #0d6efd;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, 
+              border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.urs-btn-primary:hover {
+  color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+.urs-btn-primary:focus {
+  color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+  box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+}
+
+.urs-btn-primary:active {
+  color: #fff;
+  background-color: #0a58ca;
+  border-color: #0a53be;
+}
+
+.urs-btn-primary:disabled {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  opacity: 0.65;
+}
+</style>
 <!-- FOOTER AREA START -->
-<footer class="ltn__footer-area  ">
-    <div class="footer-top-area">
+<footer class="site-footer">
+    <div class="footer-top">
         <div class="container">
-            <div class="row">
-                <div class="col-xl-8 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget footer-about-widget">
-                        <div class="bsdk">
-                        <div class="footer-logo">
-                            <div class="site-logo">
-                                <img src="{{url('assets/front/img/logo.png')}}" alt="Logo">
-                            </div>
-                        </div>
-                       
-                        </div>
-                        <div class="footer-address">
-                            <ul>
-                                <li>
-                                    
-                                    <div class="footer-address-info">
-                                    <p>Connecting Dreams To Reality.</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="footer-address-icon">
-                                        <i class="icon-placeholder"></i>
-                                    </div>
-                                    <div class="footer-address-info">
-                                        <p>Village - Parewpur, Post - Dharshawa, District - Shrawasti, Uttar Pradesh,
-                                            271835</p>
-                                    </div>
-                                </li>
-</ul>
-<ul class="tmc">
-                                <li>
-                                    <div class="footer-address-icon">
-                                        <i class="icon-call"></i>
-                                    </div>
-                                    <div class="footer-address-info">
-                                        <p><a href="tel:+919984555300">+91 9984555300</a></p>
-                                    </div>
+            <div class="row gy-4">
+                <!-- Left Side -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="footer-brand">
+                        <img src="{{ url('assets/front/img/logo.png') }}" alt="URSBID Logo">
+                        <div class="brand-name">URSBID</div>
+                    </div>
 
-                                    <div class="footer-address-icon">
-                                        <i class="icon-call"></i>
-                                    </div>
-                                    <div class="footer-address-info">
-                                        <p><a href="tel:+919984555400">+91 9984555400</a></p>
-                                    </div>
-                                </li>
-                               
-                                <li>
-                                    <div class="footer-address-icon">
-                                        <i class="icon-mail"></i>
-                                    </div>
-                                    <div class="footer-address-info">
-                                        <p><a href="mailto:info@ursbid.com">info@ursbid.com</a></p>
-                                    </div>
-                                    <!-- <div class="footer-address-icon">
-                                        <i class="icon-mail"></i>
-                                    </div> -->
-                                    <!-- <div class="footer-address-info">
-                                        <p><a href="mailto:support@ursbid.com">support@ursbid.com</a></p>
-                                    </div> -->
-                                </li>
-                               
-                            </ul>
-                        </div>
-                        <div class="ltn__social-media mt-20">
-                            <ul>
-                                <li><a target="_blank" href="https://www.facebook.com/profile.php?viewas=100000686899395&id=61566764819246" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a target="_blank" href="https://www.instagram.com/urs_bid1195/" title="instagram"><i class="fab fa-instagram"></i></a></li>
-                                <li><a target="_blank" href="https://www.linkedin.com/company/ursbid/about/?viewAsMember=true" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                                <li><a target="_blank" href="https://www.youtube.com/@URSBID" title="Youtube"><i class="fab fa-youtube"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                @php
- $currentDate = \Carbon\Carbon::now();
-@endphp
-          @php 
-          
-           $active = DB::table('qutation_form')->whereRaw("DATE_ADD(date_time, INTERVAL bid_time DAY) >= ?", [$currentDate])->count();
-           $total = DB::table('qutation_form')->count();
-          @endphp
+                    <p class="tagline">Connecting Dreams To Reality.</p>
 
-                <div class="col-xl-4 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget footer-menu-widget clearfix pdy">
-                        <h4 class="footer-title">More </h4>
-                        <div class="footer-menu">
-                               <ul>
-                                <li> Active Bidding  <b class="bc"> {{ $active }}</b></li>
-                                <li> Total  Bidding <b class="bc"> {{ $total }}</b></li>
-                                   
-                                    </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="ltn__copyright-area">
-        <div class="container-fluid ">
-            <div class="row">
-                <div class="col-md-6 col-12">
-                    <div class="ltn__copyright-design clearfix">
-                        <p>@ Copyright <span class="current-year"></span>. All Rights Reserved By Ursbid  & Designed by <a
-                                href="https://cssfounder.com" target="_blank">CssFounder.com</a> </p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-12 align-self-center">
-                    <div class="ltn__copyright-menu">
+                    <ul class="contact-list">
+                        <li>
+                            <i class="bi bi-geo-alt-fill"></i>
+                            <span>Village - Parewpur, Post - Dharshawa, District - Shrawasti, Uttar Pradesh, 271835</span>
+                        </li>
+                        <li class="contact-inline">
+                            <span><i class="bi bi-telephone-fill"></i> <a href="tel:+919984555300">+91 9984555300</a></span>
+                            <span><i class="bi bi-telephone-fill"></i> <a href="tel:+919984555400">+91 9984555400</a></span>
+                        </li>
+                        <li>
+                            <i class="bi bi-envelope-fill"></i>
+                            <a href="mailto:info@ursbid.com">info@ursbid.com</a>
+                        </li>
+                    </ul>
+
+                    <div class="social">
                         <ul>
-                        <li><a href="{{ url('terms-conditions')}}">Terms & Conditions</a></li>
-                            <li><a href="{{ url('disclaimer')}}">Disclaimer</a></li>
-                            <li><a href="{{ url('privacy-policy')}}">Privacy & Policy</a></li>
+                            <li><a target="_blank" href="https://www.facebook.com/profile.php?viewas=100000686899395&id=61566764819246" aria-label="Facebook"><i class="bi bi-facebook"></i></a></li>
+                            <li><a target="_blank" href="https://www.instagram.com/urs_bid1195/" aria-label="Instagram"><i class="bi bi-instagram"></i></a></li>
+                            <li><a target="_blank" href="https://www.linkedin.com/company/ursbid/about/?viewAsMember=true" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a></li>
+                            <li><a target="_blank" href="https://www.youtube.com/@URSBID" aria-label="YouTube"><i class="bi bi-youtube"></i></a></li>
                         </ul>
                     </div>
                 </div>
+
+                <!-- Right Side -->
+                @php
+                    $currentDate = \Carbon\Carbon::now();
+                    $active = DB::table('qutation_form')
+                        ->whereRaw("DATE_ADD(date_time, INTERVAL bid_time DAY) >= ?", [$currentDate])
+                        ->count();
+                    $total = DB::table('qutation_form')->count();
+                @endphp
+
+                <div class="col-xl-8 col-lg-7">
+                    <div class="right-section">
+                        <!-- More -->
+                        <div class="more-card">
+
+                            <!-- Simple blue Bootstrap buttons (added) -->
+                            <div class="mb-3 d-flex flex-wrap gap-2">
+                                <a href="{{ url('seller-register') }}" class="urs-btn-primary">
+                                     SELLER / CONTRACTOR REGISTER
+                                </a>
+                                <a href="{{ url('buyer-register') }}" class="urs-btn-primary">
+                                     BUYER / CLIENT REGISTER
+                                </a>
+                            </div>
+
+                            <h5 class="widget-title">More</h5>
+                            <div class="stat-row">
+                                <div class="stat-label">Active Bidding</div>
+                                <div class="stat-box">{{ $active }}</div>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-label">Total Bidding</div>
+                                <div class="stat-box">{{ $total }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div class="link-card">
+                            <h5 class="widget-title">Quick Links</h5>
+                            <ul class="link-list">
+                                <li>
+                                    <a href="{{ url('customer-support')}}"  rel="noopener">
+                                        <i class="bi bi-headset"></i> <span>Customer Care</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('advertise')}}"  rel="noopener">
+                                        <i class="bi bi-megaphone"></i> <span>Advertise</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('contact-detail')}}"  rel="noopener">
+                                        <i class="bi bi-telephone"></i> <span>Contact Details</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('about')}}" rel="noopener">
+                                        <i class="bi bi-info-circle"></i> <span>About Us</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('blog') }}">
+                                        <i class="bi bi-journal-text"></i> <span>Blog</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>
+
+    <!-- Bottom Bar -->
+    <div class="copybar">
+        <div class="container">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <div class="small">
+                        © <span class="current-year"></span> URSBID. All Rights Reserved.
+                    </div>
+                </div>
+                <div class="col-md-6 linkbar">
+                    <ul class="small m-0">
+                        <li><a href="{{ url('terms-conditions') }}">Terms & Conditions</a></li>
+                        <li><a href="{{ url('disclaimer') }}">Disclaimer</a></li>
+                        <li><a href="{{ url('privacy-policy') }}">Privacy & Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current year automatically
+        (function(){ var el=document.querySelector('.current-year'); if(el) el.textContent=new Date().getFullYear(); })();
+    </script>
 </footer>
 <!-- FOOTER AREA END -->
-
-<!-- MODAL AREA START (Quick View Modal) -->
-<div class="ltn__modal-area ltn__quick-view-modal-area">
-    <div class="modal fade" id="quick_view_modal" tabindex="-1">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        <!-- <i class="fas fa-times"></i> -->
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="ltn__quick-view-modal-inner">
-                        <div class="modal-product-item">
-                            <div class="row">
-                                <div class="col-lg-6 col-12">
-                                    <div class="modal-product-img">
-                                        <img src="{{url('assets/front/img/product/4.png')}}" alt="#">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="modal-product-info">
-                                        <div class="product-ratting">
-                                            <ul>
-                                                <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
-                                                <li><a href="#"><i class="far fa-star"></i></a></li>
-                                                <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
-                                            </ul>
-                                        </div>
-                                        <h3><a href="#">3 Rooms Manhattan</a></h3>
-                                        <div class="product-price">
-                                            <span>$34,900</span>
-                                            <del>$36,500</del>
-                                        </div>
-                                        <hr>
-                                        <div class="modal-product-brief">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos
-                                                repellendus repudiandae incidunt quidem pariatur expedita, quo quis modi
-                                                tempore non.</p>
-                                        </div>
-                                        <div class="modal-product-meta ltn__product-details-menu-1 d-none">
-                                            <ul>
-                                                <li>
-                                                    <strong>Categories:</strong>
-                                                    <span>
-                                                        <a href="#">Parts</a>
-                                                        <a href="#">Car</a>
-                                                        <a href="#">Seat</a>
-                                                        <a href="#">Cover</a>
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="ltn__product-details-menu-2 d-none">
-                                            <ul>
-                                                <li>
-                                                    <div class="cart-plus-minus">
-                                                        <input type="text" value="02" name="qtybutton"
-                                                            class="cart-plus-minus-box">
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="theme-btn-1 btn btn-effect-1" title="Add to Cart"
-                                                        data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
-                                                        <i class="fas fa-shopping-cart"></i>
-                                                        <span>ADD TO CART</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- <hr> -->
-                                        <div class="ltn__product-details-menu-3">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" class="" title="Wishlist" data-bs-toggle="modal"
-                                                        data-bs-target="#liton_wishlist_modal">
-                                                        <i class="far fa-heart"></i>
-                                                        <span>Add to Wishlist</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="" title="Compare" data-bs-toggle="modal"
-                                                        data-bs-target="#quick_view_modal">
-                                                        <i class="fas fa-exchange-alt"></i>
-                                                        <span>Compare</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <hr>
-                                        <div class="ltn__social-media">
-                                            <ul>
-                                                <li>Share:</li>
-                                                <li><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                                                </li>
-                                                <li><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                                                <li><a href="#" title="Linkedin"><i class="fab fa-linkedin"></i></a>
-                                                </li>
-                                                <li><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                                                </li>
-
-                                            </ul>
-                                        </div>
-                                        <label class="float-right mb-0"><a class="text-decoration" href="#"><small>View
-                                                    Details</small></a></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- MODAL AREA END -->
-
-<!-- MODAL AREA START (Add To Cart Modal) -->
-<div class="ltn__modal-area ltn__add-to-cart-modal-area">
-    <div class="modal fade" id="add_to_cart_modal" tabindex="-1">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="ltn__quick-view-modal-inner">
-                        <div class="modal-product-item">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="modal-product-img">
-                                        <img src="{{url('assets/front/img/product/1.png')}}" alt="#">
-                                    </div>
-                                    <div class="modal-product-info">
-                                        <h5><a href="#">Brake Conversion Kit</a></h5>
-                                        <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully added to
-                                            your Cart</p>
-                                        <div class="btn-wrapper">
-                                            <a href="#" class="theme-btn-1 btn btn-effect-1">View Cart</a>
-                                            <a href="#" class="theme-btn-2 btn btn-effect-2">Checkout</a>
-                                        </div>
-                                    </div>
-                                    <!-- additional-info -->
-                                    <div class="additional-info d-none">
-                                        <p>We want to give you <b>10% discount</b> for your first order, <br> Use
-                                            discount code at checkout</p>
-                                        <div class="payment-method">
-                                            <img src="{{url('assets/front/img/icons/payment.png')}}" alt="#">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- MODAL AREA END -->
-
-<!-- MODAL AREA START (Wishlist Modal) -->
-<div class="ltn__modal-area ltn__add-to-cart-modal-area">
-    <div class="modal fade" id="liton_wishlist_modal" tabindex="-1">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="ltn__quick-view-modal-inner">
-                        <div class="modal-product-item">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="modal-product-img">
-                                        <img src="{{url('assets/front/img/product/7.png')}}" alt="#">
-                                    </div>
-                                    <div class="modal-product-info">
-                                        <h5><a href="#">Brake Conversion Kit</a></h5>
-                                        <p class="added-cart"><i class="fa fa-check-circle"></i> Successfully added to
-                                            your Wishlist</p>
-                                        <div class="btn-wrapper">
-                                            <a href="#" class="theme-btn-1 btn btn-effect-1">View Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <!-- additional-info -->
-                                    <div class="additional-info d-none">
-                                        <p>We want to give you <b>10% discount</b> for your first order, <br> Use
-                                            discount code at checkout</p>
-                                        <div class="payment-method">
-                                            <img src="{{url('assets/front/img/icons/payment.png')}}" alt="#">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- MODAL AREA END -->

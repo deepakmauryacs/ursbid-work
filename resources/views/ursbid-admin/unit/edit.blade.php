@@ -29,7 +29,7 @@
                                 <select name="cat_id" class="form-control">
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ $unit->cat_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}" {{ $unit->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -42,7 +42,7 @@
                                 <select name="sub_id" class="form-control">
                                     <option value="">Select Sub Category</option>
                                     @foreach($subs as $sub)
-                                        <option value="{{ $sub->id }}" {{ $unit->sub_id == $sub->id ? 'selected' : '' }}>{{ $sub->name }}</option>
+                                        <option value="{{ $sub->id }}" {{ $unit->sub_category_id == $sub->id ? 'selected' : '' }}>{{ $sub->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -55,8 +55,6 @@ class ProductController extends Controller
         return view('ursbid-admin.products.list', compact('products', 'categories', 'perPage'));
     }
 
-
-
     public function create()
     {
         $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
@@ -73,53 +71,49 @@ class ProductController extends Controller
             ->where('category_id', $request->cat_id)
             ->where('status', 1)
             ->orderBy('name')
-            ->get();
+            ->get(['id','name','slug']); // include slug for data-slug in the UI
+
         return response()->json($subs);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'cat_id' => 'required|integer|exists:categories,id',
-            'sub_id' => 'required|integer|exists:sub_categories,id',
-            'order_by' => 'nullable|integer',
-            'status' => 'required|in:0,1',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
-            'description' => 'nullable|string',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_keywords' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string',
+            'title'           => 'required|string|max:255',
+            'cat_id'          => 'required|integer|exists:categories,id',
+            'sub_id'          => 'required|integer|exists:sub_categories,id',
+            'order_by'        => 'nullable|integer',
+            'status'          => 'required|in:0,1',
+            'image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            'description'     => 'nullable|string',
+            'meta_title'      => 'nullable|string|max:255',
+            'meta_keywords'   => 'nullable|string|max:255',
+            'meta_description'=> 'nullable|string',
+            'slug'            => 'nullable|string|max:255', // accept incoming slug (optional)
         ]);
 
-        $exists = DB::table('product')
-            ->where('cat_id', $validated['cat_id'])
-            ->where('sub_id', $validated['sub_id'])
-            ->where('title', $validated['title'])
-            ->exists();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'Product already exists for this sub category.',
-                'errors' => ['title' => ['Product already exists for this sub category.']],
-            ], 422);
+        // Build & sanitize slug (prefer request->slug, fallback to title)
+        $baseSlug = Str::slug($request->input('slug', '')) ?: Str::slug($validated['title']);
+        if ($baseSlug === '') {
+            $baseSlug = 'item';
         }
+        $slug = $this->uniqueSlugForSub($baseSlug, (int)$validated['sub_id']);
 
         $data = [
-            'title' => $validated['title'],
-            'cat_id' => $validated['cat_id'],
-            'sub_id' => $validated['sub_id'],
-            'order_by' => $validated['order_by'],
-            'status' => $validated['status'],
-            'description' => $request->description,
-            'slug' => Str::slug($validated['title']),
-            'meta_title' => $request->meta_title,
-            'meta_keywords' => $request->meta_keywords,
+            'title'            => $validated['title'],
+            'cat_id'           => $validated['cat_id'],
+            'sub_id'           => $validated['sub_id'],
+            'order_by'         => $validated['order_by'],
+            'status'           => $validated['status'],
+            'description'      => $request->description,
+            'slug'             => $slug,
+            'meta_title'       => $request->meta_title,
+            'meta_keywords'    => $request->meta_keywords,
             'meta_description' => $request->meta_description,
-            'user_id' => 0,
-            'user_type' => 'Admin',
-            'insert_by' => 'Admin',
-            'update_by' => 'Admin',
+            'user_id'          => 0,
+            'user_type'        => 'Admin',
+            'insert_by'        => 'Admin',
+            'update_by'        => 'Admin',
         ];
 
         $id = DB::table('product')->insertGetId($data);
@@ -138,7 +132,7 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Product created successfully.',
         ]);
     }
@@ -150,56 +144,54 @@ class ProductController extends Controller
             abort(404);
         }
         $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
-        $subCategories = DB::table('sub_categories')->where('category_id', $product->cat_id)->where('status', 1)->orderBy('name')->get();
+        $subCategories = DB::table('sub_categories')
+            ->where('category_id', $product->cat_id)
+            ->where('status', 1)
+            ->orderBy('name')
+            ->get(['id','name','slug']);
         return view('ursbid-admin.products.edit', compact('product', 'categories', 'subCategories'));
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'cat_id' => 'required|integer|exists:categories,id',
-            'sub_id' => 'required|integer|exists:sub_categories,id',
-            'order_by' => 'nullable|integer',
-            'status' => 'required|in:0,1',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
-            'description' => 'nullable|string',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_keywords' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string',
+            'title'           => 'required|string|max:255',
+            'cat_id'          => 'required|integer|exists:categories,id',
+            'sub_id'          => 'required|integer|exists:sub_categories,id',
+            'order_by'        => 'nullable|integer',
+            'status'          => 'required|in:0,1',
+            'image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            'description'     => 'nullable|string',
+            'meta_title'      => 'nullable|string|max:255',
+            'meta_keywords'   => 'nullable|string|max:255',
+            'meta_description'=> 'nullable|string',
+            'slug'            => 'nullable|string|max:255', // accept incoming slug change
         ]);
-
-        $exists = DB::table('product')
-            ->where('cat_id', $validated['cat_id'])
-            ->where('sub_id', $validated['sub_id'])
-            ->where('title', $validated['title'])
-            ->where('id', '!=', $id)
-            ->exists();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'Product already exists for this sub category.',
-                'errors' => ['title' => ['Product already exists for this sub category.']],
-            ], 422);
-        }
 
         $product = DB::table('product')->where('id', $id)->first();
         if (!$product) {
             return response()->json(['message' => 'Product not found.'], 404);
         }
 
+        // Sanitize incoming slug or derive from title
+        $baseSlug = Str::slug($request->input('slug', '')) ?: Str::slug($validated['title']);
+        if ($baseSlug === '') {
+            $baseSlug = 'item';
+        }
+        $slug = $this->uniqueSlugForSub($baseSlug, (int)$validated['sub_id'], (int)$id);
+
         $data = [
-            'title' => $validated['title'],
-            'cat_id' => $validated['cat_id'],
-            'sub_id' => $validated['sub_id'],
-            'order_by' => $validated['order_by'],
-            'status' => $validated['status'],
-            'description' => $request->description,
-            'slug' => Str::slug($validated['title']),
-            'meta_title' => $request->meta_title,
-            'meta_keywords' => $request->meta_keywords,
+            'title'            => $validated['title'],
+            'cat_id'           => $validated['cat_id'],
+            'sub_id'           => $validated['sub_id'],
+            'order_by'         => $validated['order_by'],
+            'status'           => $validated['status'],
+            'description'      => $request->description,
+            'slug'             => $slug,
+            'meta_title'       => $request->meta_title,
+            'meta_keywords'    => $request->meta_keywords,
             'meta_description' => $request->meta_description,
-            'update_by' => 'Admin',
+            'update_by'        => 'Admin',
         ];
 
         if ($request->hasFile('image')) {
@@ -219,37 +211,8 @@ class ProductController extends Controller
         DB::table('product')->where('id', $id)->update($data);
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Product updated successfully.',
-        ]);
-    }
-
-    public function toggleStatus(Request $request, $id)
-    {
-        $product = DB::table('product')->where('id', $id)->first();
-        if (!$product) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found.'
-            ], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'status' => 'required|in:0,1',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        DB::table('product')->where('id', $id)->update(['status' => $request->status]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Status updated successfully.',
         ]);
     }
 
@@ -267,8 +230,32 @@ class ProductController extends Controller
         DB::table('product')->where('id', $id)->delete();
 
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Product deleted successfully.',
         ]);
+    }
+
+    /**
+     * Ensure a unique slug within a sub-category by appending -2, -3, ...
+     */
+    private function uniqueSlugForSub(string $baseSlug, int $subId, int $ignoreId = null): string
+    {
+        $slug = $baseSlug;
+        $i = 2;
+
+        $exists = function($s) use ($subId, $ignoreId) {
+            $q = DB::table('product')->where('sub_id', $subId)->where('slug', $s);
+            if ($ignoreId) {
+                $q->where('id', '!=', $ignoreId);
+            }
+            return $q->exists();
+        };
+
+        while ($exists($slug)) {
+            $slug = $baseSlug . '-' . $i;
+            $i++;
+        }
+
+        return $slug;
     }
 }

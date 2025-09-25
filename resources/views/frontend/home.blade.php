@@ -1,54 +1,82 @@
 @extends('frontend.layouts.app')
-
 @section('title', 'URSBID: A platform for Construction material seller and buyer')
 
 @section('content')
-{{-- =========================
-     PRODUCTS & SERVICES (2 columns, uniform image size + same grid both sides)
-========================= --}}
 <style>
-  .cat-two{padding:36px 0 10px;background:#ffffff}
-  .cat-title{font-size:28px;font-weight:800;color:#0f172a;margin:0 0 12px}
-  .cat-col{position:relative}
-  @media (min-width:992px){
-    .cat-col--right{padding-left:28px}
-    .cat-col--right:before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:#e5e7eb}
+/* ====== MOBILE ONLY (<= 768px) ====== */
+@media (max-width: 767.98px){
+  /* row ko 2 columns bana do */
+  .cat-two .row.g-4{
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;   /* left & right */
+    gap: 16px;
+  }
+  /* bootstrap col widths reset */
+  .cat-two .col-lg-6{
+    width: auto !important;
+    max-width: none !important;
+    padding: 0 !important;
   }
 
-  /* UNIFIED GRID: Products == Services */
-  .cat-grid{
-    display:grid;
-    gap:14px;
-    grid-template-columns:repeat(2, 1fr);   /* default (tablet / small desktop) */
-  }
-  @media (min-width:1200px){
-    .cat-grid{ grid-template-columns:repeat(3, 1fr); } /* desktop: 3 per row */
-  }
-  @media (max-width:575.98px){
-    .cat-grid{ grid-template-columns:repeat(2, 1fr); } /* mobile: 2 per row (set to 1 if you prefer) */
+  .cat-two .cat-col{
+    height: 100%;
+    background: #fff;
+    border-radius: 14px;
   }
 
-  /* Card */
-  .cat-card{
-    display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid #e5e7eb;
-    border-radius:14px;overflow:hidden;box-shadow:0 6px 16px rgba(2,6,23,.06);
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-    text-decoration:none;
+  /* heading sticky rakhna (optional) */
+  .cat-two .cat-title{
+    position: sticky;
+    top: 0;
+    background: #fff;
+    padding: 10px 12px;
+    margin: 0 0 8px 0;
+    z-index: 2;
+    font-size: 16px;
+    line-height: 1.2;
+    border-bottom: 1px solid #eef2f6;
   }
-  .cat-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(2,6,23,.12);border-color:#dfe3ea}
 
-  /* >>> UNIFORM IMAGE SIZE + BORDER (3:2 ratio) <<< */
-  .cat-img{
-    position:relative;width:100%;padding-top:66.666%; /* 3:2 aspect ratio */
-    border:1px solid #e5e7eb; border-radius: 12px 12px 0px 0px;overflow:hidden;
-    background:linear-gradient(180deg,#f8fafc,#f1f5f9);
+  /* cards column-wise stack */
+  .cat-two .cat-grid{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px 12px;
   }
-  .cat-card:hover .cat-img{border-color:#cbd5e1}
-  .cat-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 
-  .cat-name{font-weight:700;font-size:13px;line-height:1.35;color:#0f172a;padding:0 12px 12px}
-</style>
+  .cat-two .cat-card{
+    display: block;
+    border: 1px solid #e7edf3;
+    border-radius: 14px;
+    padding: 8px;
+    text-decoration: none;
+    background: #fff;
+  }
 
+  .cat-two .cat-img{
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 16/10;              /* uniform thumbnails */
+    background: #f4f6f8;
+  }
+  .cat-two .cat-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cat-two .cat-name{
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
+}
+</style> 
 <section class="cat-two">
   <div class="container">
     <div class="row g-4">
@@ -73,7 +101,7 @@
                     $img = asset('public/uploads/placeholder/placeholder.jpg');
                   }
                 @endphp
-                <a class="cat-card" href="{{ url('/filter/'.$cat->slug.'/'.$sub->slug) }}">
+                <a class="cat-card" href="{{ route('filter', ['category' => $cat->slug, 'subcategory' => $sub->slug]) }}">
                   <span class="cat-img"><img src="{{ $img }}" alt="{{ $sub->name }}"></span>
                   <span class="cat-name">{{ $sub->name }}</span>
                 </a>
@@ -87,121 +115,135 @@
     </div>
   </div>
 </section>
+{{-- === New User Register CTA (place after Products & Services) === --}}
+@php
+  $sellerUrl =  url('seller-register');
+  $buyerUrl  =  url('seller-register');
+@endphp
 
-{{-- =========================
-     YouTube Slider (LIGHT THEME – distinct from Features)
-========================= --}}
+<section class="nu-cta">
+  <div class="container">
+    <div class="nu-wrap">
+      <div class="nu-left">
+        <span class="nu-kicker">New to URSBID?</span>
+        <h2 class="nu-title">New User Register Here</h2>
+        <p class="nu-sub">
+          Join India’s fast, transparent construction marketplace. Register as a Seller/Contractor to
+          list products & services, or as a Buyer/Client to post RFQs and start getting bids in minutes.
+        </p>
+
+        <ul class="nu-points">
+          <li><i class="bi bi-check2-circle"></i> Free signup, quick KYC</li>
+          <li><i class="bi bi-check2-circle"></i> Live bidding & real-time ranks</li>
+          <li><i class="bi bi-check2-circle"></i> Verified vendors & secure communication</li>
+        </ul>
+      </div>
+
+      <div class="nu-right">
+        <div class="nu-card">
+          <h3 class="nu-card-title"><i class="bi bi-person-gear"></i> I’m a Seller / Contractor</h3>
+          <p class="nu-card-sub">Showcase your products & services and start receiving RFQs.</p>
+          <a href="{{ $sellerUrl }}" class="nu-btn nu-btn-primary">Register as Seller / Contractor</a>
+        </div>
+
+        <div class="nu-card">
+          <h3 class="nu-card-title"><i class="bi bi-briefcase"></i> I’m a Buyer / Client</h3>
+          <p class="nu-card-sub">Create RFQs, compare quotes, and award the best bid.</p>
+          <a href="{{ $buyerUrl }}" class="nu-btn nu-btn-outline">Register as Buyer / Client</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@push('styles')
 <style>
-  .yt-wrap{padding:70px 0;background:#f6f9fc;border-top:1px solid #eef2f7;border-bottom:1px solid #eef2f7}
-  .yt-title{color:#0f172a;font-weight:800;font-size:32px;margin:0 0 10px;text-align:center}
-  .yt-sub{color:#475569;text-align:center;margin:0 auto 28px;max-width:820px}
-
-  .yt-owl .owl-stage{display:flex}
-  .yt-owl .item{height:100%}
-  .yt-owl .owl-item{margin-right:10px !important} /* 10px gap */
-
-  .yt-card{
-      height:100%; background:#ffffff; border:1px solid #e5e7eb;
-      border-radius:16px; overflow:hidden; box-shadow:0 10px 24px rgba(2,6,23,.06);
-      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  .nu-cta{ padding:60px 0; background:#0f172a; position:relative; overflow:hidden; }
+  .nu-cta:before{
+    content:""; position:absolute; inset:auto -10% -35% -10%;
+    height:300px; background:radial-gradient(50% 50% at 50% 50%, rgba(59,130,246,.25), rgba(59,130,246,0) 70%);
+    filter: blur(40px);
   }
-  .yt-card:hover{ transform:translateY(-4px); box-shadow:0 18px 40px rgba(2,6,23,.16); border-color:#dfe3ea }
-
-  .yt-frame{position:relative;width:100%;padding-top:56.25%;background:#0a0f22}
-  .yt-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px}
-
-  .yt-overlay{
-      position:absolute; inset:0; border-radius:12px;
-      background:linear-gradient(to bottom, rgba(0,0,0,.08), rgba(0,0,0,.18));
-      display:flex; align-items:center; justify-content:center; pointer-events:none;
+  .nu-wrap{
+    display:grid; gap:28px; align-items:center;
+    grid-template-columns: 1.2fr .8fr;
   }
-  .yt-play{
-      width:60px;height:60px;border-radius:9999px;
-      background:linear-gradient(135deg,#fb7185,#f59e0b);
-      display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.20);
-      transform:scale(1); transition:transform .18s ease;
-  }
-  .yt-card:hover .yt-play{ transform:scale(1.08) }
-  .yt-play:before{
-      content:""; display:block; width:0;height:0;
-      border-left:16px solid #ffffff; border-top:10px solid transparent; border-bottom:10px solid transparent;
-      margin-left:4px;
-  }
+  @media (max-width:991.98px){ .nu-wrap{ grid-template-columns:1fr; } }
 
-  .yt-owl .owl-nav{position:relative;margin-top:18px;text-align:center}
-  .yt-owl .owl-nav button{
-      width:40px;height:40px;border-radius:50%;border:1px solid #cbd5e1!important;
-      background:#ffffff!important;color:#0f172a!important;margin:0 6px;display:inline-flex;
-      align-items:center;justify-content:center;transition:all .15s ease; box-shadow:0 4px 12px rgba(2,6,23,.06);
+  .nu-kicker{
+    display:inline-block; padding:6px 12px; border:1px solid #27334a; border-radius:999px;
+    color:#9fb2d1; font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase;
+    background:rgba(255,255,255,.02);
   }
-  .yt-owl .owl-nav button:hover{background:#f8fafc!important;border-color:#94a3b8!important}
-  .yt-owl .owl-nav button span{font-size:20px;line-height:1}
+  .nu-title{ margin:12px 0 8px; color:#fff; font-weight:800; font-size:32px; }
+  .nu-sub{ color:#c8d5e6; max-width:720px; margin-bottom:14px; }
+  .nu-points{ margin:0; padding:0; list-style:none; display:grid; gap:10px; color:#cfe0f7; }
+  .nu-points li i{ margin-right:8px; }
 
-  .yt-owl .owl-dots{margin-top:8px;text-align:center}
-  .yt-owl .owl-dot span{width:8px;height:8px;background:#94a3b8;opacity:.6;display:inline-block;border-radius:9999px;margin:0 4px;transition:all .15s}
-  .yt-owl .owl-dot.active span{opacity:1;width:18px;background:#0f172a}
-
-  @media(min-width:1200px){
-    .yt-owl .owl-stage-outer{padding-top:4px;padding-bottom:12px}
+  .nu-right{ display:grid; gap:16px; }
+  .nu-card{
+    background:#0b1220; border:1px solid #1b2a44; border-radius:18px; padding:20px;
+    box-shadow:0 18px 60px rgba(15,23,42,.25);
   }
+  .nu-card-title{ color:#e6efff; font-size:18px; font-weight:700; margin:0 0 6px; }
+  .nu-card-title i{ margin-right:8px; }
+  .nu-card-sub{ color:#9fb2d1; margin:0 0 14px; }
+
+  .nu-btn{
+    display:inline-block; width:100%; text-align:center; padding:12px 16px; border-radius:12px;
+    font-weight:700; text-decoration:none; transition:transform .15s ease, box-shadow .15s ease, background .2s ease;
+    border:1px solid transparent;
+  }
+  .nu-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 30px rgba(59,130,246,.25); }
+  .nu-btn-primary{ background:#3b82f6; color:#fff; }
+  .nu-btn-primary:hover{ background:#2f74ea; }
+  .nu-btn-outline{ background:transparent; color:#e6efff; border-color:#2a3b5d; }
+  .nu-btn-outline:hover{ background:#142036; }
 </style>
+@endpush
 
+{{-- YOUTUBE SECTION — privacy-enhanced, lazy, no background requests until click --}}
 <div class="yt-wrap">
   <div class="container">
     <h2 class="yt-title">Latest from URSBID</h2>
     <p class="yt-sub">Quick tips, announcements, and product walk-throughs. Watch and get bidding faster.</p>
-
     <div class="yt-owl owl-carousel owl-theme">
       @php $yts = DB::table('youtube_links')->where('status', 1)->get(); @endphp
       @foreach ($yts as $yt)
-        <div class="item">
-          <div class="yt-card">
-            <div class="yt-frame">
-              <iframe
-                src="{{ $yt->youtube_link }}"
-                title="URSBID video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-              </iframe>
-              <div class="yt-overlay"><div class="yt-play"></div></div>
+        @php
+          $url = $yt->youtube_link ?? '';
+          $vid = null;
+          if (preg_match('~(?:youtu\.be/|v=|embed/|shorts/)([A-Za-z0-9_-]{11})~', $url, $m)) {
+              $vid = $m[1];
+          }
+        @endphp
+        @if($vid)
+          <div class="item">
+            <div class="yt-card">
+              <button
+                type="button"
+                class="yt-lazy"
+                data-ytid="{{ $vid }}"
+                aria-label="Play video"
+              >
+                <img
+                  class="yt-thumb"
+                  src="https://i.ytimg.com/vi/{{ $vid }}/hqdefault.jpg"
+                  alt="Video thumbnail"
+                  loading="lazy"
+                >
+                <span class="yt-play">
+                  <i class="bi bi-play-fill" aria-hidden="true"></i>
+                </span>
+              </button>
             </div>
-            {{-- <div class="yt-cap">{{ $yt->title ?? 'URSBID' }}</div> --}}
           </div>
-        </div>
+        @endif
       @endforeach
     </div>
   </div>
 </div>
 
-{{-- =========================
-     Our Specialization & Company Features (Dark, 3 per row)
-========================= --}}
-<style>
-  .sf-wrap{padding:80px 0;background:#0b1020;text-align:center}
-  .sf-title{font-size:36px;font-weight:800;color:#e8eefc;margin-bottom:10px}
-  .sf-sub{color:#b6c2e2;line-height:1.6;max-width:720px;margin:0 auto 40px}
-
-  .sf-grid{display:grid;gap:20px;grid-template-columns:repeat(3,minmax(0,1fr))}
-  @media (max-width:991.98px){ .sf-grid{grid-template-columns:repeat(2,1fr)} }
-  @media (max-width:575.98px){ .sf-grid{grid-template-columns:1fr} }
-
-  .sf-card{
-    background:#101734;border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:18px;
-    display:flex;gap:14px;align-items:flex-start;
-    box-shadow:0 10px 28px rgba(0,0,0,.35);
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-    text-align:left;
-  }
-  .sf-card:hover{ transform:translateY(-3px); box-shadow:0 16px 44px rgba(0,0,0,.45); border-color:rgba(255,255,255,.18) }
-  .sf-ico{
-    flex:0 0 46px;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
-    background:linear-gradient(135deg,#3b82f6,#06b6d4); color:#061120; box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)
-  }
-  .sf-ico i{font-size:20px}
-  .sf-head{font-weight:800;color:#f2f5ff;margin:2px 0 4px;font-size:17px;line-height:1.25}
-  .sf-note{color:#a8b3cf;margin:0;font-size:13.5px;line-height:1.6}
-</style>
 
 <div class="sf-wrap">
   <div class="container">
@@ -235,137 +277,55 @@
   </div>
 </div>
 
-{{-- =========================
-     Client's Feedback (Modern Grid, No Owl)
-========================= --}}
-<style>
-    :root{
-        --t-bg:#ffffff; --t-text:#0f172a; --t-muted:#475569; --t-border:#e5e7eb;
-        --t-star:#f59e0b; --t-accent:#2dd4bf; --t-shadow:0 12px 30px rgba(2,6,23,.10);
-        --t-shadow-hover:0 18px 50px rgba(2,6,23,.18);
-    }
-    .t-section{padding:80px 0 60px}
-    .t-title{font-size:38px;font-weight:800;letter-spacing:.2px;color:var(--t-text);margin-bottom:28px}
-    .t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-    @media (max-width:1199.98px){.t-grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:767.98px){.t-grid{grid-template-columns:1fr}}
-    .t-card{position:relative;background:var(--t-bg);border:1px solid var(--t-border);border-radius:20px;padding:22px;box-shadow:var(--t-shadow);transition:.18s;overflow:hidden}
-    .t-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--t-accent),#60a5fa);opacity:.9}
-    .t-card:hover{transform:translateY(-4px);box-shadow:var(--t-shadow-hover)}
-    .t-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .t-author{display:flex;align-items:center;gap:12px}
-    .t-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--t-border)}
-    .t-name{margin:0;font-weight:800;font-size:18px;color:var(--t-text)}
-    .t-role{margin-top:2px;color:#64748b;font-size:13px}
-    .t-stars{display:flex;gap:6px}
-    .t-stars i{color:var(--t-star);font-size:16px}
-    .t-text{margin:8px 0 0;color:var(--t-text);font-size:15px;line-height:1.65}
-    .t-quote{position:absolute;right:18px;bottom:-8px;font-size:72px;color:#e2e8f0;opacity:.55;pointer-events:none}
-</style>
-
 <div class="t-section">
-    <div class="container">
-        <div class="text-center">
-            <h2 class="t-title">Client's Feedback</h2>
-        </div>
-
-        @php
-            $testimonials = DB::table('testimonial')->where('status', 1)->limit(6)->get();
-        @endphp
-
-        @if($testimonials->count())
-            <div class="t-grid">
-                @foreach ($testimonials as $test)
-                    <div class="t-card">
-                        <div class="t-head">
-                            <div class="t-author">
-                                <img class="t-avatar" src="{{ asset('assets/front/img/testimonial/12.jfif') }}" alt="{{ $test->title }}">
-                                <div>
-                                    <p class="t-name">{{ $test->title }}</p>
-                                    <div class="t-role">{{ $test->position }}</div>
-                                </div>
-                            </div>
-                            <div class="t-stars" aria-label="rating 5 out of 5">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <p class="t-text">{{ $test->description }}</p>
-                        <i class="t-quote fas fa-quote-right"></i>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <p class="text-center text-muted">No testimonials yet.</p>
-        @endif
+  <div class="container">
+    <div class="text-center t-headline">
+      <span class="t-kicker">What clients say</span>
+      <h2 class="t-title">Client's Feedback</h2>
+      <p class="t-sub">Real experiences from people who’ve used our platform to save time, cut costs, and ship faster.</p>
     </div>
-</div>
 
-{{-- =========================
-     Blog Section (3 Column Grid)
-========================= --}}
-<style>
-  .blog-section {padding: 70px 0; background: #f9fafb}
-  .blog-title {font-size: 38px; font-weight: 800; color: #0f172a; margin-bottom: 28px; text-align: center}
-  .blog-card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      box-shadow: 0 10px 24px rgba(2,6,23,.06);
-      transition: 0.3s;
-      overflow: hidden;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-  }
-  .blog-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 18px 40px rgba(2,6,23,.16);
-  }
-  .blog-image {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      overflow: hidden;
-  }
-  .blog-image img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-  }
-  .blog-body {
-      padding: 18px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-  }
-  .blog-heading {
-      font-size: 18px;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 8px;
-  }
-  .blog-snippet {
-      font-size: 14.5px;
-      color: #475569;
-      line-height: 1.6;
-      margin-bottom: 16px;
-  }
-  .blog-link {
-      font-size: 14px;
-      color: #3b82f6;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-block;
-  }
-  .blog-link:hover {
-      text-decoration: underline;
-  }
-</style>
+    @php
+      $testimonials = DB::table('testimonial')->where('status', 1)->limit(6)->get();
+    @endphp
+
+    @if($testimonials->count())
+      <div class="t-grid">
+        @foreach ($testimonials as $test)
+          <article class="t-card">
+            <div class="t-card-inner">
+              <header class="t-top">
+                <div class="t-avatar-wrap">
+                  <img class="t-avatar" src="{{ asset('assets/front/img/testimonial/12.jfif') }}" alt="{{ $test->title }}">
+                </div>
+                <div class="t-bio">
+                  <h3 class="t-name">{{ $test->title }}</h3>
+                  <div class="t-role">{{ $test->position }}</div>
+                </div>
+
+                <div class="t-top-right">
+                  <div class="t-stars" aria-label="rating 5 out of 5">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <div class="t-verify">
+                    <i class="fas fa-check-circle"></i> Verified
+                  </div>
+                </div>
+              </header>
+
+              <p class="t-text clamp">{{ $test->description }}</p>
+              <i class="t-quote fas fa-quote-right"></i>
+            </div>
+          </article>
+        @endforeach
+      </div>
+    @else
+      <p class="text-center text-muted">No testimonials yet.</p>
+    @endif
+  </div>
+</div>
 
 <section class="blog-section">
   <div class="container">
@@ -399,16 +359,37 @@
     @endif
   </div>
 </section>
-
 @endsection
+
+
 
 @push('scripts')
 <script>
-  // YouTube slider (10px gap)
+  // Owl (unchanged)
   $('.yt-owl').owlCarousel({
-      loop:true, margin:10, nav:true, dots:true, stagePadding:40, smartSpeed:550, autoplay:false,
-      navText:['<span>&larr;</span>','<span>&rarr;</span>'],
-      responsive:{ 0:{items:1,stagePadding:10}, 600:{items:2,stagePadding:20}, 1000:{items:3,stagePadding:30}, 1300:{items:3,stagePadding:60} }
+    loop:true, margin:10, nav:true, dots:true, stagePadding:40, smartSpeed:550, autoplay:false,
+    navText:['<span>&larr;</span>','<span>&rarr;</span>'],
+    responsive:{ 0:{items:1,stagePadding:10}, 600:{items:2,stagePadding:20}, 1000:{items:3,stagePadding:30}, 1300:{items:3,stagePadding:60} }
+  });
+
+  // Lazy load YouTube on click using youtube-nocookie
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.yt-lazy');
+    if(!btn) return;
+    const id = btn.dataset.ytid;
+    if(!id) return;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1&autoplay=1';
+    iframe.title = 'URSBID video';
+    iframe.loading = 'lazy';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.allowFullscreen = true;
+    iframe.style.width = '100%';
+    iframe.style.height = (btn.querySelector('.yt-thumb')?.height || 315) + 'px';
+    iframe.style.border = '0';
+    btn.replaceWith(iframe);
   });
 </script>
 @endpush

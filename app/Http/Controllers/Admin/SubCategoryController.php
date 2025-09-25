@@ -144,90 +144,120 @@ class SubCategoryController extends Controller
         if (!$sub) {
             abort(404);
         }
+        
         $categories = DB::table('categories')->where('status', '1')->orderBy('name')->get();
-        return view('ursbid-admin.sub_categories.edit', compact('sub', 'categories'));
+        
+        // Get the category slug for the selected category
+        $categorySlug = '';
+        if ($sub->category_id) {
+            $category = DB::table('categories')->where('id', $sub->category_id)->first();
+            $categorySlug = $category->slug ?? '';
+        }
+        
+        return view('ursbid-admin.sub_categories.edit', compact('sub', 'categories', 'categorySlug'));
     }
 
     /**
      * Update the specified sub category in storage.
      */
+
+
     public function update(Request $request, $id)
     {
+        // 1) Validate inputs (slug required + regex for hyphenated lowercase)
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|integer',
-            'order_by' => 'nullable|integer',
-            'status' => 'required|in:1,2',
-            'description' => 'required|string',
-            'tags' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_keywords' => 'nullable|string|max:255',
+            'name'             => 'required|string|max:255',
+            'category_id'      => 'required|integer',
+            'slug'             => ['required','string','max:255','regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
+            'order_by'         => 'nullable|integer',
+            'status'           => 'required|in:1,2',
+            'description'      => 'required|string',
+            'tags'             => 'nullable|string',
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            'meta_title'       => 'nullable|string|max:255',
+            'meta_keywords'    => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
         ]);
-
-        $exists = DB::table('sub_categories')
-            ->where('category_id', $validated['category_id'])
-            ->where('name', $validated['name'])
-            ->where('id', '!=', $id)
-            ->exists();
-
-        if ($exists) {
-            return response()->json([
-                'message' => 'Sub category already exists for this category.',
-                'errors' => ['name' => ['Sub category already exists for this category.']],
-            ], 422);
-        }
-
+    
+        // Normalize slug once (keeps hyphens; enforces lowercase)
+        $normalizedSlug = Str::slug($validated['slug']);
+    
+        // 2) Ensure the sub-category exists
         $sub = DB::table('sub_categories')->where('id', $id)->first();
         if (!$sub) {
             return response()->json(['message' => 'Sub category not found.'], 404);
         }
-
+    
+        // 3) Duplicate checks within same category (by name and by slug)
+        $nameExists = DB::table('sub_categories')
+            ->where('category_id', $validated['category_id'])
+            ->where('name', $validated['name'])
+            ->where('id', '!=', $id)
+            ->exists();
+    
+        if ($nameExists) {
+            return response()->json([
+                'message' => 'Sub category already exists for this category.',
+                'errors'  => ['name' => ['Sub category already exists for this category.']],
+            ], 422);
+        }
+    
+        $slugExists = DB::table('sub_categories')
+            ->where('category_id', $validated['category_id'])
+            ->where('slug', $normalizedSlug)
+            ->where('id', '!=', $id)
+            ->exists();
+    
+        if ($slugExists) {
+            return response()->json([
+                'message' => 'Slug already exists in this category.',
+                'errors'  => ['slug' => ['Slug already exists in this category.']],
+            ], 422);
+        }
+    
+        // 4) Prepare update payload
         $data = [
-            'name' => $validated['name'],
-            'category_id' => $validated['category_id'],
-            'order_by' => $validated['order_by'],
-            'status' => $validated['status'],
-            'description' => $validated['description'],
-            'tags' => isset($validated['tags']) ? json_encode(array_map('trim', explode(',', $validated['tags']))) : json_encode([]),
-            'slug' => Str::slug($validated['name']),
-            'meta_title' => $request->meta_title,
-            'meta_keywords' => $request->meta_keywords,
-            'meta_description' => $request->meta_description,
+            'name'             => $validated['name'],
+            'category_id'      => $validated['category_id'],
+            'order_by'         => $validated['order_by'] ?? null,
+            'status'           => $validated['status'],
+            'description'      => $validated['description'],
+            'tags'             => isset($validated['tags'])
+                                    ? json_encode(array_values(array_filter(array_map('trim', explode(',', $validated['tags'])))))
+                                    : json_encode([]),
+            'slug'             => $normalizedSlug, // <-- use provided slug (normalized)
+            'meta_title'       => $request->input('meta_title'),
+            'meta_keywords'    => $request->input('meta_keywords'),
+            'meta_description' => $request->input('meta_description'),
+            'updated_at'       => now(),
         ];
-
+    
+        // 5) Handle image upload (delete old if present)
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if (!empty($sub->image) && file_exists(public_path($sub->image))) {
                 @unlink(public_path($sub->image));
             }
-        
-            // Upload new image
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-        
-            // Create folder if not exists
+            $filename = time().'_'.Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'.'.$file->getClientOriginalExtension();
+    
             $uploadPath = public_path('uploads/sub_category');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-        
-            // Move file
+    
             $file->move($uploadPath, $filename);
-        
-            // Save path in database
-            $data['image'] = 'uploads/sub_category/' . $filename;
+            $data['image'] = 'uploads/sub_category/'.$filename;
         }
-
-
+    
+        // 6) Update
         DB::table('sub_categories')->where('id', $id)->update($data);
-
+    
         return response()->json([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Sub category updated successfully.',
         ]);
     }
+
 
     /**
      * Toggle the status of the specified sub category.

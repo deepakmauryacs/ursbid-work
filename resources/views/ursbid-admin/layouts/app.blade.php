@@ -22,6 +22,7 @@
 
     <!-- App css -->
     <link href="{{ asset('public/assets/css/app.min.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('public/assets/css/custom.css') }}?v={{ config('app.asset_version', '1.0.0') }}" rel="stylesheet" type="text/css" />
 
     <!-- Theme Config js -->
     <script src="{{ asset('public/assets/js/config.min.js') }}?v={{ config('app.asset_version', '1.0.0') }}"></script>
