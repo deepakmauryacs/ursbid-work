@@ -1,230 +1,170 @@
 @extends('seller.layouts.app')
-@section('title', 'Sub Category List')
-<!--  -->
+@section('title', 'Sub Categories')
+
 @section('content')
-
 <div class="container-fluid">
-    <div class="social-dash-wrap">
-        <div class="row">
-            <div class="col-lg-12">
-
-                <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Sub Category List</h4>
-                    <div class="breadcrumb-action justify-content-center flex-wrap">
-                        <!-- <div class="action-btn">
-
-                                        <div class="form-group mb-0">
-                                            <div class="input-container icon-left position-relative">
-                                                <span class="input-icon icon-left">
-                                                    <span data-feather="calendar"></span>
-                                                </span>
-                                                <input type="text" class="form-control form-control-default date-ranger" name="date-ranger" placeholder="Oct 30, 2019 - Nov 30, 2019">
-                                                <span class="input-icon icon-right">
-                                                    <span data-feather="chevron-down"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
-
-                        <div class="action-btn">
-                            <a href="{{ url('admin/sub/add') }}" class="btn btn-sm btn-primary btn-add">
-                                <i class="la la-plus"></i> Add New Sub category</a>
-                        </div>
-                    </div>
-                </div>
-
+    <!-- Page Title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="mb-0 fw-semibold">Sub Categories</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url('seller-dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Sub Categories</li>
+                </ol>
             </div>
-
-        </div>
-        <div class="row">
-            <div class="col-lg-12 mb-30">
-                <div class="card">
-                    <div class="col-md-12 mt-2">
-                        <form class="row" method="get" action="">
-                            <div class="col-md-4 no-margin-left">
-                                <div class="form-group">
-                                    <input type="text" name="keyword" class="form-control" placeholder="Keywords"
-                                        value="{{ isset($data['keyword']) ? $data['keyword'] : '' }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 no-padding-left">
-                                <div class="form-group">
-                                    <select class="form-control select2" name="r_page">
-                                        <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}> 25 Records Per
-                                            Page</option>
-                                        <option value="50" {{ $data['r_page'] == 50 ? 'selected' : '' }}> 50 Records Per
-                                            Page</option>
-                                        <option value="100" {{ $data['r_page'] == 100 ? 'selected' : '' }}> 100 Records
-                                            Per Page</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-1 no-padding-left">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
-                                </div>
-                            </div>
-                        </form>
-
-                    </div>
-                    <div class="card-body">
-
-                        @if(Session::has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ Session::get('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        @endif
-                        @if(Session::has('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ Session::get('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        @endif
-
-                        <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <thead>
-                                        <tr class="userDatatable-header">
-                                            <th>
-                                                <span class="projectDatatable-title">Sr no</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Category</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Title</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Image</span>
-                                            </th>
-
-
-                                            <th>
-                                                <span class="projectDatatable-title">status</span>
-                                            </th>
-
-                                            <th>
-                                                <span class="projectDatatable-title">Action</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                        $i=1;
-                                        @endphp
-                                        @foreach ($blogs as $blog)
-
-                                        <tr>
-                                            <td>
-                                                <div class="userDatatable-content text-center">
-                                                    {{ $i++ }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->category_title }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->sub_tilte }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    @if($blog->img)
-                                                    <img src="{{ url('public/uploads/'.$blog->img) }}"
-                                                        style='width:100px; height:80px;' alt="Image">
-                                                    @else
-                                                    No Image
-                                                    @endif
-                                                </div>
-                                            </td>
-
-                                            <td>
-
-                                                <div class="d-inline-block">
-                                                    @if($blog->sub_status==1)
-                                                    <a href="{{ url('admin/sub/active/'.$blog->sub_id) }}">
-                                                        <span class="media-badge color-white bg-primary">Active</span>
-                                                    </a>
-                                                    @else
-                                                    <a href="{{ url('admin/sub/deactive/'.$blog->sub_id) }}">
-                                                        <span class="media-badge color-white bg-danger">De-active</span>
-                                                    </a>
-                                                    @endif
-
-                                                </div>
-                                            </td>
-
-                                            <td>
-                                                <div class="project-progress text-left">
-
-
-                                                    <div class="dropdown  dropdown-click ">
-
-                                                        <button class="btn-link border-0 bg-transparent p-0"
-                                                            data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                            <span data-feather=more-horizontal></span>
-                                                        </button>
-
-
-                                                        <div
-                                                            class="dropdown-default dropdown-bottomLeft dropdown-menu-right dropdown-menu">
-                                                            <a class="dropdown-item"
-                                                                href="{{ url('admin/sub/edit/'.$blog->sub_id) }}">Edit</a>
-                                                            <a class="dropdown-item"
-                                                                href="{{ url('admin/sub/delete/'.$blog->sub_id) }}"
-                                                                onclick="return confirm('Are you sure you want to delete this ?')">Delete</a>
-
-
-
-                                                        </div>
-                                                    </div>
-
-
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-
-
-
-                                    </tbody>
-                                </table><!-- End: .table -->
-                                @if(isset($data['keyword']) && $blogs->count() > 0)
-                                <div class="pagination">
-                                    {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
-                                </div>
-                                @elseif(isset($data['r_page']) && $blogs->count() > 0)
-                                <div class="pagination">
-                                    {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
-                                </div>
-                                @else
-
-                                <div class="gmz-pagination mt-1">
-                                    {!! $blogs->links('pagination::bootstrap-4') !!}
-                                </div>
-                                @endif
-
-                                <!-- <div class="gmz-pagination mt-1">
-                                {!! $blogs->links('pagination::bootstrap-4') !!}
-                            </div> -->
-                            </div>
-                        </div><!-- End: .userDatatable -->
-
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
-</div>
+
+    <!-- Filters -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card filter-card border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <form class="filter-form" method="get" action="">
+                        <ul class="filter-ul">
+                            <li>
+                                <label class="filter-label">Search</label>
+                                <div class="input-group pill-wrap">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text"
+                                           name="keyword"
+                                           value="{{ request('keyword', $data['keyword'] ?? '') }}"
+                                           class="form-control"
+                                           placeholder="Search by sub category">
+                                </div>
+                            </li>
+                            <li>
+                                <label class="filter-label">Records Per Page</label>
+                                <div class="input-group pill-wrap">
+                                    <span class="input-group-text"><i class="bi bi-list-ol"></i></span>
+                                    <select class="form-select" name="r_page">
+                                        @php
+                                            $records = [25, 50, 100];
+                                            $selectedPerPage = request('r_page', $data['r_page'] ?? 25);
+                                        @endphp
+                                        @foreach($records as $record)
+                                            <option value="{{ $record }}" {{ (int)$selectedPerPage === $record ? 'selected' : '' }}>
+                                                {{ $record }} Records Per Page
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="actions-li">
+                                <button type="submit" class="btn btn-primary btn-icon">
+                                    <i class="bi bi-funnel"></i>Apply
+                                </button>
+                                <a href="{{ url('admin/sub/list') }}" class="btn btn-outline-secondary btn-icon">
+                                    <i class="bi bi-arrow-counterclockwise"></i>Reset
+                                </a>
+                                <a href="{{ url('admin/sub/add') }}" class="btn btn-success btn-icon">
+                                    <i class="bi bi-plus-circle"></i>Add Sub Category
+                                </a>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="row">
+        <div class="col-12">
+            @if(Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ Session::get('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $i = ($blogs->currentPage() - 1) * $blogs->perPage() + 1; @endphp
+                                @forelse ($blogs as $blog)
+                                    <tr id="row-{{ $blog->sub_id }}">
+                                        <td>{{ $i++ }}</td>
+                                        <td>{{ $blog->category_title }}</td>
+                                        <td>{{ $blog->sub_tilte }}</td>
+                                        <td>
+                                            @if($blog->img)
+                                                <img src="{{ url('public/uploads/'.$blog->img) }}" alt="{{ $blog->sub_tilte }}" class="img-thumbnail" style="width: 80px; height: 60px; object-fit: cover;">
+                                            @else
+                                                <span class="text-muted">No Image</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($blog->sub_status == 1)
+                                                <a href="{{ url('admin/sub/active/'.$blog->sub_id) }}" class="badge bg-success-subtle text-success px-3 py-2">Active</a>
+                                            @else
+                                                <a href="{{ url('admin/sub/deactive/'.$blog->sub_id) }}" class="badge bg-danger-subtle text-danger px-3 py-2">De-active</a>
+                                            @endif
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-three-dots"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ url('admin/sub/edit/'.$blog->sub_id) }}">
+                                                            <i class="bi bi-pencil-square me-2"></i>Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item text-danger" href="{{ url('admin/sub/delete/'.$blog->sub_id) }}" onclick="return confirm('Are you sure you want to delete this?')">
+                                                            <i class="bi bi-trash me-2"></i>Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">No sub categories found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    @if($blogs->count() > 0)
+                        <div class="mt-3">
+                            @if(isset($data))
+                                {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
+                            @else
+                                {{ $blogs->links('pagination::bootstrap-4') }}
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
