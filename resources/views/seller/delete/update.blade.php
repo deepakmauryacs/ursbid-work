@@ -2,184 +2,107 @@
 @section('title', 'Update Details')
 
 @section('content')
-
-<script src="https://cdn.ckeditor.com/4.17.2/standard/ckeditor.js"></script>
-
-<div class="container-fluid">
-    <div class="social-dash-wrap">
-        <div class="row">
-            <div class="col-lg-12">
-
-                <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Edit</h4>
-                    <div class="breadcrumb-action justify-content-center flex-wrap">
-                        <!-- <div class="action-btn">
-
-                                        <div class="form-group mb-0">
-                                            <div class="input-container icon-left position-relative">
-                                                <span class="input-icon icon-left">
-                                                    <span data-feather="calendar"></span>
-                                                </span>
-                                                <input type="text" class="form-control form-control-default date-ranger" name="date-ranger" placeholder="Oct 30, 2019 - Nov 30, 2019">
-                                                <span class="input-icon icon-right">
-                                                    <span data-feather="chevron-down"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
-
-                        <!-- <div class="action-btn">
-                                        <a href="#" class="btn btn-sm btn-primary btn-add">
-                                            <i class="la la-plus"></i> </a>
-                                    </div> -->
-                    </div>
-                </div>
-
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="mb-4">
+                <h1 class="h3 mb-1">Update Account Details</h1>
+                <p class="text-muted mb-0">Keep your contact and business preferences current so we can serve you better.</p>
             </div>
 
-        </div>
-        <div class="form-element">
             @if(Session::has('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ Session::get('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ Session::get('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
             @if(Session::has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ Session::get('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ Session::get('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card card-default card-md mb-4">
 
-                        <div class="card-body py-md-25">
-                            <form method="post" action="{{ url('/update_details/'.$blog->id) }}"
-                                enctype="multipart/form-data">
-                                {{ csrf_field() }}
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form method="post" action="{{ url('/update_details/' . $blog->id) }}" enctype="multipart/form-data">
+                        {{ csrf_field() }}
 
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="seller-name" class="form-label text-capitalize">Name</label>
+                                <input type="text" class="form-control" id="seller-name" placeholder="Enter your name" name="name" value="{{ $blog->name }}">
+                                @if ($errors->has('name'))
+                                    <div class="text-danger small mt-1">{{ $errors->first('name') }}</div>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="seller-phone" class="form-label text-capitalize">Phone</label>
+                                <input type="text" class="form-control" id="seller-phone" placeholder="Enter your phone number" name="phone" value="{{ $blog->phone }}">
+                                @if ($errors->has('phone'))
+                                    <div class="text-danger small mt-1">{{ $errors->first('phone') }}</div>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="seller-gst" class="form-label text-uppercase">GST</label>
+                                <input type="text" class="form-control" id="seller-gst" placeholder="Enter GST number" name="gst" value="{{ $blog->gst }}">
+                                @if ($errors->has('gst'))
+                                    <div class="text-danger small mt-1">{{ $errors->first('gst') }}</div>
+                                @endif
+                            </div>
+                            <div class="col-md-6">
+                                <label for="seller-email" class="form-label text-capitalize">Email</label>
+                                <input type="email" class="form-control" id="seller-email" placeholder="Email" value="{{ $blog->email }}" readonly>
+                                @if ($errors->has('email'))
+                                    <div class="text-danger small mt-1">{{ $errors->first('email') }}</div>
+                                @endif
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="a8" class="il-gray fs-14 fw-500 align-center">
-                                                name</label>
-                                            <input type="text"
-                                                class="form-control ih-medium ip-light radius-xs b-light px-15" id="a8"
-                                                placeholder="name" name="name" value="{{ $blog->name }}">
-                                        </div>
-                                        @if ($errors->has('name'))
-                                        <span class="text-danger">{{ $errors->first('name') }}</span>
-                                        @endif
+                            @php
+                                $selectedAccTypes = explode(',', $blog->acc_type);
+                            @endphp
+
+                            <div class="col-12">
+                                <span class="form-label d-block mb-2">Register As</span>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="acc_type_seller" name="acc_type[]" value="1" {{ in_array(1, $selectedAccTypes) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="acc_type_seller">Seller</label>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="a8" class="il-gray fs-14 fw-500 align-center">
-                                                phone</label>
-                                            <input type="text"
-                                                class="form-control ih-medium ip-light radius-xs b-light px-15" id="a8"
-                                                placeholder="phone" name="phone" value="{{ $blog->phone }}">
-                                        </div>
-                                        @if ($errors->has('phone'))
-                                        <span class="text-danger">{{ $errors->first('phone') }}</span>
-                                        @endif
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="acc_type_contractor" name="acc_type[]" value="2" {{ in_array(2, $selectedAccTypes) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="acc_type_contractor">Contractor</label>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="a8" class="il-gray fs-14 fw-500 align-center">
-                                                gst</label>
-                                            <input type="text"
-                                                class="form-control ih-medium ip-light radius-xs b-light px-15" id="a8"
-                                                placeholder="gst" name="gst" value="{{ $blog->gst }}">
-                                        </div>
-                                        @if ($errors->has('gst'))
-                                        <span class="text-danger">{{ $errors->first('gst') }}</span>
-                                        @endif
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="acc_type_client" name="acc_type[]" value="3" {{ in_array(3, $selectedAccTypes) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="acc_type_client">Client</label>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="a8" class="il-gray fs-14 fw-500 align-center">
-                                                email</label>
-                                            <input type="email"
-                                                class="form-control ih-medium ip-light radius-xs b-light px-15" id="a8"
-                                                placeholder="email" readonly value="{{ $blog->email }}">
-                                        </div>
-                                        @if ($errors->has('email'))
-                                        <span class="text-danger">{{ $errors->first('email') }}</span>
-                                        @endif
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="acc_type_buyer" name="acc_type[]" value="4" {{ in_array(4, $selectedAccTypes) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="acc_type_buyer">Buyer</label>
                                     </div>
-                                    <label for="" class="label">Register As </label>
-                                    @php
-                                    $selectedAccTypes = explode(',', $blog->acc_type); 
-                                    @endphp
-
-                                    <div class="col-md-12">
-                                        <label>
-                                            <input type="checkbox" id="acc_type_seller" name="acc_type[]" value="1"
-                                                {{ in_array(1, $selectedAccTypes) ? 'checked' : '' }}>
-                                            <span class="outside"></span> Seller
-                                        </label>
-
-                                        <label>
-                                            <input type="checkbox" id="acc_type_contractor" name="acc_type[]" value="2"
-                                                {{ in_array(2, $selectedAccTypes) ? 'checked' : '' }}>
-                                            <span class="outside"></span> Contractor
-                                        </label>
-
-                                        <label>
-                                            <input type="checkbox" id="acc_type_client" name="acc_type[]" value="3"
-                                                {{ in_array(3, $selectedAccTypes) ? 'checked' : '' }}>
-                                            <span class="outside"></span> Client
-                                        </label>
-
-                                        <label>
-                                            <input type="checkbox" id="acc_type_buyer" name="acc_type[]" value="4"
-                                                {{ in_array(4, $selectedAccTypes) ? 'checked' : '' }}>
-                                            <span class="outside"></span> Buyer
-                                        </label>
-                                        <br>
-                                        @if ($errors->has('acc_type'))
-                                        <span class="text-danger">{{ $errors->first('acc_type') }}</span>
-                                        @endif
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div id="gstField" style="display:none;">
-                                            <label for="pro_ser" class="label"><b>Product/Services</b></label>
-                                            <!-- This is where the checkboxes will appear -->
-                                            <div id="checkboxContainer"></div>
-                                        </div>
-                                    </div>
-
-
-
-
                                 </div>
+                                @if ($errors->has('acc_type'))
+                                    <div class="text-danger small mt-1">{{ $errors->first('acc_type') }}</div>
+                                @endif
+                            </div>
 
-                              
-
-                                <div class="col-md-8">
-
-                                    <button type="submit" class="px-4 btn-sm btn-primary">Submit</button>
+                            <div class="col-12">
+                                <div id="gstField" class="mt-2" style="display: none;">
+                                    <label for="pro_ser" class="form-label fw-semibold">Product / Services</label>
+                                    <div id="checkboxContainer" class="row g-2"></div>
                                 </div>
-
-
-                            </form>
+                            </div>
                         </div>
 
-                    </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
                 </div>
-                <!-- ends: .card -->
             </div>
-
-
-
         </div>
     </div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -216,9 +139,7 @@ $(document).ready(function() {
         updateDropdown();
     });
 
-    // Initialize dropdown on page load
     updateDropdown();
 });
 </script>
-
 @endsection
