@@ -191,7 +191,9 @@
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                     <label class="form-label d-none d-lg-block">&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                                    </button>
                                 </div>
                             </form>
                         </div>
