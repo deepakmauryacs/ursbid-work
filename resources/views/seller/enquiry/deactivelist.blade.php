@@ -1,43 +1,15 @@
 @extends('seller.layouts.app')
 @section('title', 'Closed Enquiry List')
-<!--  -->
 @section('content')
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 <div class="container-fluid">
     <div class="social-dash-wrap">
         <div class="row">
             <div class="col-lg-12">
-
                 <div class="breadcrumb-main">
                     <h4 class="text-capitalize breadcrumb-title">Closed Enquiry List</h4>
-                    <div class="breadcrumb-action justify-content-center flex-wrap">
-                        <!-- <div class="action-btn">
-
-                                        <div class="form-group mb-0">
-                                            <div class="input-container icon-left position-relative">
-                                                <span class="input-icon icon-left">
-                                                    <span data-feather="calendar"></span>
-                                                </span>
-                                                <input type="text" class="form-control form-control-default date-ranger" name="date-ranger" placeholder="Oct 30, 2019 - Nov 30, 2019">
-                                                <span class="input-icon icon-right">
-                                                    <span data-feather="chevron-down"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
-
-                        <!-- <div class="action-btn">
-                            <a href="{{ url('admin/Buyer/add') }}" class="btn btn-sm btn-primary btn-add">
-                                <i class="la la-plus"></i> Add New Buyer</a>
-                        </div> -->
-                    </div>
                 </div>
-
             </div>
-
         </div>
 
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -148,206 +120,194 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         @endif
+                        <div class="table-responsive">
+                            <table class="table align-middle text-nowrap table-hover table-centered mb-0">
+                                <thead>
+                                    <tr class="userDatatable-header">
+                                        <th>
+                                            <span class="projectDatatable-title">Sr no</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Name</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Category</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Sub Category</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Product_name</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Time</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Date</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Quantity</span>
+                                        </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Unit</span>
+                                        </th>
 
-                        <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead>
-                                        <tr class="userDatatable-header">
-                                            <th>
-                                                <span class="projectDatatable-title">Sr no</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Name</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Category</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Sub Category</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Product_name</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Time</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Date</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Quantity</span>
-                                            </th>
-                                            <th>
-                                                <span class="projectDatatable-title">Unit</span>
-                                            </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Qutation</span>
+                                        </th>
 
-                                            <th>
-                                                <span class="projectDatatable-title">Qutation</span>
-                                            </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Status</span>
+                                        </th>
 
-                                            <th>
-                                                <span class="projectDatatable-title">Status</span>
-                                            </th>
+                                        <th>
+                                            <span class="projectDatatable-title">Action</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                    $i=1;
+                                    @endphp
+                                    @foreach ($blogs as $blog)
+                                    @if (isset($blog->date_time) && isset($blog->bid_time))
+                                    @php
+                                    // Use the Carbon namespace
+                                    $postDate = \Carbon\Carbon::parse($blog->date_time);
+                                    $expirationDate = $postDate->addDays($blog->bid_time);
+                                    $currentDate = \Carbon\Carbon::now();
+                                    $status = $currentDate->greaterThanOrEqualTo($expirationDate) ? 'deactive' :
+                                    'active';
+                                    @endphp
+                                    @else
+                                    @php
+                                    $status = 'active';
+                                    @endphp
+                                    @endif
+                                    <tr>
+                                        <td>
+                                            <div class="userDatatable-content text-center">
+                                                {{ $i++ }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->category_name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->sub_name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->product_name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->bid_time }} day
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ date('Y-m-d', strtotime($blog->date_time)) }}
 
-                                            <th>
-                                                <span class="projectDatatable-title">Action</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                        $i=1;
-                                        @endphp
-                                        @foreach ($blogs as $blog)
-                                        @if (isset($blog->date_time) && isset($blog->bid_time))
-                                        @php
-                                        // Use the Carbon namespace
-                                        $postDate = \Carbon\Carbon::parse($blog->date_time);
-                                        $expirationDate = $postDate->addDays($blog->bid_time);
-                                        $currentDate = \Carbon\Carbon::now();
-                                        $status = $currentDate->greaterThanOrEqualTo($expirationDate) ? 'deactive' :
-                                        'active';
-                                        @endphp
-                                        @else
-                                        @php
-                                        $status = 'active';
-                                        @endphp
-                                        @endif
-                                        <tr>
-                                            <td>
-                                                <div class="userDatatable-content text-center">
-                                                    {{ $i++ }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->category_name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->sub_name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->product_name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->bid_time }} day
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ date('Y-m-d', strtotime($blog->date_time)) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->quantity }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                {{ $blog->unit }}
+                                            </div>
+                                        </td>
 
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->quantity }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $blog->unit }}
-                                                </div>
-                                            </td>
+                                        <td>
+                                            @php
+                                            if(!empty($blog->qutation_form_image)){
+                                            @endphp
+                                            <div class="userDatatable-content">
+                                                <a href="{{ url('seller/enquiry/file/'.$blog->id) }}"
+                                                    target="_blank">View</a>
+                                            </div>
+                                            @php
+                                            }else{
+                                            @endphp
+                                            No file found
+                                            @php
+                                            }
+                                            @endphp
+                                        </td>
 
-                                            <td>
-                                                @php
-                                                if(!empty($blog->qutation_form_image)){
-                                                @endphp
-                                                <div class="userDatatable-content">
-                                                    <a href="{{ url('seller/enquiry/file/'.$blog->id) }}"
-                                                        target="_blank">View</a>
-                                                </div>
-                                                @php
-                                                }else{
-                                                @endphp
-                                                No file found
-                                                @php
-                                                }
-                                                @endphp
-                                            </td>
+                                        <td>
+                                            <div class="userDatatable-content">
+                                                <span class="media-badge color-white bg-danger">
+                                                    {{ $status }}</span>
+                                            </div>
+                                        </td>
 
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    <span class="media-badge color-white bg-danger">
-                                                        {{ $status }}</span>
-                                                </div>
-                                            </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-sm btn-primary me-2">
+                                                    <i class="bi bi-eye me-1"></i>View
+                                                </a>
 
-                                            <td>
-                                                <div class="btn-group btn-group-sm" role="group" aria-label="Enquiry actions">
-                                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-primary">
-                                                        <i class="bi bi-eye me-1"></i>View
-                                                    </a>
-
-                                                    @php
-                                                    if( $status == 'active'){
-                                                    @endphp
-                                                    <a href="#!" class="btn btn-outline-primary mdl_btn" data-toggle="modal"
-                                                        data-target="#exampleModalCenter"
-                                                        product_id='{{ $blog->product_id }}'
-                                                        product_name='{{ $blog->product_name }}'
-                                                        data_id='{{ $blog->id }}' user_email='{{ $blog->email }}'>
+                                                @if($status == 'active')
+                                                    <a href="#!" class="btn btn-primary btn-sm me-2"
+                                                       data-toggle="modal"
+                                                       data-target="#exampleModalCenter"
+                                                       product_id='{{ $blog->product_id }}'
+                                                       product_name='{{ $blog->product_name }}'
+                                                       data_id='{{ $blog->id }}'
+                                                       user_email='{{ $blog->email }}'>
                                                         <i class="bi bi-gavel me-1"></i>Bidding
                                                     </a>
-
-                                                    @php
-                                                    }else{
-                                                    @endphp
-                                                    <span class="btn btn-outline-danger disabled">
+                                                @else
+                                                    <span class="btn btn-danger btn-sm  disabled">
                                                         <i class="bi bi-lock-fill me-1"></i>Closed
                                                     </span>
-                                                    @php
-                                                    }
-                                                    @endphp
-                                                </div>
-                                            </td>
-
-
-                                        </tr>
-                                        @endforeach
+                                                @endif
+                                            </div>
+                                        </td>
 
 
 
-                                    </tbody>
-                                </table><!-- End: .table -->
-                                @if(isset($data['keyword']) && $blogs->count() > 0)
-                                <div class="pagination">
-                                    {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
-                                </div>
-                                @elseif(isset($data['r_page']) && $blogs->count() > 0)
-                                <div class="pagination">
-                                    {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
-                                </div>
-                                @else
 
-                                <div class="gmz-pagination mt-1">
-                                    {!! $blogs->links('pagination::bootstrap-4') !!}
-                                </div>
-                                @endif
+                                    </tr>
+                                    @endforeach
 
-                                <!-- <div class="gmz-pagination mt-1">
-                                {!! $blogs->links('pagination::bootstrap-4') !!}
-                            </div> -->
+
+
+                                </tbody>
+                            </table><!-- End: .table -->
+                            @if(isset($data['keyword']) && $blogs->count() > 0)
+                            <div class="pagination">
+                                {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
                             </div>
-                        </div><!-- End: .userDatatable -->
+                            @elseif(isset($data['r_page']) && $blogs->count() > 0)
+                            <div class="pagination">
+                                {{ $blogs->appends($data)->links('pagination::bootstrap-4') }}
+                            </div>
+                            @else
 
+                            <div class="gmz-pagination mt-1">
+                                {!! $blogs->links('pagination::bootstrap-4') !!}
+                            </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -363,9 +323,7 @@ $(function() {
         $('.product_name').val(product_name);
         $('.user_email').val(user_email);
         $('.data_id').val(data_id);
-
     })
 })
 </script>
-
 @endsection
