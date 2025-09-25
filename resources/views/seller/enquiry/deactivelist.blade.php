@@ -125,7 +125,9 @@
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                     <label class="form-label d-none d-lg-block">&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -285,35 +287,31 @@
                                             </td>
 
                                             <td>
-
-                                                <div class="d-inline-block">
-
-                                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}">
-                                                        <span class="media-badge color-white bg-primary">View</span>
+                                                <div class="btn-group btn-group-sm" role="group" aria-label="Enquiry actions">
+                                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-primary">
+                                                        <i class="bi bi-eye me-1"></i>View
                                                     </a>
 
                                                     @php
-                                                if( $status == 'active'){
-                                                @endphp
-                                                <a href="#!" class="mdl_btn" data-toggle="modal"
+                                                    if( $status == 'active'){
+                                                    @endphp
+                                                    <a href="#!" class="btn btn-outline-primary mdl_btn" data-toggle="modal"
                                                         data-target="#exampleModalCenter"
                                                         product_id='{{ $blog->product_id }}'
                                                         product_name='{{ $blog->product_name }}'
                                                         data_id='{{ $blog->id }}' user_email='{{ $blog->email }}'>
-                                                        <span class="media-badge color-white bg-primary">Bidding</span>
+                                                        <i class="bi bi-gavel me-1"></i>Bidding
                                                     </a>
 
-                                                @php
-                                                }else{
-                                                @endphp
-                                                <a href="#!">
-                                                        <span class="media-badge color-white bg-danger">Closed</span>
-                                                    </a>
-                                                @php
-                                                }
-                                                @endphp
-                                                    
-
+                                                    @php
+                                                    }else{
+                                                    @endphp
+                                                    <span class="btn btn-outline-danger disabled">
+                                                        <i class="bi bi-lock-fill me-1"></i>Closed
+                                                    </span>
+                                                    @php
+                                                    }
+                                                    @endphp
                                                 </div>
                                             </td>
 

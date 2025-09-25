@@ -196,7 +196,9 @@
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                     <label class="form-label d-none d-lg-block">&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -365,13 +367,13 @@
                                             </td>
 
                                             <td>
-                                                <div class="d-inline-block">
-
-                                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}">
-                                                        <span class="media-badge color-white bg-primary">View</span>
+                                                <div class="btn-group btn-group-sm" role="group" aria-label="Enquiry actions">
+                                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-primary">
+                                                        <i class="bi bi-eye me-1"></i>View
                                                     </a>
 
                                                     @php
+                                                        $showBiddingButton = false;
                                                         if($status == 'active'){
                                                             $seller_email_id = session('seller')->email;
 
@@ -388,49 +390,26 @@
                                                                 ->where('payment_status','success')
                                                                 ->first();
 
-                                                            if(!$checkk22){
-                                                                if($checkkk){
-                                                    @endphp
-
-                                                                    <a href="#!">
-                                                                        <span class="media-badge color-white bg-danger">Closed</span>
-                                                                    </a>
-
-                                                    @php
-                                                                } else {
-                                                    @endphp
-
-                                                    <a href="#!" class="mdl_btn" data-toggle="modal"
-                                                        data-target="#exampleModalCenter"
-                                                        product_id='{{ $blog->product_id }}'
-                                                        product_quantity='{{ $blog->quantity }}'
-                                                        product_name='{{ $blog->product_name }}'
-                                                        data_id='{{ $blog->id }}' user_email='{{ $blog->email }}'>
-                                                        <span class="media-badge color-white bg-primary">Bidding</span>
-                                                    </a>
-
-                                                    @php
-                                                                }
-                                                            } else {
-                                                    @endphp
-
-                                                                <a href="#!">
-                                                                    <span class="media-badge color-white bg-danger">Closed</span>
-                                                                </a>
-
-                                                    @php
+                                                            if(!$checkk22 && !$checkkk){
+                                                                $showBiddingButton = true;
                                                             }
-                                                        } else {
-                                                    @endphp
-
-                                                            <a href="#!">
-                                                                <span class="media-badge color-white bg-danger">Closed</span>
-                                                            </a>
-
-                                                    @php
                                                         }
                                                     @endphp
 
+                                                    @if($showBiddingButton)
+                                                        <a href="#!" class="btn btn-outline-primary mdl_btn" data-toggle="modal"
+                                                            data-target="#exampleModalCenter"
+                                                            product_id='{{ $blog->product_id }}'
+                                                            product_quantity='{{ $blog->quantity }}'
+                                                            product_name='{{ $blog->product_name }}'
+                                                            data_id='{{ $blog->id }}' user_email='{{ $blog->email }}'>
+                                                            <i class="bi bi-gavel me-1"></i>Bidding
+                                                        </a>
+                                                    @else
+                                                        <span class="btn btn-outline-danger disabled">
+                                                            <i class="bi bi-lock-fill me-1"></i>Closed
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </td>
 
