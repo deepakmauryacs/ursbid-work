@@ -17,9 +17,7 @@
             <div class="modal-content">
                <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">Bidding Price</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                  </button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
                   <form action="{{ url('/openqotationpage') }}" method="POST" enctype="multipart/form-data">
@@ -56,7 +54,7 @@
                      </div>
                      <div class="d-flex  ">
                         <input type="checkbox" id="myCheckbox" required> &nbsp; I accept all the  &nbsp; 
-                        <a data-toggle="modal" href="#!" class="exampleModalCentersmall" data-target="#exampleModalCentersmall"> agreement terms & condition </a>
+                        <a data-bs-toggle="modal" href="#!" class="exampleModalCentersmall" data-bs-target="#exampleModalCentersmall"> agreement terms & condition </a>
                      </div>
                      <button type="submit" class="btn btn-primary mt-2">Submit</button>
                   </form>
@@ -80,7 +78,7 @@
                      <a href="{{url('/accept-terms-condition')}}"><small>Read More</small></a>
                   </div>
                   <div class="input-item input-item-textarea ltn__custom-icon mb-4 d-flex gap-3" >
-                     <input type="checkbox" class="close" data-dismiss="modal" aria-label="Close" name="term_and_condition" required="" value="term_and_cond_acc"> I have read and accept the terms and
+                     <input type="checkbox" data-bs-dismiss="modal" aria-label="Close" name="term_and_condition" required="" value="term_and_cond_acc"> I have read and accept the terms and
                      conditions
                   </div>
                </div>

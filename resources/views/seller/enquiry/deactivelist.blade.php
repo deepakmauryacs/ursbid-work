@@ -17,9 +17,7 @@
             <div class="modal-content">
                <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">Bidding Price</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                  </button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
                   <form action="{{ url('/bidding_price') }}" method="POST">
@@ -253,8 +251,8 @@
                                     </a>
                                     @if($status == 'active')
                                     <a href="#!" class="btn btn-primary btn-sm me-2"
-                                       data-toggle="modal"
-                                       data-target="#exampleModalCenter"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#exampleModalCenter"
                                        product_id='{{ $blog->product_id }}'
                                        product_name='{{ $blog->product_name }}'
                                        data_id='{{ $blog->id }}'

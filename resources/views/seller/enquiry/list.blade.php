@@ -23,9 +23,7 @@
             <div class="modal-content">
                <div class="modal-header">
                   <h5 class="modal-title">Bidding Price</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                  </button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
                   <form action="{{ url('/openqotationpage') }}" method="POST" enctype="multipart/form-data">
@@ -64,8 +62,8 @@
                      <div class="d-flex mt-3">
                         <input type="checkbox" id="myCheckbox" required>
                         <span class="ms-2">I accept all the</span>&nbsp; 
-                        <a href="#!" class="exampleModalCentersmall" data-toggle="modal"
-                           data-target="#exampleModalCentersmall">agreement terms & condition</a>
+                        <a href="#!" class="exampleModalCentersmall" data-bs-toggle="modal"
+                           data-bs-target="#exampleModalCentersmall">agreement terms & condition</a>
                      </div>
 
                      <button type="submit" class="btn btn-primary mt-3">Submit</button>
@@ -82,9 +80,7 @@
             <div class="modal-content">
                <div class="modal-header">
                   <h5 class="modal-title">Terms & Condition</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                  </button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
                   <p>This Service Agreement ("Agreement") is valid from the date of quotation acceptance 
@@ -95,7 +91,7 @@
                      <a href="{{ url('/accept-terms-condition') }}"><small>Read More</small></a>
                   </div>
                   <div class="input-item mb-2 d-flex gap-2">
-                     <input type="checkbox" class="close" data-dismiss="modal" value="term_and_cond_acc" required>
+                     <input type="checkbox" data-bs-dismiss="modal" value="term_and_cond_acc" required>
                      I have read and accept the terms and conditions
                   </div>
                </div>
@@ -289,7 +285,7 @@
 
                                        @if($showBiddingButton)
                                           <a href="#!" class="btn btn-outline-primary mdl_btn"
-                                             data-toggle="modal" data-target="#exampleModalCenter"
+                                             data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
                                              product_id="{{ $blog->product_id }}"
                                              product_quantity="{{ $blog->quantity }}"
                                              product_name="{{ $blog->product_name }}"
