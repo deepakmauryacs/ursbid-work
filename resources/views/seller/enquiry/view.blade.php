@@ -44,140 +44,72 @@
                <div class="col-md-12 mt-2">
                </div>
                <div class="card-body">
-                  <div class="table-responsive">
-                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
-                     {{-- Standard seller table class --}}
-                     <table class="table align-middle text-nowrap table-hover table-centered mb-0">
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Name</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->seller_name }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Category Name</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->category_name }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">SubCategory Name</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->sub_name }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Product Name</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->product_name }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Brand</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_product_brand }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Message</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_message }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Address</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_address }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Zipcode</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_zipcode }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">State</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_state }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">City</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_city }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Time</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_bid_time }} Day</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Material</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_material }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Qty</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_quantity }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Unit</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_date_unit }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Profession</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->seller_pro_ser }}</span>
-                           </td>
-                        </tr>
-                        <tr class="userDatatable-header">
-                           <td>
-                              <span class="projectDatatable-title">Quotation Type</span>
-                           </td>
-                           <td>
-                              <span class="projectDatatable-title">{{ $query->qutation_form_material }}</span>
-                           </td>
-                        </tr>
-                     </table>
-                  </div>
+                  <form class="row g-3">
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Name</label>
+                        <input type="text" class="form-control" value="{{ $query->seller_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Category Name</label>
+                        <input type="text" class="form-control" value="{{ $query->category_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">SubCategory Name</label>
+                        <input type="text" class="form-control" value="{{ $query->sub_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Product Name</label>
+                        <input type="text" class="form-control" value="{{ $query->product_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Brand</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_product_brand }}" readonly>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea class="form-control" rows="3" readonly>{{ $query->qutation_form_message }}</textarea>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-label fw-semibold">Address</label>
+                        <textarea class="form-control" rows="2" readonly>{{ $query->qutation_form_address }}</textarea>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Zipcode</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_zipcode }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">State</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_state }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">City</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_city }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Bid Time (Days)</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_bid_time }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Material</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Quantity</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_quantity }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Unit</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_date_unit }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Profession</label>
+                        <input type="text" class="form-control" value="{{ $query->seller_pro_ser }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Quotation Type</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" readonly>
+                     </div>
+                  </form>
                </div>
             </div>
          </div>
@@ -185,3 +117,4 @@
    </div>
 </div>
 @endsection
+
