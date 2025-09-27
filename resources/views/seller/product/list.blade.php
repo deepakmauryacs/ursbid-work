@@ -178,7 +178,7 @@
                                                     <div class="dropdown  dropdown-click ">
 
                                                         <button class="btn-link border-0 bg-transparent p-0"
-                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                            data-bs-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false">
                                                             <span data-feather=more-horizontal></span>
                                                         </button>
