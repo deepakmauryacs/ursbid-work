@@ -152,6 +152,12 @@
                               <i class="bi bi-funnel-fill me-2"></i>Apply Filters
                            </button>
                         </div>
+                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                           <label class="form-label d-none d-lg-block">&nbsp;</label>
+                           <button type="button" id="resetActiveEnquiryFilters" class="btn btn-outline-secondary w-100">
+                              <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                           </button>
+                        </div>
                      </form>
                   </div>
                </div>
@@ -254,6 +260,15 @@
 
       $form.on('change', '#recordsPerPage', function () {
          $form.trigger('submit');
+      });
+
+      $('#resetActiveEnquiryFilters').on('click', function () {
+         $form[0].reset();
+         $form.find('select').each(function () {
+            $(this).val('').trigger('change');
+         });
+         $form.find('input[type="text"]').val('');
+         fetchActiveEnquiries(baseUrl);
       });
 
       $(document).on('click', '#activeEnquiryTable .pagination a', function (event) {

@@ -17,79 +17,75 @@
       </div>
 
       <div class="row mt-3">
-         <div class="col-lg-12">
+         <div class="col-lg-12 mb-30">
             <div class="card shadow-sm">
                <div class="card-body">
-                  <div class="table-responsive">
-                     <table class="table table-bordered mb-0">
-                        <tbody>
-                           <tr>
-                              <th class="w-25">Name</th>
-                              <td>{{ $query->seller_name }}</td>
-                           </tr>
-                           <tr>
-                              <th>Category Name</th>
-                              <td>{{ $query->category_name }}</td>
-                           </tr>
-                           <tr>
-                              <th>Sub Category Name</th>
-                              <td>{{ $query->sub_name }}</td>
-                           </tr>
-                           <tr>
-                              <th>Product Name</th>
-                              <td>{{ $query->product_name }}</td>
-                           </tr>
-                           <tr>
-                              <th>Brand</th>
-                              <td>{{ $query->qutation_form_product_brand }}</td>
-                           </tr>
-                           <tr>
-                              <th>Message</th>
-                              <td>{{ $query->qutation_form_message }}</td>
-                           </tr>
-                           <tr>
-                              <th>Address</th>
-                              <td>{{ $query->qutation_form_address }}</td>
-                           </tr>
-                           <tr>
-                              <th>Zipcode</th>
-                              <td>{{ $query->qutation_form_zipcode }}</td>
-                           </tr>
-                           <tr>
-                              <th>State</th>
-                              <td>{{ $query->qutation_form_state }}</td>
-                           </tr>
-                           <tr>
-                              <th>City</th>
-                              <td>{{ $query->qutation_form_city }}</td>
-                           </tr>
-                           <tr>
-                              <th>Bid Time</th>
-                              <td>{{ $query->qutation_form_bid_time }} Day</td>
-                           </tr>
-                           <tr>
-                              <th>Material</th>
-                              <td>{{ $query->qutation_form_material }}</td>
-                           </tr>
-                           <tr>
-                              <th>Quantity</th>
-                              <td>{{ $query->qutation_form_quantity }}</td>
-                           </tr>
-                           <tr>
-                              <th>Unit</th>
-                              <td>{{ $query->qutation_form_unit }}</td>
-                           </tr>
-                           <tr>
-                              <th>Profession</th>
-                              <td>{{ $query->seller_pro_ser }}</td>
-                           </tr>
-                           <tr>
-                              <th>Quotation Type</th>
-                              <td>{{ $query->qutation_form_material }}</td>
-                           </tr>
-                        </tbody>
-                     </table>
-                  </div>
+                  <form class="row g-3">
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Name</label>
+                        <input type="text" class="form-control" value="{{ $query->seller_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Category Name</label>
+                        <input type="text" class="form-control" value="{{ $query->category_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Sub Category Name</label>
+                        <input type="text" class="form-control" value="{{ $query->sub_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Product Name</label>
+                        <input type="text" class="form-control" value="{{ $query->product_name }}" readonly>
+                     </div>
+                     <div class="col-md-6">
+                        <label class="form-label fw-semibold">Brand</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_product_brand }}" readonly>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea class="form-control" rows="3" readonly>{{ $query->qutation_form_message }}</textarea>
+                     </div>
+                     <div class="col-12">
+                        <label class="form-label fw-semibold">Address</label>
+                        <textarea class="form-control" rows="2" readonly>{{ $query->qutation_form_address }}</textarea>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Zipcode</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_zipcode }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">State</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_state }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">City</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_city }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Bid Time (Days)</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_bid_time }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Material</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Quantity</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_quantity }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Unit</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_unit }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Profession</label>
+                        <input type="text" class="form-control" value="{{ $query->seller_pro_ser }}" readonly>
+                     </div>
+                     <div class="col-md-4">
+                        <label class="form-label fw-semibold">Quotation Type</label>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" readonly>
+                     </div>
+                  </form>
                </div>
             </div>
          </div>
