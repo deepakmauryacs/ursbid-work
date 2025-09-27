@@ -111,7 +111,7 @@
                               <option value="">Select Category</option>
                               @foreach($category_data as $cat)
                               <option value="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
-                              {{ $cat->title }}
+                              {{ $cat->name ?? $cat->title ?? '' }}
                               </option>
                               @endforeach
                            </select>
