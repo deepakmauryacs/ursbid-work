@@ -73,11 +73,11 @@
                                             class="form-control ih-medium ip-light radius-xs b-light px-15">
                                             <option value="">Select Category</option>
                                             @php
-                                            $category = DB::select("SELECT * FROM category WHERE status = 1");
+                                            $category = DB::select("SELECT * FROM categories WHERE status = 1");
                                             foreach ($category as $cat) {
                                                 $selected = $blog->cat_id == $cat->id ? 'selected' : ''; 
                                             @endphp
-                                            <option value="{{ $cat->id }}" {{ $selected }}>{{ $cat->title }}</option>
+                                            <option value="{{ $cat->id }}" {{ $selected }}>{{ $cat->name }}</option>
                                             @php } @endphp
                                         </select>
 
@@ -94,11 +94,11 @@
                                             class="form-control ih-medium ip-light radius-xs b-light px-15">
                                             <option value="">Select Sub Category</option>
                                             @php
-                                            $subc = DB::select("SELECT * FROM sub WHERE status = 1");
+                                            $subc = DB::select("SELECT * FROM sub_categories WHERE status = 1");
                                             foreach ($subc as $sub) {
                                                 $selected = $blog->sub_id == $sub->id ? 'selected' : ''; 
                                             @endphp
-                                            <option value="{{ $sub->id }}" {{ $selected }}>{{ $sub->title }}</option>
+                                            <option value="{{ $sub->id }}" {{ $selected }}>{{ $sub->name }}</option>
                                             @php } @endphp
                                         </select>
 
