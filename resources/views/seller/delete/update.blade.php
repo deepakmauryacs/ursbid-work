@@ -53,7 +53,8 @@
                             </div>
 
                             @php
-                                $selectedAccTypes = explode(',', $blog->acc_type);
+                                $selectedAccTypes = array_filter(explode(',', $blog->acc_type));
+                                $selectedProServices = array_filter(array_map('trim', explode(',', (string) $blog->pro_ser)));
                             @endphp
 
                             <div class="col-12">
@@ -108,13 +109,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-HHV3Pk2VYK9ER5iq90aqw2GUlycvIbwkWNAv8hBlC9yxy0OTUUkLR53Lcs7Vp1IU7DqDZr1P0N6xJbVQfE3d3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $(document).ready(function() {
+            const existingServices = @json($selectedProServices);
+
+            function markExistingServices() {
+                if (!existingServices || !existingServices.length) {
+                    return;
+                }
+
+                $('#checkboxContainer input[type="checkbox"]').each(function() {
+                    const value = $(this).val();
+                    if (existingServices.includes(value)) {
+                        $(this).prop('checked', true);
+                    }
+                });
+            }
+
             function updateDropdown() {
                 var selectedCategories = [];
                 if ($('#acc_type_seller').is(':checked')) {
-                    selectedCategories.push(9);
+                    selectedCategories.push(1);
                 }
                 if ($('#acc_type_contractor').is(':checked')) {
-                    selectedCategories.push(10);
+                    selectedCategories.push(2);
                 }
                 if (selectedCategories.length > 0) {
                     $('#gstField').show();
@@ -127,6 +143,7 @@
                         },
                         success: function(response) {
                             $('#checkboxContainer').html(response);
+                            markExistingServices();
                         }
                     });
                 } else {
