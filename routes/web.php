@@ -5,6 +5,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\AjexResponseController;
+use App\Http\Controllers\URSController\ActiveEnquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,13 +136,13 @@ Route::get('/seller/accounting/accbid', [App\Http\Controllers\SellerloginControl
 Route::get('/seller/accounting/biddrecive', [App\Http\Controllers\SellerloginController::class, 'biddrecive']);
 Route::get('/seller/accounting/list', [App\Http\Controllers\SellerloginController::class, 'accountinglist']);
 Route::get('/seller/accounting/totalshare', [App\Http\Controllers\SellerloginController::class, 'totalshare']);
-Route::get('/seller/enquiry/list', [App\Http\Controllers\SellerloginController::class, 'list']);
+Route::get('/seller/enquiry/list/{id?}', [ActiveEnquiryController::class, 'index'])->name('seller.enquiry.list');
 Route::get('/seller/enquiry/deactivelist', [App\Http\Controllers\SellerloginController::class, 'deactivelist']);
 Route::get('/seller/enquiry/myenclist', [App\Http\Controllers\SellerloginController::class, 'myenclist']);
 Route::post('/seller/update_lat_long', [App\Http\Controllers\SellerloginController::class, 'update_lat_long'])->name('update_lat_long');
 Route::post('/openqotationpage', [App\Http\Controllers\SellerloginController::class, 'openqotationpage'])->name('openqotationpage');
 Route::post('/bidding_price', [App\Http\Controllers\SellerloginController::class, 'bidding_price'])->name('bidding_price');
-Route::get('/seller/enquiry/view/{any}', [App\Http\Controllers\SellerloginController::class, 'vewsell']);
+Route::get('/seller/enquiry/view/{any}', [ActiveEnquiryController::class, 'show'])->name('seller.enquiry.view');
 Route::get('/seller/enquiry/file/{any}', [App\Http\Controllers\SellerloginController::class, 'vewfile']);
 Route::get('/accepet/{id}/{data_id}', [App\Http\Controllers\SellerloginController::class, 'accepet'])->name('accepet');
 Route::get('/viewwork/{id}', [App\Http\Controllers\SellerloginController::class, 'viewwork'])->name('viewwork');
