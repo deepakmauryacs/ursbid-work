@@ -47,7 +47,7 @@ Route::get('/customer-support', function () {return view('frontend/customer-supp
 Route::get('{category}/{subcategory}', [HomeController::class, 'filter'])
     ->where([
         // first segment must NOT be any reserved prefix (admin, vendor, etc.)
-        'category' => '^(?!(?:super-admin|admin|vendor|api|login|logout|register|password|cart|checkout|dashboard|storage|telescope|horizon|nova|_debugbar|sitemap\.xml|robots\.txt|buyer|seller|test|advertise|about|terms-conditions|accept-terms-condition|disclaimer|privacy-policy|admin-login|buyer-register|buyer-login|contact-detail|customer-support|menu|autofill-address|forgot-password|reset-password|refer-register|seller-register|seller-login|verify-otp|clear-cache|blog|product-detail|productdetailsearch|seller-profile|update-account|search|ajax)($|/))[A-Za-z0-9_-]+',
+        'category' => '^(?!(?:super-admin|admin|vendor|api|login|logout|register|password|cart|checkout|dashboard|storage|telescope|horizon|nova|_debugbar|sitemap\.xml|robots\.txt|buyer|seller|test|advertise|about|terms-conditions|accept-terms-condition|disclaimer|privacy-policy|admin-login|buyer-register|buyer-login|contact-detail|customer-support|menu|autofill-address|forgot-password|reset-password|refer-register|seller-register|seller-login|verify-otp|clear-cache|blog|product-detail|productdetailsearch|seller-profile|buyer-order|update-account|search|ajax)($|/))[A-Za-z0-9_-]+',
         'subcategory' => '[A-Za-z0-9_-]+',
     ])
     ->name('filter'); 
@@ -57,7 +57,7 @@ Route::get('{category}/{subcategory}', [HomeController::class, 'filter'])
 Route::get('{category}/{subcategory}/{product}', [HomeController::class, 'product'])
     ->where([
         // first segment must NOT be any reserved prefix (admin, vendor, etc.)
-        'category' => '^(?!(?:super-admin|admin|vendor|api|login|logout|register|password|cart|checkout|dashboard|storage|telescope|horizon|nova|_debugbar|sitemap\.xml|robots\.txt|buyer|seller|test|advertise|about|terms-conditions|accept-terms-condition|disclaimer|privacy-policy|admin-login|buyer-register|buyer-login|contact-detail|customer-support|menu|autofill-address|forgot-password|reset-password|refer-register|seller-register|seller-login|verify-otp|clear-cache|blog|product-detail|productdetailsearch|seller-profile|search|ajax)($|/))[A-Za-z0-9_-]+',
+        'category' => '^(?!(?:super-admin|admin|vendor|api|login|logout|register|password|cart|checkout|dashboard|storage|telescope|horizon|nova|_debugbar|sitemap\.xml|robots\.txt|buyer|seller|test|advertise|about|terms-conditions|accept-terms-condition|disclaimer|privacy-policy|admin-login|buyer-register|buyer-login|contact-detail|customer-support|menu|autofill-address|forgot-password|reset-password|refer-register|seller-register|seller-login|verify-otp|clear-cache|blog|product-detail|productdetailsearch|seller-profile|buyer-order|search|ajax)($|/))[A-Za-z0-9_-]+',
         'subcategory' => '[A-Za-z0-9_-]+',
     ])
     ->name('product.show');
