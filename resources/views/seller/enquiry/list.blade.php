@@ -172,6 +172,14 @@
                               <i class="bi bi-funnel-fill me-2"></i>Apply Filters
                            </button>
                         </div>
+
+                        <!-- Reset Button -->
+                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                           <label class="form-label d-none d-lg-block">&nbsp;</label>
+                           <a href="{{ url('seller/enquiry/list') }}" class="btn btn-outline-secondary w-100">
+                              <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                           </a>
+                        </div>
                      </form>
                   </div>
                </div>
