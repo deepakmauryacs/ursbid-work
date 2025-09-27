@@ -446,7 +446,7 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
 
@@ -455,8 +455,9 @@ class SellerloginController extends Controller
 
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('qutation_form.email', '!=', $selleremail)
             ->whereRaw("FIND_IN_SET(?, qutation_form.seller_id)", [$sellerId])
             ->whereRaw("DATE_ADD(date_time, INTERVAL bid_time DAY) >= ?", [$currentDate])
@@ -468,7 +469,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand     as qutation_form_product_brand',
+                'pb.brand_name     as qutation_form_product_brand',
                 'qutation_form.message   as qutation_form_message',
                 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address   as qutation_form_address',
@@ -510,28 +511,27 @@ class SellerloginController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
-
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
 
         if ($category) {
-            $query->where('qutation_form.cat_id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
 
         if ($date) {
@@ -545,7 +545,7 @@ class SellerloginController extends Controller
             $query->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
         }
         if ($product_name) {
-            $query->where('qutation_form.product_name', 'like', '%' . $product_name . '%');
+            $query->where('product.title', 'like', '%' . $product_name . '%');
         }
 
         $blogs = $query->orderBy('qutation_form.id', 'desc')->paginate($recordsPerPage);
@@ -573,19 +573,23 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
 
         $query = DB::table('qutation_form')
             ->join('bidding_price', 'qutation_form.id', '=', 'bidding_price.data_id')
+            ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('bidding_price.seller_email', $id)
             ->where('bidding_price.payment_status', 'success')
             ->where('bidding_price.action', 1)
-            ->select('qutation_form.*', 'bidding_price.price as b_price', 'bidding_price.rate as b_rate');
+            ->select('qutation_form.*', 'bidding_price.price as b_price', 'bidding_price.rate as b_rate', 'pb.brand_name as qutation_form_product_brand');
 
         if ($category) {
-            $query->where('qutation_form.cat_id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
 
         if ($date) {
@@ -599,7 +603,7 @@ class SellerloginController extends Controller
             $query->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
         }
         if ($product_name) {
-            $query->where('qutation_form.product_name', 'like', '%' . $product_name . '%');
+            $query->where('product.title', 'like', '%' . $product_name . '%');
         }
 
         $blogs = $query->orderBy('id', 'desc')->paginate($recordsPerPage);
@@ -628,7 +632,7 @@ class SellerloginController extends Controller
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
 
         // $query = DB::table('qutation_form')
         //     ->whereRaw("FIND_IN_SET(?, seller_id)", [$sellerId])
@@ -638,8 +642,9 @@ class SellerloginController extends Controller
 
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->whereRaw("FIND_IN_SET(?, qutation_form.seller_id)", [$sellerId])
             ->whereRaw("DATE_ADD(date_time, INTERVAL bid_time DAY) <= ?", [$currentDate])
             ->select(
@@ -650,7 +655,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand     as qutation_form_product_brand',
+                'pb.brand_name     as qutation_form_product_brand',
                 'qutation_form.message   as qutation_form_message',
                 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address   as qutation_form_address',
@@ -693,27 +698,27 @@ class SellerloginController extends Controller
                 'product.status as product_status',
                 'product.order_by as product_order_by',
 
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
 
         if ($category) {
-            $query->where('cat_id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
 
         if ($date) {
@@ -755,15 +760,16 @@ class SellerloginController extends Controller
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
         $selleremail = $request->session()->get('seller')->email;
 
         $query = DB::table('qutation_form')
 
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('qutation_form.email', $selleremail)
             ->select(
             
@@ -773,7 +779,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand     as qutation_form_product_brand',
+                'pb.brand_name     as qutation_form_product_brand',
                 'qutation_form.message   as qutation_form_message',
                 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address   as qutation_form_address',
@@ -816,27 +822,27 @@ class SellerloginController extends Controller
                 'product.status as product_status',
                 'product.order_by as product_order_by',
 
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
 
         if ($category) {
-            $query->where('qutation_form.cat_id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
 
         if ($date) {
@@ -850,7 +856,7 @@ class SellerloginController extends Controller
             $query->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
         }
         if ($product_name) {
-            $query->where('qutation_form.product_name', 'like', '%' . $product_name . '%');
+            $query->where('product.title', 'like', '%' . $product_name . '%');
         }
 
         $blogs = $query->orderBy('qutation_form.id', 'desc')->paginate($recordsPerPage);
@@ -1114,8 +1120,9 @@ class SellerloginController extends Controller
         $query = DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('qutation_form.id', $id)
             ->select(
                 // qutation_form columns
@@ -1125,7 +1132,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand     as qutation_form_product_brand',
+                'pb.brand_name     as qutation_form_product_brand',
                 'qutation_form.message   as qutation_form_message',
                 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address   as qutation_form_address',
@@ -1167,23 +1174,23 @@ class SellerloginController extends Controller
                 'product.status as product_status',
                 'product.order_by as product_order_by',
 
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             )
             ->first();
 
@@ -1210,7 +1217,7 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
         $recordsPerPage = $request->input('r_page', 25);
 
 
@@ -1219,8 +1226,9 @@ class SellerloginController extends Controller
             ->leftJoin('seller', 'bidding_price.user_email', '=', 'seller.email')
             ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('bidding_price.seller_email', $selleremail)
             ->where('payment_status', 'success')
 
@@ -1246,7 +1254,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 // 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand as qutation_form_product_brand',
+                'pb.brand_name as qutation_form_product_brand',
                 'qutation_form.message as qutation_form_message',
                 // 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address as qutation_form_address',
@@ -1285,28 +1293,27 @@ class SellerloginController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
-
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
 
         if ($category) {
-            $query->where('category.id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
         if ($product_name) {
             $query->where('product.title', 'like', '%' . $product_name . '%');
@@ -1350,7 +1357,7 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $query = DB::table('bidding_price')
@@ -1358,8 +1365,9 @@ class SellerloginController extends Controller
             ->leftJoin('seller', 'bidding_price.user_email', '=', 'seller.email')
             ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('bidding_price.seller_email', $selleremail)
             ->where('payment_status', 'success')
             ->where('action', '1')
@@ -1386,7 +1394,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 // 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand as qutation_form_product_brand',
+                'pb.brand_name as qutation_form_product_brand',
                 'qutation_form.message as qutation_form_message',
                 // 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address as qutation_form_address',
@@ -1425,28 +1433,27 @@ class SellerloginController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
-
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
 
         if ($category) {
-            $query->where('category.id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
         if ($product_name) {
             $query->where('product.title', 'like', '%' . $product_name . '%');
@@ -1490,15 +1497,16 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('category')->get();
+        $category_data = DB::table('categories')->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $query = DB::table('bidding_price')
             ->leftJoin('seller', 'bidding_price.seller_email', '=', 'seller.email')
             ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('bidding_price.user_email', $selleremail)
             ->where('payment_status', 'success')
             ->orderByDesc('bidding_price.id')
@@ -1522,7 +1530,7 @@ class SellerloginController extends Controller
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 // 'qutation_form.product_name  as qutation_form_product_name',
-                'qutation_form.product_brand as qutation_form_product_brand',
+                'pb.brand_name as qutation_form_product_brand',
                 'qutation_form.message as qutation_form_message',
                 // 'qutation_form.location  as qutation_form_location',
                 'qutation_form.address as qutation_form_address',
@@ -1561,28 +1569,27 @@ class SellerloginController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
-
-                // sub columns
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
+                // sub category columns
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_post_date',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
 
                 // category columns
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_post_date',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
 
         if ($category) {
-            $query->where('category.id', 'like', '%' . $category . '%');
+            $query->where('c.id', 'like', '%' . $category . '%');
         }
         if ($product_name) {
             $query->where('product.title', 'like', '%' . $product_name . '%');
