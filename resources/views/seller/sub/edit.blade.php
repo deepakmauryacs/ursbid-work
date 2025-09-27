@@ -46,12 +46,12 @@
                                 <select name="cat_id" class="form-select">
                                     <option value="">Select Category</option>
                                     @php
-                                        $category = DB::select("SELECT * FROM category WHERE status = 1");
+                                        $category = DB::select("SELECT * FROM categories WHERE status = 1");
                                         $selectedCategory = old('cat_id', $blog->cat_id);
                                     @endphp
                                     @foreach ($category as $cat)
                                         <option value="{{ $cat->id }}" {{ (int)$selectedCategory === (int)$cat->id ? 'selected' : '' }}>
-                                            {{ $cat->title }}
+                                            {{ $cat->name }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -73,11 +73,11 @@
                                             class="form-control ih-medium ip-light radius-xs b-light px-15">
                                             <option value="">Select Category</option>
                                             @php
-                                            $category = DB::select("SELECT * FROM category WHERE status = 1");
+                                            $category = DB::select("SELECT * FROM categories WHERE status = 1");
                                             foreach ($category as $cat) {
                                                 $selected = old('cat_id') == $cat->id ? 'selected' : ''; 
                                             @endphp
-                                            <option value="{{ $cat->id }}" {{ $selected }}>{{ $cat->title }}</option>
+                                            <option value="{{ $cat->id }}" {{ $selected }}>{{ $cat->name }}</option>
                                             @php } @endphp
                                         </select>
 

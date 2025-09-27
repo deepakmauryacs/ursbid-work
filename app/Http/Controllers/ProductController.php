@@ -20,12 +20,10 @@ class ProductController extends Controller
     public function create(Request $request)
     {
       $validator = $request->validate([
-        'title'=>'required',
-        // 'title'=>'required|unique:product',
-        'sub_id'=>'required',
-        'cat_id'=>'required',
-        // 'super_id' => 'required',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'title'  => 'required',
+        'sub_id' => 'required|integer|exists:sub_categories,id',
+        'cat_id' => 'required|integer|exists:categories,id',
+        'image'  => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
     $existingProduct = DB::table('product')
@@ -86,20 +84,20 @@ if ($existingProduct) {
         // ->join('super', 'product.super_id', '=', 'super.id')
         // ->select('product.*', 'category.*')
         // ->addSelect('product.image as img','product.id as product_id','product.title as product_tilte','product.status as product_status', 'category.id as category_id','category.title as category_title', 'sub.id as sub_id','sub.title as sub_title','super.title as super_title' );
-        $query = DB::table('product')
-    ->leftJoin('category', 'product.cat_id', '=', 'category.id')
-    ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
+    $query = DB::table('product')
+    ->leftJoin('categories', 'product.cat_id', '=', 'categories.id')
+    ->leftJoin('sub_categories', 'product.sub_id', '=', 'sub_categories.id')
     // ->leftJoin('super', 'product.super_id', '=', 'super.id')
-    ->select('product.*', 'category.*')
+    ->select('product.*', 'categories.*')
     ->addSelect(
         'product.image as img',
         'product.id as product_id',
         'product.title as product_tilte',
         'product.status as product_status',
-        'category.id as category_id',
-        'category.title as category_title',
-        'sub.id as sub_id',
-        'sub.title as sub_title',
+        'categories.id as category_id',
+        'categories.name as category_name',
+        'sub_categories.id as sub_id',
+        'sub_categories.name as sub_name',
         // 'super.title as super_title'
     )->orderBy('product.order_by');
 
@@ -107,9 +105,9 @@ if ($existingProduct) {
 
         if ($keyword) {
             $query->where('product.title', 'like', '%' . $keyword . '%')
-                  ->orWhere('sub.title', 'like', '%' . $keyword . '%')
+                  ->orWhere('sub_categories.name', 'like', '%' . $keyword . '%')
                 //   ->orWhere('super.title', 'like', '%' . $keyword . '%')
-                  ->orWhere('category.title', 'like', '%' . $keyword . '%');
+                  ->orWhere('categories.name', 'like', '%' . $keyword . '%');
         }
         if ($keyword) {
             $blogs = $query->paginate($recordsPerPage);
@@ -168,12 +166,10 @@ if ($existingProduct) {
     public function update(Request $request, $id)
 {
     $validator = $request->validate([
-        // 'title' => 'required|unique:product,title,' . $id,
-        'title' => 'required',
-        // 'super_id' => 'required',
-        'sub_id'=>'required',
-        'cat_id'=>'required',
-        'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        'title'  => 'required',
+        'sub_id' => 'required|integer|exists:sub_categories,id',
+        'cat_id' => 'required|integer|exists:categories,id',
+        'image'  => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
     $existingProduct = DB::table('product')
@@ -231,10 +227,15 @@ if ($existingProduct) {
    
 public function getSubCategories(Request $request) {
     $cat_id = $request->cat_id;
-    $subCategories = DB::select("SELECT * FROM sub WHERE cat_id = ?", [$cat_id]);
+    $subCategories = DB::table('sub_categories')
+        ->where('category_id', $cat_id)
+        ->where('status', '1')
+        ->orderBy('name')
+        ->get(['id', 'name']);
+
     $options = '<option value="">Select Sub Category</option>';
     foreach ($subCategories as $subCat) {
-        $options .= '<option value="' . $subCat->id . '">' . $subCat->title . '</option>';
+        $options .= '<option value="' . $subCat->id . '">' . e($subCat->name) . '</option>';
     }
     return $options;
 }
