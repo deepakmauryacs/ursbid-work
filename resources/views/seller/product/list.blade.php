@@ -88,6 +88,7 @@
 
                         <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
                             <div class="table-responsive">
+                                {{-- Standard seller table class --}}
                                 <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                                     <thead>
                                         <tr class="userDatatable-header">
