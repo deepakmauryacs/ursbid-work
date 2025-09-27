@@ -61,7 +61,7 @@ class ActiveEnquiryController extends Controller
         $blogs = $this->appendComputedState($blogs, $seller->email);
 
         $categoryData = DB::table('categories')
-            ->select('id', 'name', 'title')
+            ->select('id', 'name', DB::raw('name as title'))
             ->orderBy('name')
             ->get();
 
