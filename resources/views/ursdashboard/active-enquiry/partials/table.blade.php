@@ -3,6 +3,7 @@
       <thead>
          <tr>
             <th>Sr no</th>
+            <th>Quotation ID</th>
             <th>Name</th>
             <th>Category</th>
             <th>Sub Category</th>
@@ -20,6 +21,7 @@
          @forelse ($blogs as $index => $blog)
             <tr>
                <td>{{ ($blogs->currentPage() - 1) * $blogs->perPage() + $index + 1 }}</td>
+               <td>{{ $blog->qutation_id ?? '-' }}</td>
                <td>{{ $blog->name }}</td>
                <td>{{ $blog->category_name }}</td>
                <td>{{ $blog->sub_name }}</td>
@@ -65,7 +67,7 @@
             </tr>
          @empty
             <tr>
-               <td colspan="12" class="text-center py-4">No enquiries found.</td>
+               <td colspan="13" class="text-center py-4">No enquiries found.</td>
             </tr>
          @endforelse
       </tbody>

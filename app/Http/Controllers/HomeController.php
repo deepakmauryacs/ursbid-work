@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\File;
@@ -358,6 +357,7 @@ class HomeController extends Controller
         $sellerIds = $sellers->pluck('id')->implode(',');
 
         $data = [
+            'qutation_id'  => $this->generateUniqueQuotationId(),
             'latitude'      => $latitude,
             'longitude'     => $longitude,
             'name'          => $request->name,
@@ -398,6 +398,24 @@ class HomeController extends Controller
         } else {
             return back()->withErrors(['error' => 'Insertion Failed.'])->withInput();
         }
+    }
+
+    private function generateUniqueQuotationId(): string
+    {
+        $prefix = 'URSBID-';
+        $length = 10;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        do {
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[random_int(0, strlen($characters) - 1)];
+            }
+
+            $quotationId = $prefix . $randomString;
+        } while (DB::table('qutation_form')->where('qutation_id', $quotationId)->exists());
+
+        return $quotationId;
     }
 
     public function rating(Request $request)
