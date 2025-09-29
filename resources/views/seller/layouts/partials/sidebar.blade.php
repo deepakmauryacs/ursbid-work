@@ -96,7 +96,7 @@
 
                         @if(in_array(1, $accTypeValues, true) || in_array(2, $accTypeValues, true))
                             <li class="sub-nav-item">
-                                <a class="sub-nav-link {{ request()->is('buyer-order/mylist') ? 'active' : '' }}" href="{{ url('buyer-order/mylist') }}">My Bidding</a>
+                                <a class="sub-nav-link {{ request()->is('buyer-order/mylist') ? 'active' : '' }}" href="{{ route('buyer-order.mylist') }}">My Bidding</a>
                             </li>
                             <li class="sub-nav-item">
                                 <a class="sub-nav-link {{ request()->is('buyer-order/acc-list') ? 'active' : '' }}" href="{{ url('buyer-order/acc-list') }}">Accepted Bidding</a>
