@@ -23,67 +23,67 @@
                   <form class="row g-3">
                      <div class="col-md-6">
                         <label class="form-label fw-semibold">Name</label>
-                        <input type="text" class="form-control" value="{{ $query->seller_name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->seller_name }}" disabled>
                      </div>
                      <div class="col-md-6">
                         <label class="form-label fw-semibold">Category Name</label>
-                        <input type="text" class="form-control" value="{{ $query->category_name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->category_name }}" disabled>
                      </div>
                      <div class="col-md-6">
                         <label class="form-label fw-semibold">Sub Category Name</label>
-                        <input type="text" class="form-control" value="{{ $query->sub_name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->sub_name }}" disabled>
                      </div>
                      <div class="col-md-6">
                         <label class="form-label fw-semibold">Product Name</label>
-                        <input type="text" class="form-control" value="{{ $query->product_name }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->product_name }}" disabled>
                      </div>
                      <div class="col-md-6">
                         <label class="form-label fw-semibold">Brand</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_product_brand }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_product_brand }}" disabled>
                      </div>
                      <div class="col-12">
                         <label class="form-label fw-semibold">Message</label>
-                        <textarea class="form-control" rows="3" readonly>{{ $query->qutation_form_message }}</textarea>
+                        <textarea class="form-control" rows="3" disabled>{{ $query->qutation_form_message }}</textarea>
                      </div>
                      <div class="col-12">
                         <label class="form-label fw-semibold">Address</label>
-                        <textarea class="form-control" rows="2" readonly>{{ $query->qutation_form_address }}</textarea>
+                        <textarea class="form-control" rows="2" disabled>{{ $query->qutation_form_address }}</textarea>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Zipcode</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_zipcode }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_zipcode }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">State</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_state }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_state }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">City</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_city }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_city }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Bid Time (Days)</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_bid_time }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_bid_time }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Material</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Quantity</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_quantity }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_quantity }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Unit</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_unit }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_unit }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Profession</label>
-                        <input type="text" class="form-control" value="{{ $query->seller_pro_ser }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->seller_pro_ser }}" disabled>
                      </div>
                      <div class="col-md-4">
                         <label class="form-label fw-semibold">Quotation Type</label>
-                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" readonly>
+                        <input type="text" class="form-control" value="{{ $query->qutation_form_material }}" disabled>
                      </div>
                   </form>
                </div>
