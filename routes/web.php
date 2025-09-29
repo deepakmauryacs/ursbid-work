@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\AjexResponseController;
 use App\Http\Controllers\URSController\ActiveEnquiryController;
+use App\Http\Controllers\URSController\MyEnquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,7 +140,7 @@ Route::get('/seller/accounting/totalshare', [App\Http\Controllers\SellerloginCon
 Route::get('/seller/enquiry/list/{id?}', [ActiveEnquiryController::class, 'index'])->name('seller.enquiry.list');
 Route::get('/seller/enquiry/bidding-data/{id}', [ActiveEnquiryController::class, 'biddingData'])->name('seller.enquiry.bidding-data');
 Route::get('/seller/enquiry/deactivelist', [App\Http\Controllers\SellerloginController::class, 'deactivelist']);
-Route::get('/seller/enquiry/myenclist', [App\Http\Controllers\SellerloginController::class, 'myenclist']);
+Route::get('/seller/enquiry/myenclist', [MyEnquiryController::class, 'index'])->name('seller.enquiry.my-enquiry');
 Route::post('/seller/update_lat_long', [App\Http\Controllers\SellerloginController::class, 'update_lat_long'])->name('update_lat_long');
 Route::post('/openqotationpage', [ActiveEnquiryController::class, 'openQuotationPage'])->name('openqotationpage');
 Route::post('/bidding_price', [App\Http\Controllers\SellerloginController::class, 'bidding_price'])->name('bidding_price');
