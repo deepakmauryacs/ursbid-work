@@ -110,6 +110,11 @@
                            </select>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                           <label for="myQuotationId" class="form-label">Quotation ID</label>
+                           <input type="text" id="myQuotationId" name="qutation_id" class="form-control" placeholder="Quotation ID"
+                              value="{{ isset($data['qutation_id']) ? $data['qutation_id'] : '' }}">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                            <label for="myDate" class="form-label">Date</label>
                            <input type="text" id="myDate" name="date" class="form-control" placeholder="Date"
                               value="{{ isset($data['date']) ? $data['date'] : '' }}">
@@ -140,9 +145,14 @@
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                            <label class="form-label d-none d-lg-block">&nbsp;</label>
-                           <button type="submit" class="btn btn-primary w-100">
-                           <i class="bi bi-funnel-fill me-2"></i>Apply Filters
-                           </button>
+                           <div class="d-flex gap-2 flex-wrap">
+                              <button type="submit" class="btn btn-primary flex-fill">
+                              <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                              </button>
+                              <a href="{{ url('seller/enquiry/myenclist') }}" class="btn btn-outline-secondary flex-fill">
+                                 Reset
+                              </a>
+                           </div>
                         </div>
                      </form>
                   </div>
@@ -180,6 +190,9 @@
                            <tr class="userDatatable-header">
                               <th>
                                  <span class="projectDatatable-title">Sr no</span>
+                              </th>
+                              <th>
+                                 <span class="projectDatatable-title">Quotation ID</span>
                               </th>
                               <th>
                                  <span class="projectDatatable-title">Name</span>
@@ -239,6 +252,11 @@
                               <td>
                                  <div class="userDatatable-content text-center">
                                     {{ $i++ }}
+                                 </div>
+                              </td>
+                              <td>
+                                 <div class="userDatatable-content">
+                                    {{ $blog->qutation_id }}
                                  </div>
                               </td>
                               <td>

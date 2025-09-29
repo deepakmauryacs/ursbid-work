@@ -763,6 +763,7 @@ class SellerloginController extends Controller
         $date = $request->input('date');
         $city = $request->input('city');
         $quantity = $request->input('quantity');
+        $qutationId = $request->input('qutation_id');
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
@@ -780,8 +781,8 @@ class SellerloginController extends Controller
             ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('qutation_form.email', $selleremail)
             ->select(
-            
                 'qutation_form.id as id',
+                'qutation_form.id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -863,6 +864,9 @@ class SellerloginController extends Controller
         if ($quantity) {
             $query->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
         }
+        if ($qutationId) {
+            $query->where('qutation_form.id', 'like', '%' . $qutationId . '%');
+        }
         if ($product_name) {
             $query->where('product.title', 'like', '%' . $product_name . '%');
         }
@@ -876,6 +880,7 @@ class SellerloginController extends Controller
             'category' => $category,
             'product_name' => $product_name,
             'r_page' => $recordsPerPage,
+            'qutation_id' => $qutationId,
         ];
 
         return view('seller.enquiry.myenclist', compact('blogs', 'data', 'category_data'));
