@@ -48,7 +48,7 @@
                         <i class="bi bi-eye me-1"></i>View
                      </a>
                      @if($blog->show_bidding_button)
-                        <a href="#!" class="btn btn-outline-primary btn-sm"
+                        <a href="#!" class="btn btn-outline-primary btn-sm js-open-bidding-modal"
                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
                            data-product-id="{{ $blog->product_id }}"
                            data-product-quantity="{{ $blog->quantity }}"
