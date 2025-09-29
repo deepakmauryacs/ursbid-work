@@ -177,6 +177,31 @@ class ActiveEnquiryController extends Controller
         ]);
     }
 
+    public function biddingData(Request $request, $id)
+    {
+        $seller = $request->session()->get('seller');
+
+        if (!$seller) {
+            abort(403, 'Seller session not found.');
+        }
+
+        $enquiry = $this->baseActiveEnquiryQuery($seller->id, $seller->email)
+            ->where('qutation_form.id', $id)
+            ->first();
+
+        if (!$enquiry) {
+            return response()->json(['message' => 'Enquiry not found.'], 404);
+        }
+
+        return response()->json([
+            'data_id' => $enquiry->id,
+            'product_id' => $enquiry->product_id,
+            'product_name' => $enquiry->product_name,
+            'product_quantity' => $enquiry->quantity,
+            'user_email' => $enquiry->email,
+        ]);
+    }
+
     protected function baseActiveEnquiryQuery($sellerId, string $sellerEmail)
     {
         $currentDate = Carbon::now();

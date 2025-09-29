@@ -159,6 +159,7 @@
       const $form = $('#activeEnquiryFiltersForm');
       const $tableWrapper = $('#activeEnquiryTable');
       const baseUrl = "{{ $activeEnquiryBaseUrl }}";
+      const biddingDataUrlTemplate = @json(route('seller.enquiry.bidding-data', ['id' => '__ID__']));
 
       function updateHistory(url, serializedForm) {
          const params = new URLSearchParams(serializedForm);
@@ -233,22 +234,62 @@
          }
       });
 
-      $(document).on('click', '.js-open-bidding-modal', function () {
-         const $btn = $(this);
-         const modalSelector = $btn.attr('data-bs-target') || '#exampleModalCenter';
-         const $modal = $(modalSelector);
+      function getBiddingDetails(enquiryId) {
+         if (!biddingDataUrlTemplate) {
+            return $.Deferred().reject().promise();
+         }
 
-         if (!$modal.length) {
+         const url = biddingDataUrlTemplate.replace('__ID__', encodeURIComponent(enquiryId));
+
+         return $.ajax({
+            url,
+            type: 'GET',
+            dataType: 'json',
+         });
+      }
+
+      $(document).on('click', '.js-open-bidding-modal', function (event) {
+         event.preventDefault();
+         event.stopPropagation();
+
+         const $btn = $(this);
+         const enquiryId = $btn.data('enquiry-id');
+         const $modal = $('#exampleModalCenter');
+
+         if (!$modal.length || !enquiryId) {
             return;
          }
 
-         $modal.find('.product_quantity').val($btn.data('product-quantity'));
-         $modal.find('.product_id').val($btn.data('product-id'));
-         $modal.find('.product_name').val($btn.data('product-name'));
-         $modal.find('.user_email').val($btn.data('user-email'));
-         $modal.find('.data_id').val($btn.data('data-id'));
+         const modalInstance = typeof bootstrap !== 'undefined' && bootstrap.Modal
+            ? bootstrap.Modal.getOrCreateInstance($modal[0])
+            : null;
+
+         $btn.prop('disabled', true);
+         $modal.find('.product_id, .product_quantity, .product_name, .user_email, .data_id').val('');
          $modal.find('.price').val('');
          $modal.find('.total').text('0.00');
+
+         getBiddingDetails(enquiryId)
+            .done(function (response) {
+               $modal.find('.product_id').val(response.product_id || '');
+               $modal.find('.product_quantity').val(response.product_quantity || '');
+               $modal.find('.product_name').val(response.product_name || '');
+               $modal.find('.user_email').val(response.user_email || '');
+               $modal.find('.data_id').val(response.data_id || '');
+               $modal.find('.price').val('');
+               $modal.find('.total').text('0.00');
+               if (modalInstance && typeof modalInstance.show === 'function') {
+                  modalInstance.show();
+               } else if (typeof $modal.modal === 'function') {
+                  $modal.modal('show');
+               }
+            })
+            .fail(function () {
+               alert('Unable to load bidding details. Please try again.');
+            })
+            .always(function () {
+               $btn.prop('disabled', false);
+            });
       });
 
       $('#exampleModalCenter').on('input', '.price, .product_quantity', function () {
