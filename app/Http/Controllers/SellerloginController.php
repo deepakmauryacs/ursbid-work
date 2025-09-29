@@ -1068,8 +1068,30 @@ class SellerloginController extends Controller
             return redirect('seller/enquiry/list')->with('success', 'Successfully  completed payment');
     
         } else {
+            $statusCode = $request->code ?? 'UNKNOWN_ERROR';
+            $transactionId = $request->transactionId ?? null;
 
-            dd('ERROR : ' . $request->code . ', Please Try Again Later.');
+            if ($transactionId) {
+                DB::table('bidding_price')
+                    ->where('transaction_id', $transactionId)
+                    ->update(['payment_status' => 'cancelled']);
+            }
+
+            $message = 'An unexpected error occurred while confirming the payment. Please try again later.';
+            if ($statusCode === 'PAYMENT_CANCELLED') {
+                $message = 'Payment was cancelled. Please try again later.';
+            } elseif ($statusCode && $statusCode !== 'UNKNOWN_ERROR') {
+                $message = 'Payment failed with status: ' . $statusCode . '. Please try again later.';
+            }
+
+            Log::warning('Payment confirmation failed', [
+                'status_code' => $statusCode,
+                'transaction_id' => $transactionId,
+                'merchant_id' => $request->merchantId ?? null,
+                'provider_reference_id' => $request->providerReferenceId ?? null,
+            ]);
+
+            return redirect('seller/enquiry/list')->with('error', $message);
         }
     }
 
