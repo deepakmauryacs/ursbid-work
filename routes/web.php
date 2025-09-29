@@ -137,6 +137,7 @@ Route::get('/seller/accounting/biddrecive', [App\Http\Controllers\SellerloginCon
 Route::get('/seller/accounting/list', [App\Http\Controllers\SellerloginController::class, 'accountinglist']);
 Route::get('/seller/accounting/totalshare', [App\Http\Controllers\SellerloginController::class, 'totalshare']);
 Route::get('/seller/enquiry/list/{id?}', [ActiveEnquiryController::class, 'index'])->name('seller.enquiry.list');
+Route::get('/seller/enquiry/bidding-data/{id}', [ActiveEnquiryController::class, 'biddingData'])->name('seller.enquiry.bidding-data');
 Route::get('/seller/enquiry/deactivelist', [App\Http\Controllers\SellerloginController::class, 'deactivelist']);
 Route::get('/seller/enquiry/myenclist', [App\Http\Controllers\SellerloginController::class, 'myenclist']);
 Route::post('/seller/update_lat_long', [App\Http\Controllers\SellerloginController::class, 'update_lat_long'])->name('update_lat_long');

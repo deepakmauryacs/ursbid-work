@@ -49,12 +49,7 @@
                      </a>
                      @if($blog->show_bidding_button)
                         <a href="#!" class="btn btn-outline-primary btn-sm js-open-bidding-modal"
-                           data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
-                           data-product-id="{{ $blog->product_id }}"
-                           data-product-quantity="{{ $blog->quantity }}"
-                           data-product-name="{{ $blog->product_name }}"
-                           data-data-id="{{ $blog->id }}"
-                           data-user-email="{{ $blog->email }}">
+                           data-enquiry-id="{{ $blog->id }}">
                            <i class="bi bi-gavel me-1"></i>Bidding
                         </a>
                      @else
