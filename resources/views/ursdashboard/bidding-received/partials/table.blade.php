@@ -18,6 +18,7 @@
             <thead>
                 <tr>
                     <th><span class="projectDatatable-title">Sr.No</span></th>
+                    <th><span class="projectDatatable-title">Quotation ID</span></th>
                     <th><span class="projectDatatable-title">Name</span></th>
                     <th><span class="projectDatatable-title">Category</span></th>
                     <th><span class="projectDatatable-title">Sub Category</span></th>
@@ -33,6 +34,7 @@
                     @php
                         $recordId = is_object($record) ? ($record->id ?? null) : ($record['id'] ?? null);
                         $recordName = is_object($record) ? ($record->name ?? '') : ($record['name'] ?? '');
+                        $recordQuotationId = is_object($record) ? ($record->qutation_id ?? '') : ($record['qutation_id'] ?? '');
                         $recordCategory = is_object($record) ? ($record->category_name ?? '') : ($record['category_name'] ?? '');
                         $recordSubCategory = is_object($record) ? ($record->sub_name ?? '') : ($record['sub_name'] ?? '');
                         $recordProduct = is_object($record) ? ($record->product_name ?? '') : ($record['product_name'] ?? '');
@@ -44,6 +46,9 @@
                     <tr>
                         <td>
                             <div class="userDatatable-content">{{ $rowNumber++ }}</div>
+                        </td>
+                        <td>
+                            <div class="userDatatable-content">{{ $recordQuotationId ?: '-' }}</div>
                         </td>
                         <td>
                             <div class="userDatatable-content">{{ $recordName }}</div>

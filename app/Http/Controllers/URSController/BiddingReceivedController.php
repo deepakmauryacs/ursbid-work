@@ -60,6 +60,7 @@ class BiddingReceivedController extends Controller
                 'qutation_form.unit as unit',
                 'qutation_form.quantity as quantity',
                 'qutation_form.status as qutation_form_status',
+                'qutation_form.qutation_id as qutation_id',
                 'seller.id as seller_id',
                 'seller.email as seller_email',
                 'seller.name as seller_name',
