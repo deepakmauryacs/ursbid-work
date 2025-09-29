@@ -36,7 +36,7 @@ class MyBiddingController extends Controller
         if ($request->filled('category')) {
             $category = $request->input('category');
             $query->where(function ($innerQuery) use ($category) {
-                $innerQuery->where('category.id', $category)
+                $innerQuery->where('c.id', $category)
                     ->orWhere('qutation_form.cat_id', 'like', '%' . $category . '%');
             });
         }
@@ -81,9 +81,9 @@ class MyBiddingController extends Controller
 
         $records = $this->appendComputedState($records);
 
-        $categoryData = DB::table('category')
-            ->select('id', DB::raw('title as name'), DB::raw('title as title'))
-            ->orderBy('title')
+        $categoryData = DB::table('categories')
+            ->select('id', 'name', DB::raw('name as title'))
+            ->orderBy('name')
             ->get();
 
         if ($request->ajax()) {
@@ -106,11 +106,18 @@ class MyBiddingController extends Controller
 
     protected function baseMyBiddingQuery(string $sellerEmail)
     {
+        $productBrands = DB::table('product_brands')
+            ->select('product_id', DB::raw('MAX(brand_name) as brand_name'))
+            ->groupBy('product_id');
+
         return DB::table('bidding_price')
             ->leftJoin('seller', 'bidding_price.seller_email', '=', 'seller.email')
             ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+            ->leftJoinSub($productBrands, 'pb', function ($join) {
+                $join->on('product.id', '=', 'pb.product_id');
+            })
+            ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
+            ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
             ->where('bidding_price.seller_email', $sellerEmail)
             ->select(
@@ -127,7 +134,7 @@ class MyBiddingController extends Controller
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
                 'qutation_form.product_img as qutation_form_product_img',
-                'qutation_form.product_brand as qutation_form_product_brand',
+                'pb.brand_name as qutation_form_product_brand',
                 'qutation_form.product_name as qutation_form_product_name',
                 'qutation_form.message as qutation_form_message',
                 'qutation_form.address as qutation_form_address',
@@ -164,20 +171,20 @@ class MyBiddingController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+                'sc.id as sub_id',
+                'sc.name as sub_name',
+                'sc.category_id as sub_cat_id',
+                'sc.created_at as sub_created_at',
+                'sc.image as sub_image',
+                'sc.slug as sub_slug',
+                'sc.status as sub_status',
+                'sc.order_by as sub_order_by',
+                'c.id as category_id',
+                'c.name as category_name',
+                'c.created_at as category_created_at',
+                'c.image as category_image',
+                'c.slug as category_slug',
+                'c.status as category_status'
             );
     }
 
