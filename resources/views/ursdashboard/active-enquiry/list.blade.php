@@ -105,7 +105,7 @@
                <div class="collapse show" id="activeEnquiryFilters">
                   <div class="card-body">
                      <form id="activeEnquiryFiltersForm" class="row g-3 align-items-end" method="get" action="{{ $activeEnquiryBaseUrl }}">
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Category</label>
                            <select name="category" id="category" class="form-select">
                               <option value="">Select Category</option>
@@ -117,32 +117,32 @@
                            </select>
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Date</label>
                            <input type="text" name="date" id="filterDate" class="form-control" placeholder="Date" value="{{ $data['date'] ?? '' }}">
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">City</label>
                            <input type="text" name="city" id="filterCity" class="form-control" placeholder="City" value="{{ $data['city'] ?? '' }}">
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Quantity</label>
                            <input type="text" name="quantity" id="filterQuantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}">
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Product Name</label>
                            <input type="text" name="product_name" id="filterProduct" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Quotation ID</label>
                            <input type="text" name="qutation_id" id="filterQuotationId" class="form-control" placeholder="Quotation ID" value="{{ $data['qutation_id'] ?? '' }}">
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Records Per Page</label>
                            <select name="r_page" id="recordsPerPage" class="form-select">
                               <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}>25</option>
@@ -151,17 +151,16 @@
                            </select>
                         </div>
 
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                        <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label d-none d-lg-block">&nbsp;</label>
-                           <button type="submit" class="btn btn-primary w-100">
-                              <i class="bi bi-funnel-fill me-2"></i>Apply Filters
-                           </button>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-                           <label class="form-label d-none d-lg-block">&nbsp;</label>
-                           <button type="button" id="resetActiveEnquiryFilters" class="btn btn-outline-secondary w-100">
-                              <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
-                           </button>
+                           <div class="d-flex flex-column flex-sm-row flex-lg-column flex-xl-row gap-2">
+                              <button type="submit" class="btn btn-primary w-100 flex-fill">
+                                 <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                              </button>
+                              <button type="button" id="resetActiveEnquiryFilters" class="btn btn-outline-secondary w-100 flex-fill">
+                                 <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                              </button>
+                           </div>
                         </div>
                      </form>
                   </div>
