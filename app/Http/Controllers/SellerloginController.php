@@ -893,46 +893,6 @@ class SellerloginController extends Controller
         }
     }
 
-    public function openqotationpage(Request $request)
-    {
-        // Validate the request
-        $validator = $request->validate([
-            'price' => 'required|numeric', // Ensure price is required and numeric
-            'file' => 'nullable|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:10048',
-        ]);
-
-        // Retrieve request data
-        $amount = $request->price;
-        $data_id = $request->data_id;
-        $user_email = $request->user_email;
-        $product_name = $request->product_name;
-        $product_id = $request->product_id;
-        $product_quantity = $request->product_quantity;
-        $seller_email = $request->seller_email;
-
-        // Prepare data array
-        $data = [
-            'amount' => $amount,
-            'data_id' => $data_id,
-            'user_email' => $user_email,
-            'product_name' => $product_name,
-            'product_quantity' => $product_quantity,
-            'product_id' => $product_id,
-            'seller_email' => $seller_email,
-        ];
-
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-
-            $data['filename'] = $filename;
-        }
-
-        // Pass the data to the view
-        return view('seller.openqotationpage', compact('data'));
-    }
-
     public function bidding_price(Request $request)
     {
         $validator = $request->validate([

@@ -87,6 +87,39 @@ class ActiveEnquiryController extends Controller
         ]);
     }
 
+    public function openQuotationPage(Request $request)
+    {
+        $seller = $request->session()->get('seller');
+
+        if (!$seller) {
+            abort(403, 'Seller session not found.');
+        }
+
+        $request->validate([
+            'price' => 'required|numeric',
+            'file' => 'nullable|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:10048',
+        ]);
+
+        $data = [
+            'amount' => $request->price,
+            'data_id' => $request->data_id,
+            'user_email' => $request->user_email,
+            'product_name' => $request->product_name,
+            'product_quantity' => $request->product_quantity,
+            'product_id' => $request->product_id,
+            'seller_email' => $request->seller_email,
+        ];
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $filename);
+            $data['filename'] = $filename;
+        }
+
+        return view('ursdashboard.active-enquiry.openqotationpage', compact('data'));
+    }
+
     public function show(Request $request, $id)
     {
         $seller = $request->session()->get('seller');
