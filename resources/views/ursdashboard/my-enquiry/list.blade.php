@@ -75,7 +75,7 @@
                            <label class="form-label d-none d-lg-block">&nbsp;</label>
                            <div class="d-flex flex-column flex-sm-row flex-lg-column flex-xl-row gap-2">
                               <button type="submit" class="btn btn-primary w-100 flex-fill">
-                                 <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                                 <i class="bi bi-funnel-fill me-2"></i>Apply
                               </button>
                               <button type="button" id="resetMyEnquiryFilters" class="btn btn-outline-secondary w-100 flex-fill">
                                  <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
