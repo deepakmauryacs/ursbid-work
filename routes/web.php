@@ -141,7 +141,7 @@ Route::get('/seller/enquiry/bidding-data/{id}', [ActiveEnquiryController::class,
 Route::get('/seller/enquiry/deactivelist', [App\Http\Controllers\SellerloginController::class, 'deactivelist']);
 Route::get('/seller/enquiry/myenclist', [App\Http\Controllers\SellerloginController::class, 'myenclist']);
 Route::post('/seller/update_lat_long', [App\Http\Controllers\SellerloginController::class, 'update_lat_long'])->name('update_lat_long');
-Route::post('/openqotationpage', [App\Http\Controllers\SellerloginController::class, 'openqotationpage'])->name('openqotationpage');
+Route::post('/openqotationpage', [ActiveEnquiryController::class, 'openQuotationPage'])->name('openqotationpage');
 Route::post('/bidding_price', [App\Http\Controllers\SellerloginController::class, 'bidding_price'])->name('bidding_price');
 Route::get('/seller/enquiry/view/{any}', [ActiveEnquiryController::class, 'show'])->name('seller.enquiry.view');
 Route::get('/seller/enquiry/file/{any}', [App\Http\Controllers\SellerloginController::class, 'vewfile']);

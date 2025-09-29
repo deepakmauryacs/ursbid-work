@@ -98,14 +98,13 @@ table tbody th:last-child {
 
 
                                 @php
+                                    $rate = $data['amount'];
+                                    $quantity = $data['product_quantity'];
+                                    $totalAmount = $rate * $quantity;
+                                    $platformFee = $totalAmount * 0.005;
+                                    $discount = $platformFee * 0.9;
 
-                                $rate = $data['amount'];
-                                $quantity = $data['product_quantity'];
-                                $totalAmount = $rate * $quantity;
-                                $platformFee = $totalAmount * 0.005;
-                                $discount = $platformFee * 0.9;
-                                
-                                $grandTotal =   $platformFee - $discount ;
+                                    $grandTotal = $platformFee - $discount;
                                 @endphp
 
                                 {{-- Standard seller table class --}}
@@ -136,14 +135,15 @@ table tbody th:last-child {
                                             <th>{{ number_format($grandTotal, 2) }}</th>
                                         </tr>
 
-                                        @php 
-
-                                        @if(isset($data['filename']) && $data['filename'])
-    <tr>
-        <th>Quotation File</th>
-        <th><a href="{{ url('public/uploads/'.$data['filename']) }}" target="_blank">View</a></th>
-    </tr>
-@endif
+                                        @if (!empty($data['filename']))
+                                            <tr>
+                                                <th>Quotation File</th>
+                                                <th>
+                                                    <a href="{{ url('public/uploads/' . $data['filename']) }}"
+                                                        target="_blank">View</a>
+                                                </th>
+                                            </tr>
+                                        @endif
 
                                     </tbody>
                                 </table>
