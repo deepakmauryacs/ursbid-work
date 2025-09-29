@@ -30,7 +30,7 @@
 
 
                         <div class="action-btn">
-                            <a href="{{ url('/buyer-order') }}" class="btn btn-sm btn-primary btn-add">
+                            <a href="{{ url('buyer/bidding-received/list') }}" class="btn btn-sm btn-primary btn-add">
                                 <i class="la la-plus"></i> Back</a>
                         </div>
                     </div>

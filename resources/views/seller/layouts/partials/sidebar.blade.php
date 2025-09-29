@@ -80,23 +80,23 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link menu-arrow {{ request()->is('buyer-order*') ? 'active' : '' }}" href="#sidebarBidding" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('buyer-order*') ? 'true' : 'false' }}" aria-controls="sidebarBidding">
+                <a class="nav-link menu-arrow {{ request()->is('buyer/bidding-received*', 'buyer/my-bidding*', 'buyer-order/acc-list') ? 'active' : '' }}" href="#sidebarBidding" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('buyer/bidding-received*', 'buyer/my-bidding*', 'buyer-order/acc-list') ? 'true' : 'false' }}" aria-controls="sidebarBidding">
                     <span class="nav-icon">
                         <i class="ri-auction-line"></i>
                     </span>
                     <span class="nav-text">Bidding</span>
                 </a>
-                <div class="collapse {{ request()->is('buyer-order*') ? 'show' : '' }}" id="sidebarBidding">
+                <div class="collapse {{ request()->is('buyer/bidding-received*', 'buyer/my-bidding*', 'buyer-order/acc-list') ? 'show' : '' }}" id="sidebarBidding">
                     <ul class="nav sub-navbar-nav">
                         @if(in_array(3, $accTypeValues, true) || in_array(4, $accTypeValues, true))
                             <li class="sub-nav-item">
-                                <a class="sub-nav-link {{ request()->is('buyer-order') ? 'active' : '' }}" href="{{ url('buyer-order') }}">Bidding Received</a>
+                                <a class="sub-nav-link {{ request()->is('buyer/bidding-received/list') ? 'active' : '' }}" href="{{ url('buyer/bidding-received/list') }}">Bidding Received</a>
                             </li>
                         @endif
 
                         @if(in_array(1, $accTypeValues, true) || in_array(2, $accTypeValues, true))
                             <li class="sub-nav-item">
-                                <a class="sub-nav-link {{ request()->is('buyer-order/mylist') ? 'active' : '' }}" href="{{ route('buyer-order.mylist') }}">My Bidding</a>
+                                <a class="sub-nav-link {{ request()->is('buyer/my-bidding/list') ? 'active' : '' }}" href="{{ route('buyer-order.mylist') }}">My Bidding</a>
                             </li>
                             <li class="sub-nav-item">
                                 <a class="sub-nav-link {{ request()->is('buyer-order/acc-list') ? 'active' : '' }}" href="{{ url('buyer-order/acc-list') }}">Accepted Bidding</a>
