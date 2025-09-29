@@ -782,7 +782,7 @@ class SellerloginController extends Controller
             ->where('qutation_form.email', $selleremail)
             ->select(
                 'qutation_form.id as id',
-                'qutation_form.id as qutation_id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -865,7 +865,7 @@ class SellerloginController extends Controller
             $query->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
         }
         if ($qutationId) {
-            $query->where('qutation_form.id', 'like', '%' . $qutationId . '%');
+            $query->where('qutation_form.qutation_id', 'like', '%' . $qutationId . '%');
         }
         if ($product_name) {
             $query->where('product.title', 'like', '%' . $product_name . '%');
