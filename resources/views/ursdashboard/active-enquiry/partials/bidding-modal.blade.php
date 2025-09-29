@@ -43,7 +43,13 @@
                   <a href="#!" class="exampleModalCentersmall" data-bs-toggle="modal" data-bs-target="#exampleModalCentersmall">agreement terms & condition</a>
                </div>
 
-               <button type="submit" class="btn btn-primary mt-3">Submit</button>
+               <div class="row justify-content-end g-2">
+                     <div class="col-lg-3">
+                           <button type="submit" class="btn btn-outline-primary w-100 mt-3">Submit</button>
+                     </div>
+               </div>
+             
+
             </form>
          </div>
       </div>

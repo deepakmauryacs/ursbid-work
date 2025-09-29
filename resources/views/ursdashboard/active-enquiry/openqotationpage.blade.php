@@ -1,84 +1,28 @@
 @extends('seller.layouts.app')
 @section('title', 'Enquiry List')
-<!--  -->
 @section('content')
 <style>
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 18px;
-    font-family: Arial, sans-serif;
-    text-align: left;
-}
-
-table th,
-table td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-}
-
-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-}
-
-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-table tbody th:last-child {
-    text-align: right;
+.table-centered td, .table-centered th {
+    vertical-align: middle !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 <div class="container-fluid">
     <div class="social-dash-wrap">
         <div class="row">
             <div class="col-lg-12">
-
                 <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Enquiry List</h4>
-                    <div class="breadcrumb-action justify-content-center flex-wrap">
-                        <!-- <div class="action-btn">
-
-                                        <div class="form-group mb-0">
-                                            <div class="input-container icon-left position-relative">
-                                                <span class="input-icon icon-left">
-                                                    <span data-feather="calendar"></span>
-                                                </span>
-                                                <input type="text" class="form-control form-control-default date-ranger" name="date-ranger" placeholder="Oct 30, 2019 - Nov 30, 2019">
-                                                <span class="input-icon icon-right">
-                                                    <span data-feather="chevron-down"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
-
-                        <!-- <div class="action-btn">
-                            <a href="{{ url('admin/Buyer/add') }}" class="btn btn-sm btn-primary btn-add">
-                                <i class="la la-plus"></i> Add New Buyer</a>
-                        </div> -->
-                    </div>
+                    <h4 class="text-capitalize breadcrumb-title">Quotation Summary</h4>
                 </div>
-
             </div>
-
         </div>
-
 
         <div class="row">
             <div class="col-lg-12 mb-30">
                 <div class="card">
-
                     <div class="card-body">
-
                         @if(Session::has('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             {{ Session::get('success') }}
@@ -91,12 +35,9 @@ table tbody th:last-child {
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         @endif
-
-                        <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
-                            <div class="table-responsive">
+                       <div class="table-responsive">
+                           <table class="table align-middle text-nowrap table-hover table-centered mb-0">
                                 <h3>Summary</h3>
-
-
                                 @php
                                     $rate = $data['amount'];
                                     $quantity = $data['product_quantity'];
@@ -176,26 +117,26 @@ table tbody th:last-child {
                                     <input type="hidden" name="price" class="amount form-control"
                                         value="{{ number_format($grandTotal, 2) }}">
                                    
-                                    <button type="submit" class="btn btn-primary mt-2">Pay Now</button>
+                                    <div class="row justify-content-end">
+                                        <div class="col-lg-2">
+                                            <button type="submit" class="btn btn-outline-primary w-100 mt-3">Submit</button>
+                                        </div>
+                                    </div>
                                 </form>
 
                             </div>
-                        </div><!-- End: .userDatatable -->
-
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 </div>
-
 <script>
     document.getElementById("cancel-yes").addEventListener("click", function(event) {
         event.preventDefault(); // Prevent default link behavior
         window.location.href = "{{ url('seller/enquiry/list') }}"; // Redirect
     });
 </script>
-
 @endsection
