@@ -26,6 +26,7 @@ class ActiveEnquiryController extends Controller
             'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
             'product_name' => $request->input('product_name'),
+            'qutation_id' => $request->input('qutation_id'),
             'r_page' => $perPage,
         ];
 
@@ -51,6 +52,10 @@ class ActiveEnquiryController extends Controller
 
         if ($request->filled('product_name')) {
             $query->where('product.title', 'like', '%' . $request->input('product_name') . '%');
+        }
+
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
         }
 
         $blogs = $query
@@ -90,10 +95,16 @@ class ActiveEnquiryController extends Controller
             abort(403, 'Seller session not found.');
         }
 
+        $productBrands = DB::table('product_brands')
+            ->select('product_id', DB::raw('MAX(brand_name) as brand_name'))
+            ->groupBy('product_id');
+
         $query = DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
-            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoinSub($productBrands, 'pb', function ($join) {
+                $join->on('product.id', '=', 'pb.product_id');
+            })
             ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
             ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('qutation_form.id', $id)
@@ -170,10 +181,16 @@ class ActiveEnquiryController extends Controller
     {
         $currentDate = Carbon::now();
 
+        $productBrands = DB::table('product_brands')
+            ->select('product_id', DB::raw('MAX(brand_name) as brand_name'))
+            ->groupBy('product_id');
+
         return DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
-            ->leftJoin('product_brands as pb', 'product.id', '=', 'pb.product_id')
+            ->leftJoinSub($productBrands, 'pb', function ($join) {
+                $join->on('product.id', '=', 'pb.product_id');
+            })
             ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
             ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->where('qutation_form.email', '!=', $sellerEmail)

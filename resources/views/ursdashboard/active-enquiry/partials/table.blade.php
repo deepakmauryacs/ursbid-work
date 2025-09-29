@@ -27,7 +27,7 @@
                <td>{{ $blog->sub_name }}</td>
                <td>{{ $blog->product_name }}</td>
                <td>{{ $blog->bid_time }} day</td>
-               <td>{{ $blog->date_time ? \Carbon\Carbon::parse($blog->date_time)->format('Y-m-d') : '-' }}</td>
+               <td>{{ $blog->date_time ? \Carbon\Carbon::parse($blog->date_time)->format('d-m-Y') : '-' }}</td>
                <td>{{ $blog->quantity }}</td>
                <td>{{ $blog->unit }}</td>
                <td>
