@@ -446,7 +446,9 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
 
@@ -573,7 +575,9 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
 
@@ -632,7 +636,9 @@ class SellerloginController extends Controller
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
 
         // $query = DB::table('qutation_form')
         //     ->whereRaw("FIND_IN_SET(?, seller_id)", [$sellerId])
@@ -760,7 +766,9 @@ class SellerloginController extends Controller
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $selleremail = $request->session()->get('seller')->email;
 
         $query = DB::table('qutation_form')
@@ -1199,7 +1207,9 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 25);
 
 
@@ -1339,7 +1349,9 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $query = DB::table('bidding_price')
@@ -1479,7 +1491,9 @@ class SellerloginController extends Controller
         $quantity = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $query = DB::table('bidding_price')
