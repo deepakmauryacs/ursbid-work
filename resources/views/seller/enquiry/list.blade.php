@@ -176,7 +176,7 @@
                         <!-- Reset Button -->
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                            <label class="form-label d-none d-lg-block">&nbsp;</label>
-                           <a href="{{ url('seller/enquiry/list') }}" class="btn btn-outline-secondary w-100">
+                           <a href="{{ url('seller/active-enquiry/list') }}" class="btn btn-outline-secondary w-100">
                               <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
                            </a>
                         </div>

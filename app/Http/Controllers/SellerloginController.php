@@ -932,7 +932,7 @@ class SellerloginController extends Controller
             ->exists();
 
         if ($existingRecord) {
-            return response()->make("<script>alert('You have already paid for this.'); window.location.href = '" . url('seller/enquiry/list')->previous() . "';</script>");
+            return response()->make("<script>alert('You have already paid for this.'); window.location.href = '" . url('seller/active-enquiry/list')->previous() . "';</script>");
         } else {
             $merchantId = 'M22I5XAFXIGHT';
             $apiKey = '096dcc76-f0d9-41f3-93c8-f54c7b506668';
@@ -1078,7 +1078,7 @@ class SellerloginController extends Controller
                 curl_close($curl);
             }
 
-            return redirect('seller/enquiry/list')->with('success', 'Successfully  completed payment');
+            return redirect('seller/active-enquiry/list')->with('success', 'Successfully  completed payment');
     
         } else {
             $statusCode = $request->code ?? 'UNKNOWN_ERROR';
@@ -1104,7 +1104,7 @@ class SellerloginController extends Controller
                 'provider_reference_id' => $request->providerReferenceId ?? null,
             ]);
 
-            return redirect('seller/enquiry/list')->with('error', $message);
+            return redirect('seller/active-enquiry/list')->with('error', $message);
         }
     }
 

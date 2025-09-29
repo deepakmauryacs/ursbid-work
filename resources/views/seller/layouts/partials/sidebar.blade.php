@@ -53,26 +53,26 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link menu-arrow {{ request()->is('seller/enquiry*') ? 'active' : '' }}" href="#sidebarEnquiry" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('seller/enquiry*') ? 'true' : 'false' }}" aria-controls="sidebarEnquiry">
+                <a class="nav-link menu-arrow {{ request()->is('seller/enquiry*', 'seller/active-enquiry*', 'seller/closed-enquiry*', 'seller/my-enquiry*') ? 'active' : '' }}" href="#sidebarEnquiry" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('seller/enquiry*', 'seller/active-enquiry*', 'seller/closed-enquiry*', 'seller/my-enquiry*') ? 'true' : 'false' }}" aria-controls="sidebarEnquiry">
                     <span class="nav-icon">
                         <i class="ri-question-answer-line"></i>
                     </span>
                     <span class="nav-text">Enquiries</span>
                 </a>
-                <div class="collapse {{ request()->is('seller/enquiry*') ? 'show' : '' }}" id="sidebarEnquiry">
+                <div class="collapse {{ request()->is('seller/enquiry*', 'seller/active-enquiry*', 'seller/closed-enquiry*', 'seller/my-enquiry*') ? 'show' : '' }}" id="sidebarEnquiry">
                     <ul class="nav sub-navbar-nav">
                         @if(in_array(1, $accTypeValues, true) || in_array(2, $accTypeValues, true))
                             <li class="sub-nav-item">
-                                <a class="sub-nav-link {{ request()->is('seller/enquiry/list') ? 'active' : '' }}" href="{{ url('seller/enquiry/list') }}">Active Enquiry List</a>
+                                <a class="sub-nav-link {{ request()->is('seller/active-enquiry/list') ? 'active' : '' }}" href="{{ url('seller/active-enquiry/list') }}">Active Enquiry List</a>
                             </li>
                             <li class="sub-nav-item">
-                                <a class="sub-nav-link {{ request()->is('seller/enquiry/deactivelist') ? 'active' : '' }}" href="{{ url('seller/enquiry/deactivelist') }}">Closed Enquiry List</a>
+                                <a class="sub-nav-link {{ request()->is('seller/closed-enquiry/list') ? 'active' : '' }}" href="{{ url('seller/closed-enquiry/list') }}">Closed Enquiry List</a>
                             </li>
                         @endif
 
                         @if(in_array(3, $accTypeValues, true) || in_array(4, $accTypeValues, true))
                             <li class="sub-nav-item">
-                                <a class="sub-nav-link {{ request()->is('seller/enquiry/myenclist') ? 'active' : '' }}" href="{{ url('seller/enquiry/myenclist') }}">My Enquiry List</a>
+                                <a class="sub-nav-link {{ request()->is('seller/my-enquiry/list') ? 'active' : '' }}" href="{{ url('seller/my-enquiry/list') }}">My Enquiry List</a>
                             </li>
                         @endif
                     </ul>

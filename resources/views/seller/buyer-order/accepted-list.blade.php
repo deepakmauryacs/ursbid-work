@@ -30,7 +30,7 @@
 
 
                         <!-- <div class="action-btn">
-                            <a href="{{ url('seller/enquiry/list') }}" class="btn btn-sm btn-primary btn-add">
+                            <a href="{{ url('seller/active-enquiry/list') }}" class="btn btn-sm btn-primary btn-add">
                                 <i class="la la-plus"></i> Back</a>
                         </div> -->
                     </div>
