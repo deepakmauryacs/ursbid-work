@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
 use App\Models\Buyer;
+use App\Http\Controllers\URSController\MyBiddingController;
 
 class BuyerloginController extends Controller
 {
@@ -411,153 +412,11 @@ class BuyerloginController extends Controller
     }
 
 
-    public function mylist(Request $request){
-        $seller = $request->session()->get('seller');
-        if (!$seller) {
-            return redirect()->route('seller-login');
-        }
-        $buyer_email = $seller->email;
-        $keyword = $request->input('keyword');
-        $category = $request->input('category');
-        $date = $request->input('date');
-        $city = $request->input('city');
-        $quantity = $request->input('quantity');
-        $product_name = $request->input('product_name');
-
-        $category_data=DB::table('category')->get();
-        $recordsPerPage = $request->input('r_page', 25);
-
-
-        $data = DB::table('bidding_price')
-        
-        ->leftJoin('seller', 'bidding_price.seller_email', '=', 'seller.email')
-        ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
-        ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-        ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
-        ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
-        ->where('bidding_price.seller_email',$buyer_email)
-        // ->where('bidding_price.payment_status','success')
-        ->select(
-            // bidding_price columns
-            'bidding_price.id as bidding_price_id',
-                            'bidding_price.rate as rate',
-
-            'bidding_price.seller_email as seller_email',
-            'bidding_price.product_id as bidding_price_product_id',
-            'bidding_price.product_name as bidding_price_product_name',
-            'bidding_price.payment_status as bidding_price_payment_status',
-            
-
-
-            // qf
-                    'qutation_form.bid_time as bid_time',
-                    'qutation_form.material as material',
-                    'qutation_form.id as id',
-                    'qutation_form.name as name',
-                    'qutation_form.email as email',
-                    'qutation_form.product_id as qutation_form_product_id',
-                    'qutation_form.product_img as qutation_form_product_img',
-                    // 'qutation_form.product_name	as qutation_form_product_name',
-                    'qutation_form.product_brand as qutation_form_product_brand',
-                    'qutation_form.message as qutation_form_message',
-                    // 'qutation_form.location	as qutation_form_location',
-                    'qutation_form.address as qutation_form_address',
-                    'qutation_form.zipcode as qutation_form_zipcode',
-                    'qutation_form.state as qutation_form_state',
-                    'qutation_form.city as qutation_form_city',
-                    'qutation_form.date_time as date_time',
-                    // 'qutation_form.bid_time	as bid_time',
-                    'qutation_form.image as qutation_form_image',
-                    'qutation_form.latitude as qutation_form_latitude',
-                    'qutation_form.longitude as qutation_form_longitude',
-                    'qutation_form.seller_id as qutation_form_seller_id',
-                    'qutation_form.unit	 as unit',
-                    'qutation_form.quantity as quantity',
-                    'qutation_form.status as qutation_form_status',
-
-            // seller columns
-            'seller.id as seller_id',
-            'seller.email as seller_email',
-            'seller.name as seller_name',
-            'seller.phone as seller_phone',
-            'seller.hash_id as seller_hash_id',
-            'seller.pro_ser as seller_pro_ser',
-
-            // product columns
-            'product.id as product_id',
-            'product.title as product_name',
-            'product.sub_id as product_sub_id',
-            'product.user_id as product_user_id',
-            'product.cat_id as product_cat_id',
-            'product.super_id as product_super_id',
-            'product.description as product_description',
-            'product.image as product_image',
-            'product.user_type as product_user_type',
-            'product.insert_by as product_insert_by',
-            'product.update_by as product_update_by',
-            'product.slug as product_slug',
-            'product.status as product_status',
-            'product.order_by as product_order_by',
-
-            // sub columns
-            'sub.id as sub_id',
-            'sub.title as sub_name',
-            'sub.cat_id as sub_cat_id',
-            'sub.post_date as sub_post_date',
-            'sub.image as sub_image',
-            'sub.slug as sub_slug',
-            'sub.status as sub_status',
-            'sub.order_by as sub_order_by',
-
-            // category columns
-            'category.id as category_id',
-            'category.title as category_name',
-            'category.post_date as category_post_date',
-            'category.image as category_image',
-            'category.slug as category_slug',
-            'category.status as category_status'
-
-        );
-            
-        if($category){
-            $data->where('category.id', 'like', '%' . $category . '%');
-        }
-        if($product_name){
-            $data->where('product.title', 'like', '%' . $product_name . '%');
-        }
-        
-    
-       if ($date) {
-          $data->where('qutation_form.date_time', 'like', '%' . $date . '%');
-       }
-
-       if($city){
-          $data->where('qutation_form.city', 'like', '%' . $city . '%');
-       }
-       if($quantity){
-          $data->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
-       }
-       
-   
-       $data = $data->orderBy('qutation_form.id', 'desc')->paginate($recordsPerPage);
-       
-        
-       $datas = [
-        'keyword' => $keyword,
-        'date' => $date,
-        'city' => $city,
-        'quantity' => $quantity,
-        'category' => $category,
-        'product_name' => $product_name,
-        'r_page' => $recordsPerPage,
-        
-    ];
-
-
-        $total=$data->count();
-
-        return view('seller/buyer-order/mylist',  compact('data' ,'datas','total','category_data'));
+    public function mylist(Request $request)
+    {
+        return app(MyBiddingController::class)->index($request);
     }
+
     public function acc_list(Request $request){
         $keyword = $request->input('keyword');
         $category = $request->input('category');

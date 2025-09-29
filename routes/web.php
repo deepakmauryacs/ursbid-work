@@ -153,7 +153,7 @@ Route::get('/viewwork/{id}', [App\Http\Controllers\SellerloginController::class,
 
 
 Route::get('/buyer-order', [App\Http\Controllers\URSController\BiddingReceivedController::class, 'index'])->name('buyer-dashboard');
-Route::get('/buyer-order/mylist', [App\Http\Controllers\BuyerloginController::class, 'mylist'])->name('mylist');
+Route::get('/buyer-order/mylist', [App\Http\Controllers\URSController\MyBiddingController::class, 'index'])->name('buyer-order.mylist');
 Route::get('/buyer-order/acc-list', [App\Http\Controllers\BuyerloginController::class, 'acc_list'])->name('acc-list');
 Route::get('/price-list/{data_id}', [App\Http\Controllers\BuyerloginController::class, 'price_list'])->name('price-list');
 Route::get('/accepted-list/{data_id}', [App\Http\Controllers\BuyerloginController::class, 'accepted_list'])->name('accepted-list');
