@@ -10,7 +10,7 @@
             <div class="breadcrumb-main">
                <h4 class="text-capitalize breadcrumb-title">Enquiry Details</h4>
             </div>
-            <a href="{{ route('seller.enquiry.list') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('seller.enquiry.list') }}" class="btn btn-outline-secondary btn-sm">
                <i class="bi bi-arrow-left-short me-1"></i>Back to List
             </a>
          </div>

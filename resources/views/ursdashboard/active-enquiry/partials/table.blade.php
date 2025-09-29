@@ -41,12 +41,12 @@
                   </span>
                </td>
                <td>
-                  <div class="d-flex gap-2 flex-wrap">
+                  <div class="d-flex gap-2">
                      <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-primary btn-sm">
                         <i class="bi bi-eye me-1"></i>View
                      </a>
                      @if($blog->show_bidding_button)
-                        <a href="#!" class="btn btn-outline-primary btn-sm mdl_btn"
+                        <a href="#!" class="btn btn-outline-primary btn-sm"
                            data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
                            data-product-id="{{ $blog->product_id }}"
                            data-product-quantity="{{ $blog->quantity }}"
