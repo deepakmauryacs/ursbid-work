@@ -3,42 +3,116 @@
 namespace App\Http\Controllers\URSController;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class BiddingReceivedController extends Controller
 {
-    /**
-     * Display the bidding received dashboard view with the existing buyer order logic.
-     */
     public function index(Request $request)
     {
-        $keyword = $request->input('keyword');
-        $category = $request->input('category');
-        $date = $request->input('date');
-        $city = $request->input('city');
-        $quantity = $request->input('quantity');
-        $productName = $request->input('product_name');
-        $quotationId = $request->input('qutation_id');
+        $seller = $request->session()->get('seller');
+
+        if (!$seller) {
+            abort(403, 'Seller session not found.');
+        }
+
+        $perPage = (int) $request->input('r_page', 25);
+
+        $filters = [
+            'keyword' => $request->input('keyword'),
+            'category' => $request->input('category'),
+            'date' => $request->input('date'),
+            'city' => $request->input('city'),
+            'quantity' => $request->input('quantity'),
+            'product_name' => $request->input('product_name'),
+            'qutation_id' => $request->input('qutation_id'),
+            'r_page' => $perPage,
+        ];
+
+        $query = $this->baseBiddingReceivedQuery($seller->email);
+
+        if ($request->filled('category')) {
+            $query->where(function ($innerQuery) use ($request) {
+                $category = $request->input('category');
+                $innerQuery->where('c.id', $category)
+                    ->orWhere('qutation_form.cat_id', 'like', '%' . $category . '%');
+            });
+        }
+
+        if ($request->filled('date')) {
+            $query->where('qutation_form.date_time', 'like', '%' . $request->input('date') . '%');
+        }
+
+        if ($request->filled('city')) {
+            $query->where('qutation_form.city', 'like', '%' . $request->input('city') . '%');
+        }
+
+        if ($request->filled('quantity')) {
+            $query->where('qutation_form.quantity', 'like', '%' . $request->input('quantity') . '%');
+        }
+
+        if ($request->filled('product_name')) {
+            $productName = $request->input('product_name');
+            $query->where(function ($innerQuery) use ($productName) {
+                $innerQuery->where('qutation_form.product_name', 'like', '%' . $productName . '%')
+                    ->orWhere('product.title', 'like', '%' . $productName . '%');
+            });
+        }
+
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.id', 'like', '%' . $request->input('qutation_id') . '%');
+        }
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($innerQuery) use ($keyword) {
+                $innerQuery->where('qutation_form.product_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('qutation_form.name', 'like', '%' . $keyword . '%')
+                    ->orWhere('qutation_form.city', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $records = $query
+            ->orderByDesc('qutation_form.id')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $records = $this->appendComputedState($records, $seller->email);
 
         $categoryData = DB::table('categories')
             ->select('id', 'name', DB::raw('name as title'))
             ->orderBy('name')
             ->get();
-        $recordsPerPage = (int) $request->input('r_page', 25);
 
-        $seller = $request->session()->get('seller');
-        if (!$seller) {
-            return redirect()->route('seller-login');
+        if ($request->ajax()) {
+            return view('ursdashboard.bidding-received.partials.table', [
+                'records' => $records,
+                'filters' => $filters,
+                'sellerEmail' => $seller->email,
+            ])->render();
         }
 
-        $buyerEmail = $seller->email;
+        return view('ursdashboard.bidding-received.list', [
+            'seller' => $seller,
+            'filters' => $filters,
+            'category_data' => $categoryData,
+            'records' => $records,
+            'datas' => $filters,
+            'data' => $records,
+            'total' => $records->total(),
+            'sellerEmail' => $seller->email,
+        ]);
+    }
 
+    protected function baseBiddingReceivedQuery(string $buyerEmail)
+    {
         $productBrands = DB::table('product_brands')
             ->select('product_id', DB::raw('MAX(brand_name) as brand_name'))
             ->groupBy('product_id');
 
-        $recordsQuery = DB::table('qutation_form')
+        return DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
             ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
             ->leftJoinSub($productBrands, 'pb', function ($join) {
@@ -106,66 +180,52 @@ class BiddingReceivedController extends Controller
                 'c.slug as category_slug',
                 'c.status as category_status'
             );
+    }
 
-        if ($category) {
-            $recordsQuery->where(function ($query) use ($category) {
-                $query->where('c.id', $category)
-                    ->orWhere('qutation_form.cat_id', 'like', '%' . $category . '%');
-            });
+    protected function appendComputedState(LengthAwarePaginator $records, string $sellerEmail): LengthAwarePaginator
+    {
+        $currentDate = Carbon::now();
+        $collection = $records->getCollection();
+        $ids = $collection->pluck('id')->filter()->values();
+
+        $lockedByAdmin = collect();
+        $lockedForSeller = collect();
+
+        if ($ids->isNotEmpty()) {
+            $lockedByAdmin = DB::table('bidding_price')
+                ->whereIn('data_id', $ids)
+                ->where('payment_status', 'success')
+                ->where('action', '1')
+                ->where('hide', '1')
+                ->pluck('data_id')
+                ->unique();
+
+            $lockedForSeller = DB::table('bidding_price')
+                ->whereIn('data_id', $ids)
+                ->where('payment_status', 'success')
+                ->where('seller_email', $sellerEmail)
+                ->pluck('data_id')
+                ->unique();
         }
 
-        if ($date) {
-            $recordsQuery->where('qutation_form.date_time', 'like', '%' . $date . '%');
-        }
+        $collection->transform(function ($record) use ($currentDate, $lockedByAdmin, $lockedForSeller) {
+            $status = 'active';
 
-        if ($city) {
-            $recordsQuery->where('qutation_form.city', 'like', '%' . $city . '%');
-        }
+            if (!empty($record->date_time) && !empty($record->bid_time)) {
+                $expirationDate = Carbon::parse($record->date_time)->addDays((int) $record->bid_time);
+                if ($currentDate->greaterThanOrEqualTo($expirationDate)) {
+                    $status = 'deactive';
+                }
+            }
 
-        if ($quantity) {
-            $recordsQuery->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
-        }
+            $record->status_badge = $status;
+            $record->show_bidding_button = $status === 'active'
+                && !$lockedByAdmin->contains($record->id)
+                && !$lockedForSeller->contains($record->id);
 
-        if ($productName) {
-            $recordsQuery->where(function ($query) use ($productName) {
-                $query->where('qutation_form.product_name', 'like', '%' . $productName . '%')
-                    ->orWhere('product.title', 'like', '%' . $productName . '%');
-            });
-        }
+            return $record;
+        });
 
-        if ($quotationId) {
-            $recordsQuery->where('qutation_form.id', 'like', '%' . $quotationId . '%');
-        }
-
-        if ($keyword) {
-            $recordsQuery->where(function ($query) use ($keyword) {
-                $query->where('qutation_form.product_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.name', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.city', 'like', '%' . $keyword . '%');
-            });
-        }
-
-        $records = $recordsQuery->orderByDesc('qutation_form.id')->paginate($recordsPerPage);
-
-        $filters = [
-            'keyword' => $keyword,
-            'date' => $date,
-            'city' => $city,
-            'quantity' => $quantity,
-            'category' => $category,
-            'product_name' => $productName,
-            'qutation_id' => $quotationId,
-            'r_page' => $recordsPerPage,
-        ];
-
-        return view('ursdashboard.bidding-received.list', [
-            'seller' => $seller,
-            'filters' => $filters,
-            'category_data' => $categoryData,
-            'records' => $records,
-            'datas' => $filters,
-            'data' => $records,
-            'total' => $records->total(),
-        ]);
+        return $records;
     }
 }
