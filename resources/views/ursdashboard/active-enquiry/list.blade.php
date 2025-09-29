@@ -138,6 +138,11 @@
                         </div>
 
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                           <label class="form-label">Quotation ID</label>
+                           <input type="text" name="qutation_id" id="filterQuotationId" class="form-control" placeholder="Quotation ID" value="{{ $data['qutation_id'] ?? '' }}">
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                            <label class="form-label">Records Per Page</label>
                            <select name="r_page" id="recordsPerPage" class="form-select">
                               <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}>25</option>
