@@ -16,7 +16,11 @@
                     <input type="hidden" name="data_id" class="data_id form-control">
                     <label class="form-label">Enter Price</label>
                     <input type="text" name="price" required class="price form-control" placeholder="Enter Price">
-                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                     <div class="row justify-content-end g-2">
+                     <div class="col-lg-3">
+                           <button type="submit" class="btn btn-outline-primary w-100 mt-3">Submit</button>
+                       </div>
+                    </div>
                 </form>
             </div>
         </div>
