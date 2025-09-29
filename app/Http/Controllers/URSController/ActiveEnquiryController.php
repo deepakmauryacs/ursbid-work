@@ -181,6 +181,7 @@ class ActiveEnquiryController extends Controller
             ->whereRaw('DATE_ADD(date_time, INTERVAL bid_time DAY) >= ?', [$currentDate])
             ->select(
                 'qutation_form.id as id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
