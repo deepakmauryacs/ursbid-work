@@ -138,10 +138,10 @@ Route::get('/seller/accounting/accbid', [App\Http\Controllers\SellerloginControl
 Route::get('/seller/accounting/biddrecive', [App\Http\Controllers\SellerloginController::class, 'biddrecive']);
 Route::get('/seller/accounting/list', [App\Http\Controllers\SellerloginController::class, 'accountinglist']);
 Route::get('/seller/accounting/totalshare', [App\Http\Controllers\SellerloginController::class, 'totalshare']);
-Route::get('/seller/enquiry/list/{id?}', [ActiveEnquiryController::class, 'index'])->name('seller.enquiry.list');
+Route::get('/seller/active-enquiry/list/{id?}', [ActiveEnquiryController::class, 'index'])->name('seller.enquiry.list');
 Route::get('/seller/enquiry/bidding-data/{id}', [ActiveEnquiryController::class, 'biddingData'])->name('seller.enquiry.bidding-data');
-Route::get('/seller/enquiry/deactivelist', [ClosedEnquiryController::class, 'index'])->name('seller.enquiry.closed');
-Route::get('/seller/enquiry/myenclist', [MyEnquiryController::class, 'index'])->name('seller.enquiry.my-enquiry');
+Route::get('/seller/closed-enquiry/list', [ClosedEnquiryController::class, 'index'])->name('seller.enquiry.closed');
+Route::get('/seller/my-enquiry/list', [MyEnquiryController::class, 'index'])->name('seller.enquiry.my-enquiry');
 Route::post('/seller/update_lat_long', [App\Http\Controllers\SellerloginController::class, 'update_lat_long'])->name('update_lat_long');
 Route::post('/openqotationpage', [ActiveEnquiryController::class, 'openQuotationPage'])->name('openqotationpage');
 Route::post('/bidding_price', [App\Http\Controllers\SellerloginController::class, 'bidding_price'])->name('bidding_price');

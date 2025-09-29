@@ -136,7 +136,7 @@
 <script>
     document.getElementById("cancel-yes").addEventListener("click", function(event) {
         event.preventDefault(); // Prevent default link behavior
-        window.location.href = "{{ url('seller/enquiry/list') }}"; // Redirect
+        window.location.href = "{{ url('seller/active-enquiry/list') }}"; // Redirect
     });
 </script>
 @endsection

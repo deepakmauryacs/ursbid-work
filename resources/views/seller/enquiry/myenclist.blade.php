@@ -149,7 +149,7 @@
                               <button type="submit" class="btn btn-primary flex-fill">
                               <i class="bi bi-funnel-fill me-2"></i>Apply Filters
                               </button>
-                              <a href="{{ url('seller/enquiry/myenclist') }}" class="btn btn-outline-secondary flex-fill">
+                              <a href="{{ url('seller/my-enquiry/list') }}" class="btn btn-outline-secondary flex-fill">
                                  Reset
                               </a>
                            </div>
