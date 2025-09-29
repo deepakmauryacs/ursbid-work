@@ -39,7 +39,9 @@ class HomeController extends Controller
         $quantity     = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data  = DB::table('categories')->get();
+        $category_data  = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $query = DB::table('bidding_price')
@@ -591,7 +593,9 @@ class HomeController extends Controller
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
 
         $query = DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
@@ -708,7 +712,9 @@ class HomeController extends Controller
         $product_name = $request->input('product_name');
         $recordsPerPage = $request->input('r_page', 15);
         $currentDate = \Carbon\Carbon::now();
-        $category_data = DB::table('categories')->get();
+        $category_data = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
 
         $query = DB::table('qutation_form')
             ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
@@ -1036,7 +1042,9 @@ class HomeController extends Controller
         $quantity     = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data  = DB::table('categories')->get();
+        $category_data  = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $data = DB::table('bidding_price')
@@ -1165,7 +1173,9 @@ class HomeController extends Controller
         $quantity     = $request->input('quantity');
         $product_name = $request->input('product_name');
 
-        $category_data  = DB::table('categories')->get();
+        $category_data  = DB::table('categories')
+            ->select('categories.*', 'categories.name as title')
+            ->get();
         $recordsPerPage = $request->input('r_page', 25);
 
         $data = DB::table('bidding_price')
