@@ -69,7 +69,12 @@
 
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Date</label>
-                           <input type="text" name="date" id="filterDate" class="form-control" placeholder="Date" value="{{ $data['date'] ?? '' }}">
+                           <input type="date" name="date" id="filterDate" class="form-control" placeholder="Date" value="{{ $data['date'] ?? '' }}">
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label class="form-label">Quotation ID</label>
+                           <input type="text" name="qutation_id" id="filterQuotationId" class="form-control" placeholder="Quotation ID" value="{{ $data['qutation_id'] ?? '' }}">
                         </div>
 
                         <div class="col-12 col-sm-6 col-lg-3">
@@ -79,17 +84,12 @@
 
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Quantity</label>
-                           <input type="text" name="quantity" id="filterQuantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}">
+                           <input type="number" name="quantity" id="filterQuantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}" min="1" step="1">
                         </div>
 
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Product Name</label>
                            <input type="text" name="product_name" id="filterProduct" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-lg-3">
-                           <label class="form-label">Quotation ID</label>
-                           <input type="text" name="qutation_id" id="filterQuotationId" class="form-control" placeholder="Quotation ID" value="{{ $data['qutation_id'] ?? '' }}">
                         </div>
 
                         <div class="col-12 col-sm-6 col-lg-3">
