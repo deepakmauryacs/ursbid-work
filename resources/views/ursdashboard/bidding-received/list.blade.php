@@ -40,66 +40,94 @@
                                 $categories = $categories ?? [];
                             @endphp
                             <form id="buyerOrderFiltersForm" class="row g-3 align-items-end" method="get" action="{{ $buyerOrderBaseUrl }}">
+
+                                <!-- Category -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Category</label>
-                                    <select name="category" id="buyerOrderCategory" class="form-select">
-                                        <option value="">Select Category</option>
-                                        @foreach($categories as $cat)
-                                            @php
-                                                $categoryId = is_object($cat) ? ($cat->id ?? null) : ($cat['id'] ?? null);
-                                                $categoryLabel = is_object($cat)
-                                                    ? ($cat->name ?? $cat->title ?? '')
-                                                    : ($cat['name'] ?? $cat['title'] ?? '');
-                                            @endphp
-                                            <option value="{{ $categoryId }}" {{ ($filters['category'] ?? '') == $categoryId ? 'selected' : '' }}>
-                                                {{ $categoryLabel }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-tags"></i></span>
+                                        <select name="category" id="buyerOrderCategory" class="form-select">
+                                            <option value="">Select Category</option>
+                                            @foreach($categories as $cat)
+                                                @php
+                                                    $categoryId = is_object($cat) ? ($cat->id ?? null) : ($cat['id'] ?? null);
+                                                    $categoryLabel = is_object($cat)
+                                                        ? ($cat->name ?? $cat->title ?? '')
+                                                        : ($cat['name'] ?? $cat['title'] ?? '');
+                                                @endphp
+                                                <option value="{{ $categoryId }}" {{ ($filters['category'] ?? '') == $categoryId ? 'selected' : '' }}>
+                                                    {{ $categoryLabel }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
+                                <!-- Date -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Date</label>
-                                    <input type="text" name="date" id="buyerOrderDate" class="form-control" placeholder="Date"
-                                        value="{{ $filters['date'] ?? '' }}">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                        <input type="date" name="date" id="buyerOrderDate" class="form-control"
+                                            value="{{ $filters['date'] ?? '' }}">
+                                    </div>
                                 </div>
 
+                                <!-- City -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">City</label>
-                                    <input type="text" name="city" id="buyerOrderCity" class="form-control" placeholder="City"
-                                        value="{{ $filters['city'] ?? '' }}">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                        <input type="text" name="city" id="buyerOrderCity" class="form-control" placeholder="City"
+                                            value="{{ $filters['city'] ?? '' }}">
+                                    </div>
                                 </div>
 
+                                <!-- Quantity -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Quantity</label>
-                                    <input type="text" name="quantity" id="buyerOrderQuantity" class="form-control" placeholder="Quantity"
-                                        value="{{ $filters['quantity'] ?? '' }}">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                                        <input type="number" name="quantity" id="buyerOrderQuantity" class="form-control" placeholder="Quantity"
+                                            value="{{ $filters['quantity'] ?? '' }}" min="1" step="1" inputmode="numeric">
+                                    </div>
                                 </div>
 
+                                <!-- Product Name -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Product Name</label>
-                                    <input type="text" name="product_name" id="buyerOrderProduct" class="form-control" placeholder="Product Name"
-                                        value="{{ $filters['product_name'] ?? '' }}">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                                        <input type="text" name="product_name" id="buyerOrderProduct" class="form-control" placeholder="Product Name"
+                                            value="{{ $filters['product_name'] ?? '' }}">
+                                    </div>
                                 </div>
 
+                                <!-- Quotation ID -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Quotation ID</label>
-                                    <input type="text" name="qutation_id" id="buyerOrderQuotation" class="form-control" placeholder="Quotation ID"
-                                        value="{{ $filters['qutation_id'] ?? '' }}">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                                        <input type="text" name="qutation_id" id="buyerOrderQuotation" class="form-control" placeholder="Quotation ID"
+                                            value="{{ $filters['qutation_id'] ?? '' }}">
+                                    </div>
                                 </div>
 
+                                <!-- Records Per Page -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Records Per Page</label>
-                                    <select name="r_page" id="buyerOrderRecords" class="form-select">
-                                        @php
-                                            $perPage = (int) ($filters['r_page'] ?? 25);
-                                        @endphp
-                                        <option value="25" {{ $perPage === 25 ? 'selected' : '' }}>25</option>
-                                        <option value="50" {{ $perPage === 50 ? 'selected' : '' }}>50</option>
-                                        <option value="100" {{ $perPage === 100 ? 'selected' : '' }}>100</option>
-                                    </select>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-list-ol"></i></span>
+                                        @php $perPage = (int) ($filters['r_page'] ?? 25); @endphp
+                                        <select name="r_page" id="buyerOrderRecords" class="form-select">
+                                            <option value="25" {{ $perPage === 25 ? 'selected' : '' }}>25</option>
+                                            <option value="50" {{ $perPage === 50 ? 'selected' : '' }}>50</option>
+                                            <option value="100" {{ $perPage === 100 ? 'selected' : '' }}>100</option>
+                                        </select>
+                                    </div>
                                 </div>
 
+                                <!-- Action Buttons -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label d-none d-lg-block">&nbsp;</label>
                                     <div class="d-flex flex-column flex-sm-row flex-lg-column flex-xl-row gap-2">
@@ -167,11 +195,12 @@
         });
 
         $resetButton.on('click', function () {
-            $form.find('input[type="text"]').val('');
+            $form.find('input[type="text"], input[type="date"], input[type="number"]').val('');
             $form.find('select').prop('selectedIndex', 0);
             $form.trigger('submit');
         });
 
+        // Fill modal fields on "Bid" button click
         $(document).on('click', '.mdl_btn', function () {
             const $button = $(this);
             $('.product_id').val($button.data('product_id'));

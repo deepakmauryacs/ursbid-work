@@ -25,45 +25,82 @@
                <div class="collapse show" id="closedEnquiryFilters">
                   <div class="card-body">
                      <form id="closedEnquiryFiltersForm" class="row g-3 align-items-end" method="get" action="{{ route('seller.enquiry.closed') }}">
+
+                        <!-- Category -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Category</label>
-                           <select name="category" class="form-select">
-                              <option value="">Select Category</option>
-                              @foreach($category_data as $cat)
-                                 <option value="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
-                                    {{ $cat->name ?? $cat->title ?? '' }}
-                                 </option>
-                              @endforeach
-                           </select>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-tags"></i></span>
+                              <select name="category" class="form-select">
+                                 <option value="">Select Category</option>
+                                 @foreach($category_data as $cat)
+                                    <option value="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
+                                       {{ $cat->name ?? $cat->title ?? '' }}
+                                    </option>
+                                 @endforeach
+                              </select>
+                           </div>
                         </div>
+
+                        <!-- Quotation ID -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Quotation ID</label>
-                           <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID" value="{{ $data['qutation_id'] ?? '' }}">
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                              <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID" value="{{ $data['qutation_id'] ?? '' }}">
+                           </div>
                         </div>
+
+                        <!-- Date -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Date</label>
-                           <input type="date" name="date" class="form-control" placeholder="Date" value="{{ $data['date'] ?? '' }}">
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                              <input type="date" name="date" class="form-control" value="{{ $data['date'] ?? '' }}">
+                           </div>
                         </div>
+
+                        <!-- City -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">City</label>
-                           <input type="text" name="city" class="form-control" placeholder="City" value="{{ $data['city'] ?? '' }}">
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                              <input type="text" name="city" class="form-control" placeholder="City" value="{{ $data['city'] ?? '' }}">
+                           </div>
                         </div>
+
+                        <!-- Quantity -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Quantity</label>
-                           <input type="number" name="quantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}" min="1" step="1" inputmode="numeric">
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                              <input type="number" name="quantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}" min="1" step="1" inputmode="numeric">
+                           </div>
                         </div>
+
+                        <!-- Product Name -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Product Name</label>
-                           <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                              <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
+                           </div>
                         </div>
+
+                        <!-- Records Per Page -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label">Records Per Page</label>
-                           <select name="r_page" class="form-select">
-                              <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}>25</option>
-                              <option value="50" {{ $data['r_page'] == 50 ? 'selected' : '' }}>50</option>
-                              <option value="100" {{ $data['r_page'] == 100 ? 'selected' : '' }}>100</option>
-                           </select>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-list-ol"></i></span>
+                              <select name="r_page" class="form-select">
+                                 <option value="25" {{ $data['r_page'] == 25 ? 'selected' : '' }}>25</option>
+                                 <option value="50" {{ $data['r_page'] == 50 ? 'selected' : '' }}>50</option>
+                                 <option value="100" {{ $data['r_page'] == 100 ? 'selected' : '' }}>100</option>
+                              </select>
+                           </div>
                         </div>
+
+                        <!-- Action Buttons -->
                         <div class="col-12 col-sm-6 col-lg-3">
                            <label class="form-label d-none d-lg-block">&nbsp;</label>
                            <div class="d-flex flex-column flex-sm-row flex-lg-column flex-xl-row gap-2">
