@@ -25,6 +25,19 @@ Route::get('/clear-cache', function () {
     return 'All caches cleared!';
 })->name('clear.cache');
 
+Route::get('/sitemap.xml', function () {
+    $path = public_path('sitemap.xml');
+
+    if (! file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path, [
+        'Content-Type' => 'application/xml',
+        'Cache-Control' => 'public, max-age=3600',
+    ]);
+});
+
 // Route to display the email form
 Route::get('/test', [EmailController::class, 'showForm'])->name('email.form');
 
