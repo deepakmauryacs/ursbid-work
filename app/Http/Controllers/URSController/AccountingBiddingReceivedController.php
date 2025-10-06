@@ -21,10 +21,8 @@ class AccountingBiddingReceivedController extends Controller
         $perPage = (int) $request->input('r_page', 25);
 
         $filters = [
-            'keyword' => $request->input('keyword'),
             'category' => $request->input('category'),
             'date' => $request->input('date'),
-            'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
             'product_name' => $request->input('product_name'),
             'qutation_id' => $request->input('qutation_id'),
@@ -46,10 +44,6 @@ class AccountingBiddingReceivedController extends Controller
             $query->whereDate('qutation_form.date_time', $request->input('date'));
         }
 
-        if ($request->filled('city')) {
-            $query->where('qutation_form.city', 'like', '%' . $request->input('city') . '%');
-        }
-
         if ($request->filled('quantity')) {
             $query->where('qutation_form.quantity', 'like', '%' . $request->input('quantity') . '%');
         }
@@ -65,16 +59,6 @@ class AccountingBiddingReceivedController extends Controller
 
         if ($request->filled('qutation_id')) {
             $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
-        }
-
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where(function ($innerQuery) use ($keyword) {
-                $innerQuery
-                    ->where('qutation_form.product_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.name', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.city', 'like', '%' . $keyword . '%');
-            });
         }
 
         $records = $query
