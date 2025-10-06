@@ -166,7 +166,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div id="sellerBiddingTable">
-                            @include('ursdashboard.seller.accounting.bidding-received.partials.table', [
+                            @include('ursdashboard.accounting.bidding-received.partials.table', [
                                 'records' => $records,
                                 'filters' => $filters,
                                 'sellerEmail' => $sellerEmail,

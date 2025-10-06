@@ -8,7 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SellerAccountingBiddingReceivedController extends Controller
+class AccountingBiddingReceivedController extends Controller
 {
     public function index(Request $request)
     {
@@ -90,14 +90,14 @@ class SellerAccountingBiddingReceivedController extends Controller
             ->get();
 
         if ($request->ajax()) {
-            return view('ursdashboard.seller.accounting.bidding-received.partials.table', [
+            return view('ursdashboard.accounting.bidding-received.partials.table', [
                 'records' => $records,
                 'filters' => $filters,
                 'sellerEmail' => $seller->email,
             ])->render();
         }
 
-        return view('ursdashboard.seller.accounting.bidding-received.list', [
+        return view('ursdashboard.accounting.bidding-received.list', [
             'seller' => $seller,
             'filters' => $filters,
             'category_data' => $categoryData,
