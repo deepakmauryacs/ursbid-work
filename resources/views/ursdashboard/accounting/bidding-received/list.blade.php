@@ -35,15 +35,6 @@
                         <div class="card-body">
                             <form id="sellerBiddingFiltersForm" class="row g-3 align-items-end" method="get" action="{{ $listingUrl }}">
                                 <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">Keyword</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                        <input type="text" name="keyword" class="form-control" placeholder="Search keyword"
-                                            value="{{ $filters['keyword'] ?? '' }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Category</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-tags"></i></span>
@@ -74,15 +65,6 @@
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">City</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                                        <input type="text" name="city" class="form-control" placeholder="City"
-                                            value="{{ $filters['city'] ?? '' }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Quantity</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
@@ -106,19 +88,6 @@
                                         <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
                                         <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID"
                                             value="{{ $filters['qutation_id'] ?? '' }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">Records Per Page</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-list-ol"></i></span>
-                                        @php $perPage = (int) ($filters['r_page'] ?? 25); @endphp
-                                        <select name="r_page" id="sellerBiddingRecords" class="form-select">
-                                            <option value="25" {{ $perPage === 25 ? 'selected' : '' }}>25</option>
-                                            <option value="50" {{ $perPage === 50 ? 'selected' : '' }}>50</option>
-                                            <option value="100" {{ $perPage === 100 ? 'selected' : '' }}>100</option>
-                                        </select>
                                     </div>
                                 </div>
 
@@ -182,12 +151,7 @@
 <script type="text/javascript">
     (function ($) {
         const $form = $('#sellerBiddingFiltersForm');
-        const $recordsPerPage = $('#sellerBiddingRecords');
         const $resetButton = $('#resetSellerBiddingFilters');
-
-        $recordsPerPage.on('change', function () {
-            $form.trigger('submit');
-        });
 
         $resetButton.on('click', function () {
             $form.find('input[type="text"], input[type="date"]').val('');
