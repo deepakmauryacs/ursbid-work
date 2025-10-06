@@ -149,7 +149,7 @@ Route::get('/seller/buyer-order/file/{any}', [App\Http\Controllers\BuyerloginCon
 
 Route::get('/seller/accounting/accbid', [App\Http\Controllers\SellerloginController::class, 'accbid']);
 Route::get('/seller/accounting/biddrecive', [App\Http\Controllers\URSController\AccountingBiddingReceivedController::class, 'index'])->name('seller.accounting.biddrecive');
-Route::get('/seller/accounting/list', [App\Http\Controllers\SellerloginController::class, 'accountinglist']);
+Route::get('/seller/accounting/list', [App\Http\Controllers\URSController\AccountingTotalBiddingController::class, 'index'])->name('seller.accounting.list');
 Route::get('/seller/accounting/totalshare', [App\Http\Controllers\SellerloginController::class, 'totalshare']);
 Route::get('/seller/active-enquiry/list/{id?}', [ActiveEnquiryController::class, 'index'])->name('seller.enquiry.list');
 Route::get('/seller/enquiry/bidding-data/{id}', [ActiveEnquiryController::class, 'biddingData'])->name('seller.enquiry.bidding-data');
