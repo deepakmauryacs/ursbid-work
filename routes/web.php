@@ -147,7 +147,7 @@ Route::get('/unlock_location/{any}', [App\Http\Controllers\SellerloginController
 Route::get('/seller/buyer-order/file/{any}', [App\Http\Controllers\BuyerloginController::class, 'vewfile']);
 
 
-Route::get('/seller/accounting/accbid', [App\Http\Controllers\SellerloginController::class, 'accbid']);
+Route::get('/seller/accounting/accbid', [App\Http\Controllers\URSController\AccountingAcceptedBiddingController::class, 'index'])->name('seller.accounting.accbid');
 Route::get('/seller/accounting/biddrecive', [App\Http\Controllers\URSController\AccountingBiddingReceivedController::class, 'index'])->name('seller.accounting.biddrecive');
 Route::get('/seller/accounting/list', [App\Http\Controllers\URSController\AccountingTotalBiddingController::class, 'index'])->name('seller.accounting.list');
 Route::get('/seller/accounting/totalshare', [App\Http\Controllers\SellerloginController::class, 'totalshare']);
