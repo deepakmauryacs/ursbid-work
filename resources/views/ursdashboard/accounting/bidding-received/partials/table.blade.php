@@ -25,7 +25,6 @@
                 <th>Rate</th>
                 <th>Total Price</th>
                 <th>Platform Fee</th>
-                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -44,7 +43,6 @@
                     $rate = $record->rate ?? null;
                     $platformFee = $record->platform_fee ?? null;
                     $qutationFormId = $record->qutation_form_id ?? null;
-                    $statusBadge = $record->status_badge ?? 'active';
 
                     $quantityNumber = 0;
                     if (is_numeric($quantityRaw)) {
@@ -70,11 +68,6 @@
                     <td>{{ $totalPrice !== null ? number_format($totalPrice, 2) : '-' }}</td>
                     <td>{{ $platformFee !== null ? number_format((float) $platformFee, 2) : '-' }}</td>
                     <td>
-                        <span class="badge bg-{{ $statusBadge === 'active' ? 'success' : 'secondary' }} text-capitalize">
-                            {{ $statusBadge }}
-                        </span>
-                    </td>
-                    <td>
                         <div class="d-flex gap-2">
                             @if($qutationFormId)
                                 <a href="{{ url('seller/enquiry/view/' . $qutationFormId) }}" class="btn btn-primary btn-sm">
@@ -88,7 +81,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="14" class="text-center py-4">No bids found.</td>
+                    <td colspan="13" class="text-center py-4">No bids found.</td>
                 </tr>
             @endforelse
         </tbody>
