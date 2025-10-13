@@ -152,21 +152,28 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('delete-account') ? 'active' : '' }}" href="{{ url('delete-account') }}">
+                @php
+                    $settingsActive = request()->is('update-account*', 'seller/change-password', 'delete-account');
+                @endphp
+                <a class="nav-link menu-arrow {{ $settingsActive ? 'active' : '' }}" href="#sidebarSettings" data-bs-toggle="collapse" role="button" aria-expanded="{{ $settingsActive ? 'true' : 'false' }}" aria-controls="sidebarSettings">
                     <span class="nav-icon">
-                        <i class="ri-delete-bin-line"></i>
+                        <i class="ri-settings-3-line"></i>
                     </span>
-                    <span class="nav-text">Delete Account</span>
+                    <span class="nav-text">Settings</span>
                 </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('update-account*') ? 'active' : '' }}" href="{{ $sellerHashId ? url('update-account/' . $sellerHashId) : 'javascript:void(0);' }}">
-                    <span class="nav-icon">
-                        <i class="ri-user-settings-line"></i>
-                    </span>
-                    <span class="nav-text">Update Account</span>
-                </a>
+                <div class="collapse {{ $settingsActive ? 'show' : '' }}" id="sidebarSettings">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('update-account*') ? 'active' : '' }}" href="{{ $sellerHashId ? url('update-account/' . $sellerHashId) : 'javascript:void(0);' }}">Profile</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('seller/change-password') ? 'active' : '' }}" href="{{ url('seller/change-password') }}">Change Password</a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link {{ request()->is('delete-account') ? 'active' : '' }}" href="{{ url('delete-account') }}">Delete Account</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </div>
