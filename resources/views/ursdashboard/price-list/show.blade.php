@@ -10,7 +10,7 @@
                     <h4 class="text-capitalize breadcrumb-title mb-0">Seller List with Price</h4>
                     <div class="breadcrumb-action justify-content-center flex-wrap">
                         <div class="action-btn">
-                            <a href="{{ route('buyer-dashboard') }}" class="btn btn-sm btn-primary btn-add">
+                            <a href="{{ url('buyer/bidding-received/list') }}" class="btn btn-sm btn-primary btn-add">
                                 <i class="la la-arrow-left me-1"></i> Back
                             </a>
                         </div>
