@@ -54,7 +54,7 @@
                         <a href="{{ $recordId ? route('buyer.price-list', $recordId) : '#' }}" class="btn btn-primary btn-sm">
                             View List
                         </a>
-                        <a href="{{ $recordId ? url('/accepted-list/' . $recordId) : '#' }}" class="btn btn-success btn-sm">
+                        <a href="{{ $recordId ? route('accepted-list', $recordId) : '#' }}" class="btn btn-success btn-sm">
                             Accepted List
                         </a>
                         <button type="button" class="btn btn-outline-secondary btn-sm mdl_btn" data-bs-toggle="modal"
