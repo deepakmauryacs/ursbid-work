@@ -152,6 +152,15 @@
             </li> -->
 
             <li class="nav-item">
+                <a class="nav-link {{ request()->is('seller/help-support') ? 'active' : '' }}" href="{{ route('seller.help-support.index') }}">
+                    <span class="nav-icon">
+                        <i class="ri-customer-service-2-line"></i>
+                    </span>
+                    <span class="nav-text">Help &amp; Support</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 @php
                     $settingsActive = request()->is('update-account*', 'seller/change-password', 'delete-account');
                 @endphp

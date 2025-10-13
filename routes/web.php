@@ -3,6 +3,7 @@ use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\URSController\SupportTicketController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\AjexResponseController;
 use App\Http\Controllers\URSController\ActiveEnquiryController;
@@ -158,6 +159,9 @@ Route::get('/seller/active-enquiry/list/{id?}', [ActiveEnquiryController::class,
 Route::get('/seller/enquiry/bidding-data/{id}', [ActiveEnquiryController::class, 'biddingData'])->name('seller.enquiry.bidding-data');
 Route::get('/seller/closed-enquiry/list', [ClosedEnquiryController::class, 'index'])->name('seller.enquiry.closed');
 Route::get('/seller/my-enquiry/list', [MyEnquiryController::class, 'index'])->name('seller.enquiry.my-enquiry');
+Route::get('/seller/help-support', [SupportTicketController::class, 'index'])->name('seller.help-support.index');
+Route::get('/seller/help-support/create', [SupportTicketController::class, 'create'])->name('seller.help-support.create');
+Route::post('/seller/help-support', [SupportTicketController::class, 'store'])->name('seller.help-support.store');
 Route::post('/seller/update_lat_long', [App\Http\Controllers\SellerloginController::class, 'update_lat_long'])->name('update_lat_long');
 Route::post('/openqotationpage', [ActiveEnquiryController::class, 'openQuotationPage'])->name('openqotationpage');
 Route::post('/bidding_price', [App\Http\Controllers\SellerloginController::class, 'bidding_price'])->name('bidding_price');
