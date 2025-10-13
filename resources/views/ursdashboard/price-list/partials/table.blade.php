@@ -10,6 +10,7 @@
         <thead>
             <tr>
                 <th>Sr.No</th>
+                <th class="text-center">Action</th>
                 <th>Seller</th>
                 <th>Category</th>
                 <th>Sub Category</th>
@@ -21,7 +22,6 @@
                 <th>Total Price</th>
                 <th>Platform Fee</th>
                 <th>Status</th>
-                <th class="text-end">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -39,6 +39,27 @@
                 @endphp
                 <tr>
                     <td>{{ $rowNumber }}</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex flex-wrap gap-2 justify-content-center">
+                            @if ($record->can_accept)
+                                <a
+                                    href="{{ url('accepet/' . $record->bidding_price_id . '/' . $record->data_id) }}"
+                                    class="btn btn-sm btn-success"
+                                    onclick="return confirm('Are you sure you want to accept this bid?')"
+                                >
+                                    Accept
+                                </a>
+                            @endif
+                            <a href="{{ url('seller-profile/' . $record->seller_id) }}" class="btn btn-sm btn-primary">
+                                View Profile
+                            </a>
+                            @if ($fileUrl)
+                                <a href="{{ $fileUrl }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                    View File
+                                </a>
+                            @endif
+                        </div>
+                    </td>
                     <td>
                         <div class="d-flex flex-column">
                             <span class="fw-semibold">{{ $record->seller_name }}</span>
@@ -68,27 +89,6 @@
                     <td>{{ number_format((float) $record->calculated_total, 2) }}</td>
                     <td>{{ number_format((float) ($record->platform_fee ?? 0), 2) }}</td>
                     <td><span class="{{ $statusClass }}">{{ ucfirst($record->status_badge) }}</span></td>
-                    <td class="text-end">
-                        <div class="btn-group" role="group">
-                            @if ($record->can_accept)
-                                <a
-                                    href="{{ url('accepet/' . $record->bidding_price_id . '/' . $record->data_id) }}"
-                                    class="btn btn-sm btn-success"
-                                    onclick="return confirm('Are you sure you want to accept this bid?')"
-                                >
-                                    Accept
-                                </a>
-                            @endif
-                            <a href="{{ url('seller-profile/' . $record->seller_id) }}" class="btn btn-sm btn-primary">
-                                View Profile
-                            </a>
-                            @if ($fileUrl)
-                                <a href="{{ $fileUrl }}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                                    View File
-                                </a>
-                            @endif
-                        </div>
-                    </td>
                 </tr>
             @empty
                 <tr>
