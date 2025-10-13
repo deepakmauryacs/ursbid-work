@@ -51,7 +51,7 @@
                     <td>{{ $recordQuantity }}</td>
                     <td>{{ $recordUnit }}</td>
                     <td class="d-flex gap-2">
-                        <a href="{{ $recordId ? url('/price-list/' . $recordId) : '#' }}" class="btn btn-primary btn-sm">
+                        <a href="{{ $recordId ? route('buyer.price-list', $recordId) : '#' }}" class="btn btn-primary btn-sm">
                             View List
                         </a>
                         <a href="{{ $recordId ? url('/accepted-list/' . $recordId) : '#' }}" class="btn btn-success btn-sm">
