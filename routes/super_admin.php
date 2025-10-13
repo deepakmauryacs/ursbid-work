@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\UserAccountController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UsermanagementController;
+use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Frontend\AjexResponseController;
 
@@ -39,6 +40,17 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
     // Web Settings
     Route::get('web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
     Route::post('web-settings/save', [WebSettingsController::class, 'save'])->name('super-admin.web-settings.save');
+
+    // Help & Support
+    Route::get('help-support', [AdminSupportTicketController::class, 'index'])
+        ->name('super-admin.support-tickets.index')
+        ->middleware('module.permission:help-support,can_view');
+    Route::get('help-support/{ticket}', [AdminSupportTicketController::class, 'show'])
+        ->name('super-admin.support-tickets.show')
+        ->middleware('module.permission:help-support,can_view');
+    Route::patch('help-support/{ticket}/status', [AdminSupportTicketController::class, 'updateStatus'])
+        ->name('super-admin.support-tickets.update-status')
+        ->middleware('module.permission:help-support,can_edit');
 
     // Categories
     Route::get('categories', [AdminCategoryController::class, 'index'])
