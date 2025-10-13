@@ -26,8 +26,6 @@
                 <th>Rate</th>
                 <th>Total Price</th>
                 <th>Platform Fee</th>
-                <th>Status</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -47,14 +45,6 @@
                     $rate = $record->rate ?? null;
                     $platformFee = $record->platform_fee ?? null;
                     $totalPrice = $record->total_price ?? null;
-                    $statusBadge = $record->status_badge ?? 'secondary';
-                    $statusLabel = match ($statusBadge) {
-                        'success' => 'Confirm',
-                        'warning' => 'Pending',
-                        'danger' => 'Rejected',
-                        default => ucfirst($statusBadge),
-                    };
-                    $qutationFormId = $record->qutation_form_id ?? null;
                 @endphp
                 <tr>
                     <td>{{ $rowNumber++ }}</td>
@@ -70,24 +60,10 @@
                     <td>{{ $rate !== null ? number_format((float) $rate, 2) : '-' }}</td>
                     <td>{{ $totalPrice !== null ? number_format($totalPrice, 2) : '-' }}</td>
                     <td>{{ $platformFee !== null ? number_format((float) $platformFee, 2) : '-' }}</td>
-                    <td>
-                        <span class="badge bg-{{ $statusBadge }}">{{ $statusLabel }}</span>
-                    </td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            @if($qutationFormId)
-                                <a href="{{ url('seller/enquiry/view/' . $qutationFormId) }}" class="btn btn-primary btn-sm">
-                                    View Details
-                                </a>
-                            @else
-                                <span class="text-muted">-</span>
-                            @endif
-                        </div>
-                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="15" class="text-center py-4">No accepted bids found.</td>
+                    <td colspan="13" class="text-center py-4">No accepted bids found.</td>
                 </tr>
             @endforelse
         </tbody>
