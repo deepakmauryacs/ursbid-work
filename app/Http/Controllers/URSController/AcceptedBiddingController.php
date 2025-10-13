@@ -20,19 +20,20 @@ class AcceptedBiddingController extends Controller
         $perPage = (int) $request->input('r_page', 25);
 
         $filters = [
-            'keyword' => $request->input('keyword'),
-            'category' => $request->input('category'),
-            'date' => $request->input('date'),
-            'city' => $request->input('city'),
-            'quantity' => $request->input('quantity'),
+            'keyword'      => $request->input('keyword'),
+            'category'     => $request->input('category'),
+            'date'         => $request->input('date'),
+            'city'         => $request->input('city'),
+            'quantity'     => $request->input('quantity'),
             'product_name' => $request->input('product_name'),
-            'r_page' => $perPage,
+            'r_page'       => $perPage,
         ];
 
         $query = $this->baseAcceptedBidsQuery($seller->email);
 
+        // filter by NEW categories.id
         if ($request->filled('category')) {
-            $query->where('category.id', $request->input('category'));
+            $query->where('categories.id', $request->input('category'));
         }
 
         if ($request->filled('date')) {
@@ -48,8 +49,8 @@ class AcceptedBiddingController extends Controller
         }
 
         if ($request->filled('product_name')) {
-            $query->where(function ($innerQuery) use ($request) {
-                $productName = $request->input('product_name');
+            $productName = $request->input('product_name');
+            $query->where(function ($innerQuery) use ($productName) {
                 $innerQuery->where('product.title', 'like', '%' . $productName . '%')
                     ->orWhere('qutation_form.product_name', 'like', '%' . $productName . '%');
             });
@@ -72,9 +73,10 @@ class AcceptedBiddingController extends Controller
 
         $records = $this->appendComputedTotals($records);
 
-        $categoryData = DB::table('category')
-            ->select('id', 'title')
-            ->orderBy('title')
+        // NEW categories list
+        $categoryData = DB::table('categories')
+            ->select('id', 'name')
+            ->orderBy('name')
             ->get();
 
         if ($request->ajax()) {
@@ -85,28 +87,39 @@ class AcceptedBiddingController extends Controller
         }
 
         return view('ursdashboard.accepted-bidding.list', [
-            'seller' => $seller,
-            'filters' => $filters,
+            'seller'        => $seller,
+            'filters'       => $filters,
             'category_data' => $categoryData,
-            'records' => $records,
-            'datas' => $filters,
-            'total' => $records->total(),
+            'records'       => $records,
+            'datas'         => $filters,
+            'total'         => $records->total(),
         ]);
     }
 
+    /**
+     * Base query adjusted to join new `sub_categories` and `categories`.
+     *
+     * Note:
+     * - We keep using product.sub_id (as per your current schema) and join it to sub_categories.id.
+     * - Category is derived via sub_categories.category_id → categories.id.
+     */
     protected function baseAcceptedBidsQuery(string $sellerEmail)
     {
         return DB::table('bidding_price')
             ->leftJoin('seller', 'bidding_price.seller_email', '=', 'seller.email')
             ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
-            ->leftJoin('sub', 'product.sub_id', '=', 'sub.id')
-            ->leftJoin('category', 'sub.cat_id', '=', 'category.id')
+
+            // NEW tables
+            ->leftJoin('sub_categories', 'product.sub_id', '=', 'sub_categories.id')
+            ->leftJoin('categories', 'sub_categories.category_id', '=', 'categories.id')
+
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
             ->where('bidding_price.seller_email', $sellerEmail)
             ->where('bidding_price.payment_status', 'success')
             ->where('bidding_price.action', '1')
             ->where('bidding_price.hide', '1')
             ->select(
+                // bidding_price
                 'bidding_price.id as bidding_price_id',
                 'bidding_price.rate as rate',
                 'bidding_price.price as price',
@@ -115,6 +128,8 @@ class AcceptedBiddingController extends Controller
                 'bidding_price.product_name as bidding_price_product_name',
                 'bidding_price.payment_status as bidding_price_payment_status',
                 'bidding_price.filename as bidding_price_filename',
+
+                // qutation_form
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
                 'qutation_form.id as id',
@@ -136,17 +151,21 @@ class AcceptedBiddingController extends Controller
                 'qutation_form.unit as unit',
                 'qutation_form.quantity as quantity',
                 'qutation_form.status as qutation_form_status',
+
+                // seller
                 'seller.id as seller_id',
                 'seller.email as seller_email',
                 'seller.name as seller_name',
                 'seller.phone as seller_phone',
                 'seller.hash_id as seller_hash_id',
                 'seller.pro_ser as seller_pro_ser',
+
+                // product
                 'product.id as product_id',
                 'product.title as product_name',
                 'product.sub_id as product_sub_id',
                 'product.user_id as product_user_id',
-                'product.cat_id as product_cat_id',
+                'product.cat_id as product_cat_id',       // kept in case you still store cat_id on product
                 'product.super_id as product_super_id',
                 'product.description as product_description',
                 'product.image as product_image',
@@ -156,20 +175,24 @@ class AcceptedBiddingController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
-                'sub.id as sub_id',
-                'sub.title as sub_name',
-                'sub.cat_id as sub_cat_id',
-                'sub.post_date as sub_post_date',
-                'sub.image as sub_image',
-                'sub.slug as sub_slug',
-                'sub.status as sub_status',
-                'sub.order_by as sub_order_by',
-                'category.id as category_id',
-                'category.title as category_name',
-                'category.post_date as category_post_date',
-                'category.image as category_image',
-                'category.slug as category_slug',
-                'category.status as category_status'
+
+                // sub_categories
+                'sub_categories.id as sub_id',
+                'sub_categories.name as sub_name',
+                'sub_categories.category_id as sub_cat_id',
+                'sub_categories.created_at as sub_created_at',
+                'sub_categories.image as sub_image',
+                'sub_categories.slug as sub_slug',
+                'sub_categories.status as sub_status',
+                'sub_categories.order_by as sub_order_by',
+
+                // categories
+                'categories.id as category_id',
+                'categories.name as category_name',
+                'categories.created_at as category_created_at',
+                'categories.image as category_image',
+                'categories.slug as category_slug',
+                'categories.status as category_status'
             );
     }
 

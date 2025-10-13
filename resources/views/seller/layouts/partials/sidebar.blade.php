@@ -133,7 +133,7 @@
                 </div>
             </li>
 
-            <li class="nav-item">
+           <!--  <li class="nav-item">
                 <a class="nav-link {{ request()->is('seller/accounting/totalshare') && $currentShareView !== 'users' ? 'active' : '' }}" href="{{ url('seller/accounting/totalshare') }}">
                     <span class="nav-icon">
                         <i class="ri-share-forward-line"></i>
@@ -149,7 +149,7 @@
                     </span>
                     <span class="nav-text">Users List</span>
                 </a>
-            </li>
+            </li> -->
 
             <li class="nav-item">
                 @php

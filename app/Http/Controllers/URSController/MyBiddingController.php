@@ -13,60 +13,64 @@ class MyBiddingController extends Controller
     public function index(Request $request)
     {
         $seller = $request->session()->get('seller');
-
         if (!$seller) {
             abort(403, 'Seller session not found.');
         }
 
-        $perPage = (int) $request->input('r_page', 25);
+        // Per-page guard (10–100)
+        $perPage = (int) ($request->input('r_page', 25));
+        $perPage = max(10, min(100, $perPage));
 
+        // Gather filters (trimmed)
         $filters = [
-            'keyword' => $request->input('keyword'),
-            'category' => $request->input('category'),
-            'date' => $request->input('date'),
-            'city' => $request->input('city'),
-            'quantity' => $request->input('quantity'),
-            'product_name' => $request->input('product_name'),
-            'qutation_id' => $request->input('qutation_id'),
-            'r_page' => $perPage,
+            'keyword'      => trim((string) $request->input('keyword', '')),
+            'category'     => trim((string) $request->input('category', '')), // category id
+            'date'         => trim((string) $request->input('date', '')),
+            'city'         => trim((string) $request->input('city', '')),
+            'quantity'     => trim((string) $request->input('quantity', '')),
+            'product_name' => trim((string) $request->input('product_name', '')),
+            'qutation_id'  => trim((string) $request->input('qutation_id', '')),
+            'r_page'       => $perPage,
         ];
 
         $query = $this->baseMyBiddingQuery($seller->email);
 
-        if ($request->filled('category')) {
-            $category = $request->input('category');
+        // Filters
+        if ($filters['category'] !== '') {
+            $category = $filters['category'];
             $query->where(function ($innerQuery) use ($category) {
+                // Match by categories.id OR by qutation_form.cat_id (CSV/in-list text)
                 $innerQuery->where('c.id', $category)
                     ->orWhere('qutation_form.cat_id', 'like', '%' . $category . '%');
             });
         }
 
-        if ($request->filled('date')) {
-            $query->where('qutation_form.date_time', 'like', '%' . $request->input('date') . '%');
+        if ($filters['date'] !== '') {
+            $query->where('qutation_form.date_time', 'like', '%' . $filters['date'] . '%');
         }
 
-        if ($request->filled('city')) {
-            $query->where('qutation_form.city', 'like', '%' . $request->input('city') . '%');
+        if ($filters['city'] !== '') {
+            $query->where('qutation_form.city', 'like', '%' . $filters['city'] . '%');
         }
 
-        if ($request->filled('quantity')) {
-            $query->where('qutation_form.quantity', 'like', '%' . $request->input('quantity') . '%');
+        if ($filters['quantity'] !== '') {
+            $query->where('qutation_form.quantity', 'like', '%' . $filters['quantity'] . '%');
         }
 
-        if ($request->filled('product_name')) {
-            $productName = $request->input('product_name');
+        if ($filters['product_name'] !== '') {
+            $productName = $filters['product_name'];
             $query->where(function ($innerQuery) use ($productName) {
                 $innerQuery->where('qutation_form.product_name', 'like', '%' . $productName . '%')
                     ->orWhere('product.title', 'like', '%' . $productName . '%');
             });
         }
 
-        if ($request->filled('qutation_id')) {
-            $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
+        if ($filters['qutation_id'] !== '') {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $filters['qutation_id'] . '%');
         }
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
+        if ($filters['keyword'] !== '') {
+            $keyword = $filters['keyword'];
             $query->where(function ($innerQuery) use ($keyword) {
                 $innerQuery->where('qutation_form.product_name', 'like', '%' . $keyword . '%')
                     ->orWhere('qutation_form.name', 'like', '%' . $keyword . '%')
@@ -74,6 +78,7 @@ class MyBiddingController extends Controller
             });
         }
 
+        // Pagination
         $records = $query
             ->orderByDesc('qutation_form.id')
             ->paginate($perPage)
@@ -81,8 +86,10 @@ class MyBiddingController extends Controller
 
         $records = $this->appendComputedState($records);
 
+        // Category dropdown (active only)
         $categoryData = DB::table('categories')
             ->select('id', 'name', DB::raw('name as title'))
+            ->where('status', '1')
             ->orderBy('name')
             ->get();
 
@@ -93,19 +100,27 @@ class MyBiddingController extends Controller
             ])->render();
         }
 
+        // echo "<pre>";
+        // print_r($records); die();
+
         return view('ursdashboard.my-bidding.list', [
-            'seller' => $seller,
-            'filters' => $filters,
+            'seller'        => $seller,
+            'filters'       => $filters,
             'category_data' => $categoryData,
-            'records' => $records,
-            'datas' => $filters,
-            'data' => $records,
-            'total' => $records->total(),
+            'records'       => $records,
+            // legacy keys some views expect:
+            'datas'         => $filters,
+            'data'          => $records,
+            'total'         => $records->total(),
         ]);
     }
 
+    /**
+     * Base query for My Bidding – wired to new categories & sub_categories schemas.
+     */
     protected function baseMyBiddingQuery(string $sellerEmail)
     {
+        // Collapse multiple brand rows per product (matches your original logic)
         $productBrands = DB::table('product_brands')
             ->select('product_id', DB::raw('MAX(brand_name) as brand_name'))
             ->groupBy('product_id');
@@ -116,17 +131,28 @@ class MyBiddingController extends Controller
             ->leftJoinSub($productBrands, 'pb', function ($join) {
                 $join->on('product.id', '=', 'pb.product_id');
             })
+            // New tables: sub_categories & categories
             ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
             ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
             ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
             ->where('bidding_price.seller_email', $sellerEmail)
+            // Only active categories/subcategories (status enum('1','2'); keep '1')
+            ->where(function ($w) {
+                $w->whereNull('c.status')->orWhere('c.status', '1');
+            })
+            ->where(function ($w) {
+                $w->whereNull('sc.status')->orWhere('sc.status', '1');
+            })
             ->select(
+                // bidding_price
                 'bidding_price.id as bidding_price_id',
                 'bidding_price.rate as bidding_rate',
                 'bidding_price.seller_email as bidding_price_seller_email',
                 'bidding_price.product_id as bidding_price_product_id',
                 'bidding_price.product_name as bidding_price_product_name',
                 'bidding_price.payment_status as bidding_price_payment_status',
+
+                // qutation_form
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
                 'qutation_form.id as id',
@@ -151,12 +177,16 @@ class MyBiddingController extends Controller
                 'qutation_form.status as qutation_form_status',
                 'qutation_form.qutation_id as qutation_id',
                 'qutation_form.cat_id as qutation_form_cat_id',
+
+                // seller
                 'seller.id as seller_id',
                 'seller.email as seller_email',
                 'seller.name as seller_name',
                 'seller.phone as seller_phone',
                 'seller.hash_id as seller_hash_id',
                 'seller.pro_ser as seller_pro_ser',
+
+                // product
                 'product.id as product_id',
                 'product.title as product_name',
                 'product.sub_id as product_sub_id',
@@ -171,36 +201,46 @@ class MyBiddingController extends Controller
                 'product.slug as product_slug',
                 'product.status as product_status',
                 'product.order_by as product_order_by',
+
+                // sub_categories (new schema)
                 'sc.id as sub_id',
                 'sc.name as sub_name',
+                'sc.slug as sub_slug',
                 'sc.category_id as sub_cat_id',
                 'sc.created_at as sub_created_at',
                 'sc.image as sub_image',
-                'sc.slug as sub_slug',
                 'sc.status as sub_status',
                 'sc.order_by as sub_order_by',
+
+                // categories (new schema)
                 'c.id as category_id',
                 'c.name as category_name',
+                'c.slug as category_slug',
                 'c.created_at as category_created_at',
                 'c.image as category_image',
-                'c.slug as category_slug',
                 'c.status as category_status'
             );
     }
 
+    /**
+     * Append computed fields for display/use in Blade.
+     */
     protected function appendComputedState(LengthAwarePaginator $records): LengthAwarePaginator
     {
         $collection = $records->getCollection();
 
         $collection = $collection->map(function ($record) {
             if (isset($record->bidding_price_payment_status)) {
-                $record->bidding_price_payment_status = ucfirst($record->bidding_price_payment_status);
+                $record->bidding_price_payment_status = ucfirst((string) $record->bidding_price_payment_status);
             }
 
-            if (isset($record->date_time) && $record->date_time) {
-                $record->formatted_date = Carbon::parse($record->date_time)->format('Y-m-d');
-            } else {
-                $record->formatted_date = null;
+            $record->formatted_date = null;
+            if (!empty($record->date_time)) {
+                try {
+                    $record->formatted_date = Carbon::parse($record->date_time)->format('Y-m-d');
+                } catch (\Throwable $e) {
+                    // leave null if parse fails
+                }
             }
 
             return $record;

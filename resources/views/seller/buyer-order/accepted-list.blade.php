@@ -1,186 +1,104 @@
 @extends('seller.layouts.app')
-@section('title', 'Detail ')
-<!--  -->
+@section('title', 'Detail')
+
 @section('content')
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 <div class="container-fluid">
     <div class="social-dash-wrap">
         <div class="row">
             <div class="col-lg-12">
-
-                <div class="breadcrumb-main">
+                <div class="breadcrumb-main d-flex align-items-center justify-content-between">
                     <h4 class="text-capitalize breadcrumb-title">Accepted List</h4>
                     <div class="breadcrumb-action justify-content-center flex-wrap">
-                        <!-- <div class="action-btn">
-
-                                        <div class="form-group mb-0">
-                                            <div class="input-container icon-left position-relative">
-                                                <span class="input-icon icon-left">
-                                                    <span data-feather="calendar"></span>
-                                                </span>
-                                                <input type="text" class="form-control form-control-default date-ranger" name="date-ranger" placeholder="Oct 30, 2019 - Nov 30, 2019">
-                                                <span class="input-icon icon-right">
-                                                    <span data-feather="chevron-down"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div> -->
-
-
-                        <!-- <div class="action-btn">
-                            <a href="{{ url('seller/active-enquiry/list') }}" class="btn btn-sm btn-primary btn-add">
-                                <i class="la la-plus"></i> Back</a>
-                        </div> -->
+                    <div class="action-btn">
+                      <a href="{{ url('buyer/bidding-received/list') }}" class="btn btn-sm btn-primary btn-add">
+                        <i class="la la-plus"></i> Back
+                      </a>
                     </div>
+                  </div>
                 </div>
-
             </div>
-
         </div>
 
+        @php
+            // Normalize inputs: expect $records (Collection or Paginator) + optional $filters
+            $records = $records ?? (isset($data) ? collect($data) : collect());
+            $filters = $filters ?? [];
+            $isPaginated = $records instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator;
+            $startIndex = $isPaginated ? $records->firstItem() : 1;
+        @endphp
 
         <div class="row">
             <div class="col-lg-12 mb-30">
                 <div class="card">
-                    <div class="col-md-12 mt-2">
-
-
-                    </div>
                     <div class="card-body">
-
-
                         <div class="userDatatable projectDatatable project-table bg-white w-100 border-0">
                             <div class="table-responsive">
-                                <div class="col-sm-12">
-                                    <div class="padd">
-
-                                        @php
-                                        if($total < 1){ echo "<div class='text-danger'>Sorry, No data Found!</div>" ;
-                                            }else{ @endphp <div class="pro">
-                                            {{-- Standard seller table class --}}
-                                            <table class="table align-middle text-nowrap table-hover table-centered mb-0">
-
-                                                <head>
-                                                    <tr>
-                                                      
-                                                        <th>
-                                                            <span class="projectDatatable-title"> Sr.No</span>
-                                                        </th>
-                                                        <th>
-                                                            <span class="projectDatatable-title">Name</span>
-                                                        </th>
-                                                        <th>
-                                                            <span class="projectDatatable-title">Category</span>
-                                                        </th>
-                                                        <th>
-                                                            <span class="projectDatatable-title">Sub_Category</span>
-                                                        </th>
-                                                        <th>
-                                                            <span class="projectDatatable-title">Product_name</span>
-                                                        </th>
-
-                                                        <th>
-                                                            <span class="projectDatatable-title">Date</span>
-                                                        </th>
-                                                        <th>
-                                                            <span class="projectDatatable-title">Quantity</span>
-                                                        </th>
-                                                        <th>
-                                                            <span class="projectDatatable-title">Unit</span>
-                                                        </th>
-                                                        <th>Price</th>
-                                                        <!-- <th></th> -->
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </head>
-                                                <tbody>
-                                                    @php
-                                                    $i= 1;
-                                                    foreach ($data as $all) {
-                                                    $all_id = $all->id;
-
-                                                    @endphp
-                                                    <tr>
-                                                    <td>
-                                                <div class="userDatatable-content text-center">
-                                                {{ $i++ }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $all->seller_name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $all->category_name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $all->sub_name }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $all->product_name }}
-                                                </div>
-                                            </td>
-                                            
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ date('Y-m-d', strtotime($all->date_time)) }}
-
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $all->quantity }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $all->unit }}
-                                                </div>
-                                            </td>
-                                                        <td>{{ $all->price }}</td>
-                                                        <td class="d-flex">
-                                                            @if($all->action == '0')
-                                                            <a class="btn-success btn btn-sm mx-3"
-                                                                href="{{ url('accepet/'.$all->id.'/'.$all->data_id) }}"
-                                                                onclick="return confirm('Are you sure?')">Accept</a>
-
-                                                            @endif
-
-                                                            <a href="{{ url('seller-profile/'.$all->seller_id) }}"
-                                                                class="btn-primary btn btn-sm">Veiw Profile</a>
-
-                                                        </td>
-
-                                                    </tr>
-                                                    @php } @endphp
-                                                </tbody>
-                                            </table>
-
-                                    </div>
-                                    @php
-                                    }
-                                    @endphp
-                                </div>
-
+                                <table class="table align-middle text-nowrap table-hover table-centered mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr. No</th>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Sub Category</th>
+                                            <th>Product Name</th>
+                                            <th>Date</th>
+                                            <th>Unit</th>
+                                            <th>Quantity</th>
+                                            <th>Rate</th>
+                                            <th>Total Price</th>
+                                            <th>Platform Fee</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($records as $index => $record)
+                                            @php
+                                                // Field fallbacks to support older keys
+                                                $name            = $record->name ?? $record->seller_name ?? '';
+                                                $category_name   = $record->category_name ?? '';
+                                                $sub_name        = $record->sub_name ?? '';
+                                                $product_name    = $record->product_name ?? '';
+                                                $date_val        = $record->date_time ?? null;
+                                                $unit            = $record->unit ?? '-';
+                                                $quantity        = $record->quantity ?? $record->qty ?? 0;
+                                                $rate            = $record->rate ?? $record->price_per_unit ?? '';
+                                                $platform_fee    = $record->price ?? $record->platform_fee ?? '';
+                                                $total_calc      = $record->calculated_total_price
+                                                                    ?? (($rate && $quantity) ? (float)$rate * (float)$quantity : 0);
+                                            @endphp
+                                            <tr>
+                                                <td class="text-center">{{ $startIndex + $index }}</td>
+                                                <td>{{ $name }}</td>
+                                                <td>{{ $category_name }}</td>
+                                                <td>{{ $sub_name }}</td>
+                                                <td>{{ $product_name }}</td>
+                                                <td>{{ $date_val ? \Carbon\Carbon::parse($date_val)->format('d-m-Y') : '' }}</td>
+                                                <td>{{ $unit }}</td>
+                                                <td>{{ $quantity }}</td>
+                                                <td>{{ $rate }}</td>
+                                                <td>{{ number_format($total_calc ?? 0, 2) }}</td>
+                                                <td>{{ $platform_fee }}</td>
+                                                <td class="text-success">Confirm</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="12" class="text-center text-muted py-4">No accepted bids found.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
-                        </div><!-- End: .userDatatable -->
 
+                            @if($isPaginated && $records->hasPages())
+                                <div class="gmz-pagination mt-3">
+                                    {!! $records->appends($filters)->links('pagination::bootstrap-4') !!}
+                                </div>
+                            @endif
+                        </div><!-- End: .userDatatable -->
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-</div>
-
-
 @endsection

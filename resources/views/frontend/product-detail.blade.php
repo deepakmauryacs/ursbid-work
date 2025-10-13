@@ -222,12 +222,12 @@
 
                             <div class="col-md-3">
                                 <div class="form-floating">
-                                    <select class="form-select form-select-lg" id="unit" name="unit" required>
+                                    <select class="form-select form-select-lg" id="unit" name="unit">
                                         @foreach ($units as $unit)
                                             <option value="{{ $unit->title }}">{{ $unit->title }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="unit">Unit*</label>
+                                    <label for="unit">Unit</label>
                                 </div>
                             </div>
 

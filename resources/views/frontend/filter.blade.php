@@ -170,7 +170,7 @@
                     <div class="img ads-img">
                         @php
                             $cat_id = $sid;
-                            $ads = DB::select("SELECT * FROM advertisement WHERE cat_id = ? AND status = 1", [$cat_id]);
+                            $ads = DB::select("SELECT * FROM advertisements WHERE category_id = ? AND status = 1", [$cat_id]);
                         @endphp
                         @foreach ($ads as $ad)
                             @php

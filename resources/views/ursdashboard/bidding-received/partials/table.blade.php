@@ -28,6 +28,7 @@
         <tbody>
             @forelse($recordsForDisplay as $index => $record)
                 @php
+                    $productId = is_object($record) ? ($record->product_id ?? null) : ($record['product_id'] ?? null);
                     $recordId = is_object($record) ? ($record->id ?? null) : ($record['id'] ?? null);
                     $recordName = is_object($record) ? ($record->name ?? '') : ($record['name'] ?? '');
                     $recordQuotationId = is_object($record) ? ($record->qutation_id ?? '') : ($record['qutation_id'] ?? '');
@@ -58,7 +59,7 @@
                         </a>
                         <button type="button" class="btn btn-outline-secondary btn-sm mdl_btn" data-bs-toggle="modal"
                             data-bs-target="#buyerBidModal"
-                            data-product_id="{{ $recordId }}"
+                            data-product_id="{{ $productId }}"
                             data-product_name="{{ $recordProduct }}"
                             data-user_email="{{ is_object($record) ? ($record->user_email ?? '') : ($record['user_email'] ?? '') }}"
                             data-data_id="{{ $recordId }}">

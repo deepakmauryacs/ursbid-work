@@ -327,10 +327,10 @@
         <div class="widget">
           <div class="w-head">Follow Me</div>
           <div class="w-body d-flex gap-2">
-            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-facebook"></i></a>
-            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-twitter-x"></i></a>
-            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-instagram"></i></a>
-            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-youtube"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://www.facebook.com/ursbid2025"><i class="bi bi-facebook"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://x.com/URSBID2025"><i class="bi bi-twitter-x"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://www.instagram.com/ursbid2025/"><i class="bi bi-instagram"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://www.youtube.com/@URSBID"><i class="bi bi-youtube"></i></a>
           </div>
         </div>
       </div>
@@ -380,10 +380,10 @@
     <div class="row gy-3 align-items-center">
       <div class="col-md text-center text-md-start">
         <div class="social-icons">
-          <a href="#"><i class="bi bi-facebook"></i></a>
-          <a href="#"><i class="bi bi-twitter-x"></i></a>
-          <a href="#"><i class="bi bi-instagram"></i></a>
-          <a href="#"><i class="bi bi-youtube"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://www.facebook.com/ursbid2025"><i class="bi bi-facebook"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://x.com/URSBID2025"><i class="bi bi-twitter-x"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://www.instagram.com/ursbid2025/"><i class="bi bi-instagram"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="https://www.youtube.com/@URSBID"><i class="bi bi-youtube"></i></a>
         </div>
       </div>
       <div class="col-md-auto text-center text-md-end">
