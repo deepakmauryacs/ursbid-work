@@ -19,49 +19,57 @@
   <!-- FILTERS -->
   <div class="row mb-3">
     <div class="col-12">
-      <div class="card filter-card border-0">
-        <div class="card-body py-3">
-          <form id="filterForm" action="{{ route('super-admin.sub-categories.index') }}" method="GET">
-            <ul class="filter-ul">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <h5 class="mb-0">Filter Sub Categories</h5>
+          <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('super-admin.sub-categories.create') }}" class="btn btn-success btn-sm">
+              <i class="bi bi-plus-circle me-1"></i>Add Sub Category
+            </a>
+            <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#subCategoryFilters" aria-expanded="true" aria-controls="subCategoryFilters">
+              Toggle Filters
+            </button>
+          </div>
+        </div>
 
-              <li>
-                <label class="filter-label">Category (optional):</label>
-                <div class="input-group pill-wrap">
-                  <span class="input-group-text"><i class="bi bi-collection"></i></span>
-                  <select name="category" id="category" class="form-select">
-                    <option value="">All</option>
-                    @foreach($categories as $category)
-                      <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                      </option>
-                    @endforeach
-                  </select>
-                </div>
-              </li>
+        <div class="collapse show" id="subCategoryFilters">
+          <div class="card-body">
+            <form id="filterForm" action="{{ route('super-admin.sub-categories.index') }}" method="GET" class="row g-3 align-items-end">
 
-              <li>
-                <label class="filter-label">Search (optional):</label>
-                <div class="input-group pill-wrap">
-                  <span class="input-group-text"><i class="bi bi-search"></i></span>
-                  <input type="text" name="name" id="name" value="{{ request('name') }}"
-                         class="form-control" placeholder="Enter sub category">
-                </div>
-              </li>
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label">Category (optional)</label>
+                <select name="category" id="category" class="form-select">
+                  <option value="">All</option>
+                  @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                      {{ $category->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
 
-              <li class="actions-li">
-                <button type="submit" class="btn btn-primary btn-icon">
-                  <i class="bi bi-funnel"></i>Apply
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label">Search (optional)</label>
+                <input type="text" name="name" id="name" value="{{ request('name') }}" class="form-control" placeholder="Enter sub category">
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label d-none d-lg-block">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="bi bi-funnel-fill me-2"></i>Apply Filters
                 </button>
-                <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-icon">
-                  <i class="bi bi-arrow-counterclockwise"></i>Reset
-                </button>
-                <a href="{{ route('super-admin.sub-categories.create') }}" class="btn btn-success btn-icon">
-                  <i class="bi bi-plus-circle"></i>Add Sub Category
-                </a>
-              </li>
+              </div>
 
-            </ul>
-          </form>
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label d-none d-lg-block">&nbsp;</label>
+                <button type="button" id="resetBtn" class="btn btn-outline-secondary w-100">
+                  <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                </button>
+              </div>
+
+            </form>
+          </div>
         </div>
       </div>
     </div>
