@@ -173,7 +173,7 @@ Route::get('/buyer/bidding-received/price-list/{data_id}', [App\Http\Controllers
 Route::get('/buyer/my-bidding/list', [App\Http\Controllers\URSController\MyBiddingController::class, 'index'])->name('buyer-order.mylist');
 Route::get('/buyer-order/acc-list', [App\Http\Controllers\URSController\AcceptedBiddingController::class, 'index'])->name('acc-list');
 Route::get('/price-list/{data_id}', [App\Http\Controllers\BuyerloginController::class, 'price_list'])->name('price-list');
-Route::get('/accepted-list/{data_id}', [App\Http\Controllers\BuyerloginController::class, 'accepted_list'])->name('accepted-list');
+Route::get('/accepted-list/{data_id}', [App\Http\Controllers\URSController\AcceptedListController::class, 'show'])->name('accepted-list');
    
 
 
