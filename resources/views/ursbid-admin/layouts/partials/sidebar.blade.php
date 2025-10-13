@@ -204,6 +204,15 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link {{ request()->is('super-admin/help-support*') ? 'active' : '' }}" href="{{ route('super-admin.support-tickets.index') }}">
+                    <span class="nav-icon">
+                        <i class="ri-customer-service-2-line"></i>
+                    </span>
+                    <span class="nav-text">Help &amp; Support</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link menu-arrow {{ request()->is('super-admin/blogs*') ? 'active' : '' }}" href="#sidebarBlog" data-bs-toggle="collapse" role="button" aria-expanded="{{ request()->is('super-admin/blogs*') ? 'true' : 'false' }}" aria-controls="sidebarBlog">
                      <span class="nav-icon">
                           <i class="ri-news-line"></i>
