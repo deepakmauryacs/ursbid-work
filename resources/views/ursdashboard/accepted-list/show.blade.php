@@ -10,7 +10,7 @@
                     <h4 class="text-capitalize breadcrumb-title">Accepted List</h4>
                     <div class="breadcrumb-action justify-content-center flex-wrap">
                         <div class="action-btn">
-                            <a href="{{ route('acc-list') }}" class="btn btn-sm btn-primary btn-add">
+                            <a href="https://ursbid.com/buyer/bidding-received/list" class="btn btn-sm btn-primary btn-add">
                                 <i class="la la-arrow-left"></i> Back
                             </a>
                         </div>
