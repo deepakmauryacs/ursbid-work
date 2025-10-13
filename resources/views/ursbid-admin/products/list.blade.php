@@ -21,64 +21,64 @@
   <!-- Filters -->
   <div class="row mb-3">
     <div class="col-12">
-      <div class="card filter-wrap border-0">
-        <div class="card-body py-3">
-          <form id="filterForm" action="{{ route('super-admin.products.index') }}" method="GET">
-            <ul class="filter-ul">
-        
-                <!-- Category -->
-                <li>
-                    <label class="filter-label">Category:</label>
-                    <div class="input-group pill-wrap">
-                        <span class="input-group-text"><i class="bi bi-collection"></i></span>
-                        <select name="category" id="category" class="form-select">
-                            <option value="">All</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </li>
-        
-                <!-- Sub Category -->
-                <li>
-                    <label class="filter-label">Sub Category:</label>
-                    <div class="input-group pill-wrap">
-                        <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
-                        <select name="subcategory" id="subcategory" class="form-select">
-                            <option value="">All</option>
-                        </select>
-                    </div>
-                </li>
-        
-                <!-- Search -->
-                <li>
-                    <label class="filter-label">Search:</label>
-                    <div class="input-group pill-wrap">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" name="name" id="name" value="{{ request('name') }}"
-                               class="form-control" placeholder="Enter product name">
-                    </div>
-                </li>
-        
-                <!-- Actions -->
-                <li class="actions-li">
-                    <button type="submit" class="btn btn-primary btn-icon">
-                        <i class="bi bi-funnel"></i>Apply
-                    </button>
-                    <button type="button" id="resetBtn" class="btn btn-outline-secondary btn-icon">
-                        <i class="bi bi-arrow-counterclockwise"></i>Reset
-                    </button>
-                    <a href="{{ route('super-admin.products.create') }}" class="btn btn-success btn-icon">
-                        <i class="bi bi-plus-circle"></i>Add Product
-                    </a>
-                </li>
-        
-            </ul>
-        </form>
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <h5 class="mb-0">Filter Products</h5>
+          <div class="d-flex align-items-center gap-2">
+            <a href="{{ route('super-admin.products.create') }}" class="btn btn-success btn-sm">
+              <i class="bi bi-plus-circle me-1"></i>Add Product
+            </a>
+            <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#productFilters" aria-expanded="true" aria-controls="productFilters">
+              Toggle Filters
+            </button>
+          </div>
+        </div>
 
+        <div class="collapse show" id="productFilters">
+          <div class="card-body">
+            <form id="filterForm" action="{{ route('super-admin.products.index') }}" method="GET" class="row g-3 align-items-end">
+
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label">Category</label>
+                <select name="category" id="category" class="form-select">
+                  <option value="">All</option>
+                  @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                      {{ $category->name }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label">Sub Category</label>
+                <select name="subcategory" id="subcategory" class="form-select">
+                  <option value="">All</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label">Search</label>
+                <input type="text" name="name" id="name" value="{{ request('name') }}" class="form-control" placeholder="Enter product name">
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label d-none d-lg-block">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                </button>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <label class="form-label d-none d-lg-block">&nbsp;</label>
+                <button type="button" id="resetBtn" class="btn btn-outline-secondary w-100">
+                  <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                </button>
+              </div>
+
+            </form>
+          </div>
         </div>
       </div>
     </div>
