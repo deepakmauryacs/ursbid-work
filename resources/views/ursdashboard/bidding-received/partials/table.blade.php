@@ -38,14 +38,23 @@
                     $recordDate = is_object($record) ? ($record->date_time ?? null) : ($record['date_time'] ?? null);
                     $recordQuantity = is_object($record) ? ($record->quantity ?? '') : ($record['quantity'] ?? '');
                     $recordUnit = is_object($record) ? ($record->unit ?? '') : ($record['unit'] ?? '');
+                    $hasVendorPrice = is_object($record)
+                        ? (bool) ($record->has_vendor_price ?? false)
+                        : (bool) ($record['has_vendor_price'] ?? false);
                     $formattedDate = $recordDate ? \Carbon\Carbon::parse($recordDate)->format('Y-m-d') : '';
                 @endphp
                 <tr>
                     <td>{{ $rowNumber++ }}</td>
                     <td class="d-flex gap-2">
-                        <a href="{{ $recordId ? route('buyer.price-list', $recordId) : '#' }}" class="btn btn-primary btn-sm">
-                            View List
-                        </a>
+                        @if($recordId && $hasVendorPrice)
+                            <a href="{{ route('buyer.price-list', $recordId) }}" class="btn btn-primary btn-sm">
+                                View List
+                            </a>
+                        @else
+                            <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                View List
+                            </button>
+                        @endif
                         <a href="{{ $recordId ? route('accepted-list', $recordId) : '#' }}" class="btn btn-success btn-sm">
                             Accepted List
                         </a>

@@ -191,6 +191,8 @@ class BiddingReceivedController extends Controller
         $lockedByAdmin = collect();
         $lockedForSeller = collect();
 
+        $priceCounts = collect();
+
         if ($ids->isNotEmpty()) {
             $lockedByAdmin = DB::table('bidding_price')
                 ->whereIn('data_id', $ids)
@@ -206,9 +208,18 @@ class BiddingReceivedController extends Controller
                 ->where('seller_email', $sellerEmail)
                 ->pluck('data_id')
                 ->unique();
+
+            $priceCounts = DB::table('bidding_price')
+                ->select('data_id', DB::raw('COUNT(*) as total_prices'))
+                ->whereIn('data_id', $ids)
+                ->where('payment_status', 'success')
+                ->where('hide', '0')
+                ->where('user_email', $sellerEmail)
+                ->groupBy('data_id')
+                ->pluck('total_prices', 'data_id');
         }
 
-        $collection->transform(function ($record) use ($currentDate, $lockedByAdmin, $lockedForSeller) {
+        $collection->transform(function ($record) use ($currentDate, $lockedByAdmin, $lockedForSeller, $priceCounts) {
             $status = 'active';
 
             if (!empty($record->date_time) && !empty($record->bid_time)) {
@@ -222,6 +233,8 @@ class BiddingReceivedController extends Controller
             $record->show_bidding_button = $status === 'active'
                 && !$lockedByAdmin->contains($record->id)
                 && !$lockedForSeller->contains($record->id);
+
+            $record->has_vendor_price = ((int) ($priceCounts[$record->id] ?? 0)) > 0;
 
             return $record;
         });
