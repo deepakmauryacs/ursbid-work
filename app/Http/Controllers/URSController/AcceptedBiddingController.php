@@ -20,7 +20,7 @@ class AcceptedBiddingController extends Controller
         $perPage = (int) $request->input('r_page', 25);
 
         $filters = [
-            'keyword'      => $request->input('keyword'),
+            'qutation_id'  => $request->input('qutation_id'),
             'category'     => $request->input('category'),
             'date'         => $request->input('date'),
             'city'         => $request->input('city'),
@@ -56,14 +56,8 @@ class AcceptedBiddingController extends Controller
             });
         }
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where(function ($innerQuery) use ($keyword) {
-                $innerQuery->where('qutation_form.product_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.name', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.city', 'like', '%' . $keyword . '%')
-                    ->orWhere('product.title', 'like', '%' . $keyword . '%');
-            });
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
         }
 
         $records = $query
