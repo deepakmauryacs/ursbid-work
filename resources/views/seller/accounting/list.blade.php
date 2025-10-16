@@ -164,9 +164,9 @@
 
                                             
 
-                                            <!-- <th>
+                                            <th>
                                                 <span class="projectDatatable-title">Action</span>
-                                            </th> -->
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -243,11 +243,11 @@
                                                     {{ $all->price }}
                                                 </div>
                                             </td>
-
-
-                                           
-
-
+                                            <td>
+                                                <a href="{{ url('seller/enquiry/view/'.$all->product_id) }}">
+                                                    <span class="media-badge color-white bg-primary">View Details</span>
+                                                </a>
+                                            </td>
                                         </tr>
                                         @endforeach
 
