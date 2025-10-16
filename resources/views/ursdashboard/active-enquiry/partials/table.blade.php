@@ -29,7 +29,7 @@
                      @if($blog->show_bidding_button)
                         <a href="#!" class="btn btn-outline-primary btn-sm js-open-bidding-modal"
                            data-enquiry-id="{{ $blog->id }}">
-                           <i class="bi bi-gavel me-1"></i>Bidding
+                           <i class="bi bi-gavel me-1"></i>Bid Now
                         </a>
                      @else
                         <span class="btn btn-outline-danger btn-sm disabled">
