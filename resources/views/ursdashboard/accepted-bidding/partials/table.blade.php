@@ -53,6 +53,6 @@
 </div>
 @if($isPaginated && $records->hasPages())
     <div class="gmz-pagination mt-3">
-        {!! $records->appends($filters)->links('pagination::bootstrap-4') !!}
+        {!! $records->appends($filters)->links('pagination::bootstrap-5') !!}
     </div>
 @endif
