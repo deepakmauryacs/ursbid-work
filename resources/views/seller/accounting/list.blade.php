@@ -244,9 +244,18 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <a href="{{ url('seller/enquiry/view/'.$all->product_id) }}">
-                                                    <span class="media-badge color-white bg-primary">View Details</span>
-                                                </a>
+                                                @php
+                                                    $detailsId = $all->qutation_form_id ?? $all->product_id ?? null;
+                                                @endphp
+                                                @if ($detailsId)
+                                                    <div class="d-flex gap-2">
+                                                        <a href="{{ url('seller/enquiry/view/' . $detailsId) }}" class="btn btn-primary btn-sm">
+                                                            View Details
+                                                        </a>
+                                                    </div>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach

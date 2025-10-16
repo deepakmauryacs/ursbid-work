@@ -43,6 +43,8 @@
                     $rate = $record->rate ?? null;
                     $platformFee = $record->platform_fee ?? null;
                     $qutationFormId = $record->qutation_form_id ?? null;
+                    $productId = $record->product_id ?? null;
+                    $detailsId = $qutationFormId ?? $productId ?? null;
 
                     $quantityNumber = 0;
                     if (is_numeric($quantityRaw)) {
@@ -69,8 +71,8 @@
                     <td>{{ $platformFee !== null ? number_format((float) $platformFee, 2) : '-' }}</td>
                     <td>
                         <div class="d-flex gap-2">
-                            @if($qutationFormId)
-                                <a href="{{ url('seller/enquiry/view/' . $qutationFormId) }}" class="btn btn-primary btn-sm">
+                            @if($detailsId)
+                                <a href="{{ url('seller/enquiry/view/' . $detailsId) }}" class="btn btn-primary btn-sm">
                                     View Details
                                 </a>
                             @else
