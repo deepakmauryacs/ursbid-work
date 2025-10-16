@@ -123,6 +123,9 @@
                                  <span class="projectDatatable-title">Sr no</span>
                               </th>
                               <th>
+                                 <span class="projectDatatable-title">Action</span>
+                              </th>
+                              <th>
                                  <span class="projectDatatable-title">Name</span>
                               </th>
                               <th>
@@ -152,9 +155,6 @@
                               <th>
                                  <span class="projectDatatable-title">Status</span>
                               </th>
-                              <th>
-                                 <span class="projectDatatable-title">Action</span>
-                              </th>
                            </tr>
                         </thead>
                         <tbody>
@@ -180,6 +180,28 @@
                               <td>
                                  <div class="userDatatable-content text-center">
                                     {{ $i++ }}
+                                 </div>
+                              </td>
+                              <td>
+                                 <div class="d-flex gap-2">
+                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-sm btn-primary me-2">
+                                       <i class="bi bi-eye me-1"></i>View
+                                    </a>
+                                    @if($status == 'active')
+                                    <a href="#!" class="btn btn-primary btn-sm me-2"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#exampleModalCenter"
+                                       product_id='{{ $blog->product_id }}'
+                                       product_name='{{ $blog->product_name }}'
+                                       data_id='{{ $blog->id }}'
+                                       user_email='{{ $blog->email }}'>
+                                       <i class="bi bi-gavel me-1"></i>Bidding
+                                    </a>
+                                    @else
+                                    <span class="btn btn-danger btn-sm  disabled">
+                                       <i class="bi bi-lock-fill me-1"></i>Closed
+                                    </span>
+                                    @endif
                                  </div>
                               </td>
                               <td>
@@ -242,28 +264,6 @@
                                  <div class="userDatatable-content">
                                     <span class="media-badge color-white bg-danger">
                                     {{ $status }}</span>
-                                 </div>
-                              </td>
-                              <td>
-                                 <div class="d-flex gap-2">
-                                    <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-sm btn-primary me-2">
-                                    <i class="bi bi-eye me-1"></i>View
-                                    </a>
-                                    @if($status == 'active')
-                                    <a href="#!" class="btn btn-primary btn-sm me-2"
-                                       data-bs-toggle="modal"
-                                       data-bs-target="#exampleModalCenter"
-                                       product_id='{{ $blog->product_id }}'
-                                       product_name='{{ $blog->product_name }}'
-                                       data_id='{{ $blog->id }}'
-                                       user_email='{{ $blog->email }}'>
-                                    <i class="bi bi-gavel me-1"></i>Bidding
-                                    </a>
-                                    @else
-                                    <span class="btn btn-danger btn-sm  disabled">
-                                    <i class="bi bi-lock-fill me-1"></i>Closed
-                                    </span>
-                                    @endif
                                  </div>
                               </td>
                            </tr>
