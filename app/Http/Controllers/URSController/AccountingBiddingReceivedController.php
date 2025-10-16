@@ -53,7 +53,8 @@ class AccountingBiddingReceivedController extends Controller
             $query->where(function ($innerQuery) use ($productName) {
                 $innerQuery
                     ->where('qutation_form.product_name', 'like', '%' . $productName . '%')
-                    ->orWhere('product.title', 'like', '%' . $productName . '%');
+                    ->orWhere('product.title', 'like', '%' . $productName . '%')
+                    ->orWhere('bidding_price.product_name', 'like', '%' . $productName . '%');
             });
         }
 
@@ -62,7 +63,7 @@ class AccountingBiddingReceivedController extends Controller
         }
 
         $records = $query
-            ->orderByDesc('qutation_form.id')
+            ->orderByDesc('bidding_price.id')
             ->paginate($perPage)
             ->withQueryString();
 
@@ -99,16 +100,24 @@ class AccountingBiddingReceivedController extends Controller
             ->select('product_id', DB::raw('MAX(brand_name) as brand_name'))
             ->groupBy('product_id');
 
-        return DB::table('qutation_form')
-            ->leftJoin('seller', 'qutation_form.email', '=', 'seller.email')
-            ->leftJoin('product', 'qutation_form.product_id', '=', 'product.id')
+        return DB::table('bidding_price')
+            ->leftJoin('seller', 'bidding_price.seller_email', '=', 'seller.email')
+            ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
             ->leftJoinSub($productBrands, 'pb', function ($join) {
                 $join->on('product.id', '=', 'pb.product_id');
             })
+            ->leftJoin('qutation_form', 'bidding_price.data_id', '=', 'qutation_form.id')
             ->leftJoin('sub_categories as sc', 'product.sub_id', '=', 'sc.id')
             ->leftJoin('categories as c', 'sc.category_id', '=', 'c.id')
-            ->where('qutation_form.email', $sellerEmail)
+            ->where('bidding_price.user_email', $sellerEmail)
+            ->where('bidding_price.payment_status', 'success')
             ->select(
+                'bidding_price.id as bidding_id',
+                'bidding_price.data_id as qutation_form_id',
+                'bidding_price.rate as rate',
+                'bidding_price.price as platform_fee',
+                'bidding_price.action as action',
+                'bidding_price.product_name as requested_product_name',
                 'qutation_form.product_name as product_name',
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
