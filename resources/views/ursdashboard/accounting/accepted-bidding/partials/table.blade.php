@@ -16,6 +16,8 @@
                 <th>Sr.No</th>
                 <th>Quotation ID</th>
                 <th>Name</th>
+                <th>Email Id</th>
+                <th>Contact No.</th>
                 <th>Category</th>
                 <th>Sub Category</th>
                 <th>Product Name</th>
@@ -36,6 +38,8 @@
                     $quotationId = $record->qutation_id ?? '';
                     $name = $record->name ?? '';
                     $category = $record->category_name ?? '';
+                    $email = $record->buyer_email ?? $record->bidder_email ?? $record->seller_email ?? '';
+                    $contactNumber = $record->seller_phone ?? '';
                     $subCategory = $record->sub_name ?? '';
                     $productName = $record->requested_product_name ?? $record->product_name ?? '';
                     $dateValue = $record->date_time ?? null;
@@ -52,6 +56,8 @@
                     <td>{{ $rowNumber++ }}</td>
                     <td>{{ $quotationId ?: '-' }}</td>
                     <td>{{ $name }}</td>
+                    <td>{{ $email ?: '-' }}</td>
+                    <td>{{ $contactNumber ?: '-' }}</td>
                     <td>{{ $category }}</td>
                     <td>{{ $subCategory }}</td>
                     <td>{{ $productName }}</td>
@@ -76,7 +82,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="13" class="text-center py-4">No accepted bids found.</td>
+                    <td colspan="16" class="text-center py-4">No accepted bids found.</td>
                 </tr>
             @endforelse
         </tbody>

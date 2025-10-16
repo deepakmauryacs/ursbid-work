@@ -116,10 +116,12 @@ class AccountingAcceptedBiddingController extends Controller
                 'bidding_price.price as platform_fee',
                 'bidding_price.action as action',
                 'bidding_price.product_name as requested_product_name',
+                'bidding_price.user_email as bidder_email',
                 'bidding_price.data_id as qutation_form_id',
                 'bidding_price.rate as rate',
                 'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
+                'qutation_form.email as buyer_email',
                 'qutation_form.date_time as date_time',
                 'qutation_form.quantity as quantity',
                 'qutation_form.unit as unit',
@@ -129,7 +131,8 @@ class AccountingAcceptedBiddingController extends Controller
                 'product.image as product_image',
                 'pb.brand_name as product_brand',
                 'sc.name as sub_name',
-                'c.name as category_name'
+                'c.name as category_name',
+                'seller.phone as seller_phone'
             );
     }
 
