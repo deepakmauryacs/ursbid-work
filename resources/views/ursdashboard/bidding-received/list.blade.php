@@ -8,7 +8,7 @@
     $filters = $filters ?? ($datas ?? []);
     $categories = $category_data ?? [];
     $records = $records ?? ($data ?? collect());
-    $buyerOrderBaseUrl = route('buyer-dashboard');
+    $buyerOrderBaseUrl = route('buyer.bidding-received.list');
 @endphp
 <div class="container-fluid">
     <div class="social-dash-wrap">
