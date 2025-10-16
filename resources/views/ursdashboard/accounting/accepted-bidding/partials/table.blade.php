@@ -73,9 +73,9 @@
 @if($isPaginator && $records->hasPages())
     <div class="gmz-pagination mt-3">
         @if(!empty($filters))
-            {{ $records->appends($filters)->links('pagination::bootstrap-4') }}
+            {{ $records->appends($filters)->links('pagination::bootstrap-5') }}
         @else
-            {{ $records->links('pagination::bootstrap-4') }}
+            {{ $records->links('pagination::bootstrap-5') }}
         @endif
     </div>
 @endif
