@@ -21,7 +21,7 @@
         </div>
 
         <div class="row">
-            <div class="col-12 col-lg-10 col-xl-8">
+            <div class="col-12 col-lg-12 col-xl-12">
                 <div class="card">
                     <div class="card-body">
                         @if ($errors->any())
