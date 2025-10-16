@@ -130,6 +130,7 @@ class AcceptedBiddingController extends Controller
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.product_img as qutation_form_product_img',
                 'qutation_form.product_brand as qutation_form_product_brand',
                 'qutation_form.message as qutation_form_message',
