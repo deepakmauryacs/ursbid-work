@@ -220,6 +220,7 @@
                         <thead>
                            <tr>
                               <th>Sr no</th>
+                              <th>Action</th>
                               <th>Name</th>
                               <th>Category</th>
                               <th>Sub Category</th>
@@ -230,7 +231,6 @@
                               <th>Unit</th>
                               <th>Quotation</th>
                               <th>Status</th>
-                              <th>Action</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -247,24 +247,6 @@
                               @endphp
                               <tr>
                                  <td>{{ $i++ }}</td>
-                                 <td>{{ $blog->name }}</td>
-                                 <td>{{ $blog->category_name }}</td>
-                                 <td>{{ $blog->sub_name }}</td>
-                                 <td>{{ $blog->product_name }}</td>
-                                 <td>{{ $blog->bid_time }} day</td>
-                                 <td>{{ date('Y-m-d', strtotime($blog->date_time)) }}</td>
-                                 <td>{{ $blog->quantity }}</td>
-                                 <td>{{ $blog->unit }}</td>
-                                 <td>
-                                    @if(!empty($blog->qutation_form_image))
-                                       <a href="{{ url('seller/enquiry/file/'.$blog->id) }}" target="_blank">View</a>
-                                    @else
-                                       No file found
-                                    @endif
-                                 </td>
-                                 <td>
-                                    <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">{{ $status }}</span>
-                                 </td>
                                  <td>
                                     <div class="d-flex gap-2">
                                        <a href="{{ url('seller/enquiry/view/'.$blog->id) }}" class="btn btn-primary">
@@ -307,6 +289,24 @@
                                           </span>
                                        @endif
                                     </div>
+                                 </td>
+                                 <td>{{ $blog->name }}</td>
+                                 <td>{{ $blog->category_name }}</td>
+                                 <td>{{ $blog->sub_name }}</td>
+                                 <td>{{ $blog->product_name }}</td>
+                                 <td>{{ $blog->bid_time }} day</td>
+                                 <td>{{ date('Y-m-d', strtotime($blog->date_time)) }}</td>
+                                 <td>{{ $blog->quantity }}</td>
+                                 <td>{{ $blog->unit }}</td>
+                                 <td>
+                                    @if(!empty($blog->qutation_form_image))
+                                       <a href="{{ url('seller/enquiry/file/'.$blog->id) }}" target="_blank">View</a>
+                                    @else
+                                       No file found
+                                    @endif
+                                 </td>
+                                 <td>
+                                    <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">{{ $status }}</span>
                                  </td>
                               </tr>
                            @endforeach

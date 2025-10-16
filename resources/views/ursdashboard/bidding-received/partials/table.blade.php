@@ -14,6 +14,7 @@
         <thead>
             <tr>
                 <th>Sr.No</th>
+                <th>Action</th>
                 <th>Quotation ID</th>
                 <th>Name</th>
                 <th>Category</th>
@@ -22,7 +23,6 @@
                 <th>Date</th>
                 <th>Quantity</th>
                 <th>Unit</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -42,14 +42,6 @@
                 @endphp
                 <tr>
                     <td>{{ $rowNumber++ }}</td>
-                    <td>{{ $recordQuotationId ?: '-' }}</td>
-                    <td>{{ $recordName }} </td>
-                    <td>{{ $recordCategory }}</td>   
-                    <td>{{ $recordSubCategory }}</td>
-                    <td>{{ $recordProduct }}</td>
-                    <td>{{ $formattedDate }}</td>
-                    <td>{{ $recordQuantity }}</td>
-                    <td>{{ $recordUnit }}</td>
                     <td class="d-flex gap-2">
                         <a href="{{ $recordId ? route('buyer.price-list', $recordId) : '#' }}" class="btn btn-primary btn-sm">
                             View List
@@ -57,15 +49,15 @@
                         <a href="{{ $recordId ? route('accepted-list', $recordId) : '#' }}" class="btn btn-success btn-sm">
                             Accepted List
                         </a>
-                        <button type="button" class="btn btn-outline-secondary btn-sm mdl_btn" data-bs-toggle="modal"
-                            data-bs-target="#buyerBidModal"
-                            data-product_id="{{ $productId }}"
-                            data-product_name="{{ $recordProduct }}"
-                            data-user_email="{{ is_object($record) ? ($record->user_email ?? '') : ($record['user_email'] ?? '') }}"
-                            data-data_id="{{ $recordId }}">
-                            Bid Now
-                        </button>
                     </td>
+                    <td>{{ $recordQuotationId ?: '-' }}</td>
+                    <td>{{ $recordName }} </td>
+                    <td>{{ $recordCategory }}</td>
+                    <td>{{ $recordSubCategory }}</td>
+                    <td>{{ $recordProduct }}</td>
+                    <td>{{ $formattedDate }}</td>
+                    <td>{{ $recordQuantity }}</td>
+                    <td>{{ $recordUnit }}</td>
                 </tr>
                 @empty
                     <tr>
