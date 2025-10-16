@@ -25,6 +25,7 @@
                 <th>Rate</th>
                 <th>Total Price</th>
                 <th>Platform Fee</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -44,6 +45,7 @@
                     $rate = $record->rate ?? null;
                     $totalPrice = $record->total_price ?? null;
                     $platformFee = $record->platform_fee ?? null;
+                    $detailsId = $record->qutation_form_id ?? $record->product_id ?? null;
                 @endphp
                 <tr>
                     <td>{{ $rowNumber++ }}</td>
@@ -59,6 +61,17 @@
                     <td>{{ $rate !== null ? number_format((float) $rate, 2) : '-' }}</td>
                     <td>{{ $totalPrice !== null ? number_format($totalPrice, 2) : '-' }}</td>
                     <td>{{ $platformFee !== null ? number_format((float) $platformFee, 2) : '-' }}</td>
+                    <td>
+                        @if($detailsId)
+                            <div class="d-flex gap-2">
+                                <a href="{{ url('seller/enquiry/view/' . $detailsId) }}" class="btn btn-primary btn-sm">
+                                    View Details
+                                </a>
+                            </div>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
