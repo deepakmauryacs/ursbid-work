@@ -26,7 +26,7 @@ class AccountingAcceptedBiddingController extends Controller
             'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
             'product_name' => $request->input('product_name'),
-            'keyword' => $request->input('keyword'),
+            'qutation_id' => $request->input('qutation_id'),
             'r_page' => $perPage,
         ];
 
@@ -60,16 +60,8 @@ class AccountingAcceptedBiddingController extends Controller
             });
         }
 
-        if ($request->filled('keyword')) {
-            $keyword = $request->input('keyword');
-            $query->where(function ($innerQuery) use ($keyword) {
-                $innerQuery
-                    ->where('qutation_form.qutation_id', 'like', '%' . $keyword . '%')
-                    ->orWhere('qutation_form.name', 'like', '%' . $keyword . '%')
-                    ->orWhere('seller.name', 'like', '%' . $keyword . '%')
-                    ->orWhere('product.title', 'like', '%' . $keyword . '%')
-                    ->orWhere('bidding_price.product_name', 'like', '%' . $keyword . '%');
-            });
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
         }
 
         $records = $query

@@ -92,10 +92,10 @@
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">Search Keyword</label>
+                                    <label class="form-label">Quotation ID</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                        <input type="text" name="keyword" class="form-control" placeholder="Search" value="{{ $filters['keyword'] ?? '' }}">
+                                        <span class="input-group-text"><i class="bi bi-upc"></i></span>
+                                        <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID" value="{{ $filters['qutation_id'] ?? '' }}">
                                     </div>
                                 </div>
 
