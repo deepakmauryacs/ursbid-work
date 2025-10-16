@@ -51,7 +51,7 @@
                                 View List
                             </a>
                         @else
-                            <button type="button" class="btn btn-secondary btn-sm" disabled>
+                            <button type="button" class="btn btn-primary btn-sm" disabled>
                                 View List
                             </button>
                         @endif
