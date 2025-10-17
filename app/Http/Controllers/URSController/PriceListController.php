@@ -97,7 +97,8 @@ class PriceListController extends Controller
         $enquiry = $this->hydrateEnquiryContext($records->first(), $quotationForm);
 
         $sellerRecords = $records
-            ->sortBy(fn ($record) => is_numeric($record->rate) ? (float) $record->rate : INF)
+            ->filter(fn ($record) => is_numeric($record->rate))
+            ->sortBy(fn ($record) => (float) $record->rate)
             ->values();
 
         $productTitle = collect([
@@ -227,18 +228,6 @@ class PriceListController extends Controller
                 'total'        => $total,
             ];
         });
-
-        if ($vendorBids->isEmpty()) {
-            $vendorBids = collect([
-                [
-                    'name'         => 'Vendor',
-                    'mobile'       => '-',
-                    'country_code' => null,
-                    'prices'       => [optional($products->first())->id ?? 0 => null],
-                    'total'        => null,
-                ],
-            ]);
-        }
 
         $auction = (object) [
             'auction_id'           => $enquiry->qutation_id ?? $quotationId,
