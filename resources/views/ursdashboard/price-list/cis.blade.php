@@ -3,389 +3,628 @@
 
 @section('content')
 @php
-    $records = $records ?? collect();
+    $records = ($records ?? collect())->values();
     $enquiry = $enquiry ?? null;
+    $sellerRecords = $records;
+    $maxVendorColumns = max($sellerRecords->count(), 4);
+
+    $productTitle = $enquiry->product_title
+        ?? $enquiry->bidding_price_product_name
+        ?? $enquiry->qutation_form_product_name
+        ?? '-';
+
+    $productBrand = $enquiry->product_brand
+        ?? $enquiry->category_name
+        ?? $enquiry->sub_name
+        ?? $enquiry->material
+        ?? null;
+
     $quantityValue = $enquiry->quantity ?? null;
     $unitValue = $enquiry->unit ?? null;
-    $quantityLabel = trim(($quantityValue ? (string) $quantityValue : '-') . ' ' . ($unitValue ?? ''));
-    $sellerRecords = $records->values();
+
     $startPrice = $sellerRecords
         ->map(function ($item) {
             return is_numeric($item->rate ?? null) ? (float) $item->rate : null;
         })
         ->filter(fn ($value) => $value !== null)
         ->min();
-    $productTitle = $enquiry->product_title
-        ?? $enquiry->bidding_price_product_name
-        ?? $enquiry->qutation_form_product_name
-        ?? '-';
-    $productBrand = $enquiry->product_brand ?? $enquiry->qutation_form_product_brand ?? null;
-    $specification = $productBrand ?: ($enquiry->material ?? null);
-    $maxVendorColumns = max($sellerRecords->count(), 4);
-    $responseDeadlineRaw = $enquiry->response_deadline ?? $enquiry->created_at ?? null;
-    try {
-        $responseDeadlineLabel = $responseDeadlineRaw ? \Illuminate\Support\Carbon::parse($responseDeadlineRaw)->format('d M, Y') : 'N/A';
-    } catch (\Exception $exception) {
-        $responseDeadlineLabel = is_string($responseDeadlineRaw) ? $responseDeadlineRaw : 'N/A';
+
+    $extractQuantity = static function ($value) {
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        if (is_string($value) && preg_match('/\d+(?:\.\d+)?/', $value, $matches)) {
+            return isset($matches[0]) ? (float) $matches[0] : null;
+        }
+
+        return null;
+    };
+
+    $buyerQuantityNumber = $extractQuantity($quantityValue);
+    $buyerQuoteValue = null;
+
+    if ($startPrice !== null) {
+        $buyerQuoteValue = $buyerQuantityNumber !== null
+            ? $buyerQuantityNumber * $startPrice
+            : $startPrice;
     }
-    $totalQuoteValue = static function ($record) {
+
+    $valueOrNA = static function ($value, string $default = 'N/A') {
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+
+        return ($value === null || $value === '') ? $default : $value;
+    };
+
+    $buyerName = $enquiry->name
+        ?? $enquiry->buyer_name
+        ?? $enquiry->qutation_form_name
+        ?? 'N/A';
+
+    $quotationDateRaw = $enquiry->date_time
+        ?? $enquiry->created_at
+        ?? $enquiry->updated_at
+        ?? null;
+
+    try {
+        $quotationDateLabel = $quotationDateRaw
+            ? \Illuminate\Support\Carbon::parse($quotationDateRaw)->format('d/m/Y')
+            : 'N/A';
+    } catch (\Exception $exception) {
+        $quotationDateLabel = is_string($quotationDateRaw) ? $quotationDateRaw : 'N/A';
+    }
+
+    $buyerLocationParts = collect([
+        $enquiry->city ?? null,
+        $enquiry->state ?? null,
+    ])->filter()->implode(', ');
+
+    $lowestVendorRate = $sellerRecords
+        ->map(function ($record) {
+            return is_numeric($record->rate ?? null) ? (float) $record->rate : null;
+        })
+        ->filter()
+        ->min();
+
+    $totalQuoteValue = static function ($record) use ($extractQuantity) {
+        if (!$record) {
+            return null;
+        }
+
         $rate = is_numeric($record->rate ?? null) ? (float) $record->rate : null;
         if ($rate === null) {
             return null;
         }
 
-        $quantity = 0;
-        if (is_numeric($record->quantity ?? null)) {
-            $quantity = (float) $record->quantity;
-        } elseif (is_string($record->quantity ?? null) && preg_match('/\d+(?:\.\d+)?/', $record->quantity, $matches)) {
-            $quantity = (float) ($matches[0] ?? 0);
+        $quantity = $extractQuantity($record->quantity ?? null);
+
+        return $quantity !== null ? $quantity * $rate : $rate;
+    };
+
+    $resolveSellerValue = static function (?object $record, string $key) use ($totalQuoteValue, $extractQuantity) {
+        if (!$record) {
+            return null;
         }
 
-        return $quantity > 0 ? $quantity * $rate : $rate;
+        switch ($key) {
+            case 'product':
+                return $record->product_title
+                    ?? $record->bidding_price_product_name
+                    ?? null;
+            case 'category':
+                return $record->category_name
+                    ?? $record->sub_name
+                    ?? $record->product_brand
+                    ?? $record->material
+                    ?? null;
+            case 'quantity':
+                return $record->quantity ?? null;
+            case 'unit':
+                return $record->unit ?? null;
+            case 'rate':
+                return is_numeric($record->rate ?? null)
+                    ? number_format((float) $record->rate, 2)
+                    : null;
+            case 'quote_value':
+                $value = $totalQuoteValue($record);
+
+                return $value !== null ? number_format($value, 2) : null;
+            case 'quotation_type':
+                if (!empty($record->material)) {
+                    return 'With Material';
+                }
+
+                return 'Not Specified';
+            case 'delivery_period':
+                return $record->bid_time ?? null;
+            case 'platform_fee':
+                return is_numeric($record->platform_fee ?? null)
+                    ? number_format((float) $record->platform_fee, 2)
+                    : null;
+            default:
+                return null;
+        }
     };
+
+    $comparisonRows = [
+        [
+            'label' => 'Product',
+            'key' => 'product',
+            'buyerValue' => $productTitle,
+        ],
+        [
+            'label' => 'Category',
+            'key' => 'category',
+            'buyerValue' => $productBrand ?? 'Not specified',
+        ],
+        [
+            'label' => 'Quantity',
+            'key' => 'quantity',
+            'buyerValue' => $quantityValue ?? 'Not specified',
+        ],
+        [
+            'label' => 'Unit',
+            'key' => 'unit',
+            'buyerValue' => $unitValue ?? 'Not specified',
+        ],
+        [
+            'label' => 'Rate (₹)',
+            'key' => 'rate',
+            'buyerValue' => $startPrice !== null ? number_format($startPrice, 2) : 'N/A',
+        ],
+        [
+            'label' => 'Quote Value (₹)',
+            'key' => 'quote_value',
+            'buyerValue' => $buyerQuoteValue !== null ? number_format($buyerQuoteValue, 2) : 'N/A',
+        ],
+        [
+            'label' => 'Quotation Type',
+            'key' => 'quotation_type',
+            'buyerValue' => !empty($enquiry->material) ? 'With Material' : 'Not Specified',
+        ],
+        [
+            'label' => 'Delivery Period (In Days)',
+            'key' => 'delivery_period',
+            'buyerValue' => $enquiry->bid_time ?? 'Not specified',
+        ],
+        [
+            'label' => 'Platform Fee (₹)',
+            'key' => 'platform_fee',
+            'buyerValue' => is_numeric($enquiry->platform_fee ?? null)
+                ? number_format((float) $enquiry->platform_fee, 2)
+                : 'N/A',
+        ],
+    ];
 @endphp
+
 <style>
     .cis-wrapper {
-        background: #f5f8fc;
-        border-radius: 12px;
-        padding: 24px;
-        box-shadow: 0 12px 32px rgba(15, 70, 140, 0.08);
+        background: linear-gradient(180deg, #f6f9ff 0%, #eef3fb 100%);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(15, 70, 140, 0.08);
     }
 
-    .cis-toolbar {
-        border: 1px solid #dbe5f4;
-        border-radius: 10px;
-        background: #fff;
-        padding: 12px 16px;
+    .cis-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
     }
 
-    .cis-toolbar .title-badge {
-        font-weight: 600;
-        color: #0a4a8c;
-        background: #e8f1ff;
-        border-radius: 6px;
-        padding: 6px 12px;
-        font-size: 13px;
+    .cis-meta-card {
+        background: #ffffff;
+        border: 1px solid #d5e2fb;
+        border-radius: 16px;
+        padding: 18px 20px;
+        box-shadow: 0 10px 24px rgba(15, 70, 140, 0.08);
     }
 
-    .cis-toolbar .filter-chip {
-        background: linear-gradient(135deg, #ffffff, #f3f7ff);
-        border: 1px solid #d8e4f8;
-        border-radius: 999px;
-        padding: 6px 14px;
-        font-size: 13px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: #32527a;
-        cursor: pointer;
+    .cis-meta-card span {
+        display: block;
+        font-size: 12px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: #6f83aa;
+        margin-bottom: 6px;
     }
 
-    .cis-toolbar .filter-chip i {
-        color: #0a4a8c;
-    }
-
-    .cis-alert {
-        margin-top: 16px;
-        padding: 12px 16px;
-        background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(242,246,255,0.95));
-        border: 1px dashed #ff9c9c;
-        border-radius: 10px;
-        color: #0b4685;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .cis-alert span {
-        color: #ff4f4f;
+    .cis-meta-card strong {
+        display: block;
+        font-size: 18px;
         font-weight: 700;
+        color: #0f3c7c;
+        word-break: break-word;
     }
 
-    .cis-table-wrapper {
-        margin-top: 24px;
-        background: #fff;
-        border-radius: 12px;
-        border: 1px solid #dbe5f4;
+    .cis-table-card {
+        margin-top: 28px;
+        background: #ffffff;
+        border: 1px solid #d5e2fb;
+        border-radius: 18px;
         overflow: hidden;
+        box-shadow: 0 16px 38px rgba(15, 70, 140, 0.1);
+    }
+
+    .cis-table-headline {
+        padding: 20px 24px;
+        background: linear-gradient(135deg, #e9f1ff 0%, #ffffff 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .cis-table-headline h5 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #103b77;
+    }
+
+    .cis-table-headline p {
+        margin: 0;
+        color: #4e6c9a;
+        font-size: 13px;
+    }
+
+    .cis-table-scroll {
+        overflow-x: auto;
     }
 
     .cis-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
+        min-width: 880px;
         font-size: 13px;
+        --cis-label-width: 220px;
+        --cis-value-width: 260px;
+    }
+
+    .cis-table th,
+    .cis-table td {
+        border: 1px solid #dbe4f5;
+        padding: 14px 16px;
+        background: #ffffff;
+        min-width: 150px;
     }
 
     .cis-table thead th {
-        background: #f0f6ff;
-        color: #0a4a8c;
-        text-transform: uppercase;
-        font-size: 12px;
+        background: #e4edff;
+        color: #0f3c7c;
         font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: .06em;
         text-align: center;
-        border-bottom: 1px solid #d1def5;
-        padding: 14px 10px;
     }
 
-    .cis-table tbody th,
-    .cis-table tbody td {
-        border-bottom: 1px solid #e4ecf8;
-        border-right: 1px solid #e4ecf8;
-        padding: 12px 10px;
-        background: #fff;
-    }
-
-    .cis-table tbody tr:nth-child(odd) th,
-    .cis-table tbody tr:nth-child(odd) td {
-        background: #f9fbff;
+    .cis-table thead th.cis-col-label,
+    .cis-table thead th.cis-col-value {
+        text-transform: none;
+        font-size: 13px;
+        letter-spacing: normal;
+        text-align: left;
     }
 
     .cis-table tbody th {
-        font-weight: 700;
-        color: #0a4a8c;
-        background: #f1f6ff;
+        background: #f3f7ff;
+        color: #0f3c7c;
+        font-weight: 600;
+        text-align: left;
     }
 
-    .cis-table tbody td.text-center {
+    .cis-table tbody tr:nth-child(even) td {
+        background: #f9fbff;
+    }
+
+    .cis-table td {
+        color: #21497f;
+        font-weight: 500;
         text-align: center;
     }
 
-    .cis-table .vendor-header {
+    .cis-table td.text-start {
+        text-align: left;
+    }
+
+    .cis-table .sticky-col {
+        position: sticky;
+        z-index: 5;
+        box-shadow: 12px 0 16px rgba(15, 70, 140, 0.06);
+    }
+
+    .cis-table .sticky-col-label {
+        left: 0;
+        min-width: var(--cis-label-width);
+        z-index: 6;
+    }
+
+    .cis-table .sticky-col-value {
+        left: calc(var(--cis-label-width));
+        min-width: var(--cis-value-width);
+        z-index: 5;
+        box-shadow: 6px 0 12px rgba(15, 70, 140, 0.05);
+    }
+
+    .cis-buyer-header {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 4px;
+        gap: 2px;
     }
 
-    .cis-table .vendor-badge {
-        background: #e7f2ff;
-        color: #0a4a8c;
-        border-radius: 6px;
-        padding: 4px 8px;
-        font-weight: 600;
+    .cis-buyer-header .cis-headline {
+        font-weight: 700;
+        color: #103b77;
+        font-size: 16px;
+    }
+
+    .cis-buyer-header .cis-subtext {
         font-size: 12px;
+        color: #5c77a4;
+        text-transform: uppercase;
+        letter-spacing: .08em;
     }
 
-    .cis-table .highlight {
-        background: #fffaf1 !important;
-        color: #c9820f;
+    .cis-vendor-header {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .cis-vendor-badge {
+        background: #dceaff;
+        color: #0f3c7c;
+        font-weight: 600;
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .cis-vendor-name {
+        font-size: 14px;
         font-weight: 700;
+        color: #0e386e;
+        text-transform: capitalize;
     }
 
-    .cis-table tfoot td {
-        background: #e7f2ff;
+    .cis-vendor-contact {
+        font-size: 12px;
+        color: #5c77a4;
+    }
+
+    .cis-table td.is-best {
+        background: #fff6e6 !important;
+        color: #c47b07;
         font-weight: 700;
-        color: #0a4a8c;
+        box-shadow: inset 0 0 0 1px rgba(196, 123, 7, 0.25);
     }
 
-    .cis-summary {
-        margin-top: 24px;
+    .cis-summary-grid {
+        margin-top: 28px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
     }
 
     .cis-summary-card {
-        background: linear-gradient(180deg, #ffffff, #f7f9ff);
-        border: 1px solid #dbe5f4;
-        border-radius: 12px;
-        padding: 18px;
-        min-height: 120px;
+        background: #ffffff;
+        border: 1px solid #d5e2fb;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 12px 26px rgba(15, 70, 140, 0.08);
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
+        min-height: 140px;
     }
 
     .cis-summary-card h6 {
+        margin: 0;
+        font-size: 12px;
         text-transform: uppercase;
-        font-size: 11px;
         letter-spacing: .08em;
-        color: #6c87b5;
-        margin-bottom: 0;
+        color: #6b82ab;
     }
 
     .cis-summary-card p {
-        margin-bottom: 0;
-        font-weight: 600;
-        color: #0a3d78;
+        margin: 0;
         font-size: 14px;
+        font-weight: 600;
+        color: #102f63;
+        line-height: 1.5;
+    }
+
+    .cis-invited-card {
+        margin-top: 32px;
+        background: #ffffff;
+        border: 1px solid #d5e2fb;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 12px 30px rgba(15, 70, 140, 0.08);
+    }
+
+    .cis-invited-card h5 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #103b77;
+        margin-bottom: 16px;
+    }
+
+    .cis-invited-card table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 13px;
+    }
+
+    .cis-invited-card thead th {
+        background: #e4edff;
+        color: #0f3c7c;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid #dbe4f5;
+        padding: 12px 14px;
+    }
+
+    .cis-invited-card tbody td {
+        border: 1px solid #e1e9f8;
+        padding: 12px 14px;
+        color: #21497f;
+        font-weight: 500;
+        background: #ffffff;
+    }
+
+    .cis-invited-card tbody tr:nth-child(even) td {
+        background: #f8fbff;
     }
 
     @media (max-width: 991.98px) {
         .cis-wrapper {
-            padding: 16px;
-        }
-
-        .cis-toolbar {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 12px;
+            padding: 20px;
         }
 
         .cis-table {
-            font-size: 12px;
+            --cis-label-width: 180px;
+            --cis-value-width: 220px;
+        }
+
+        .cis-table-headline h5 {
+            font-size: 16px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .cis-meta-card {
+            padding: 16px;
+        }
+
+        .cis-meta-card strong {
+            font-size: 16px;
+        }
+
+        .cis-summary-card {
+            padding: 16px;
+            min-height: auto;
         }
     }
 </style>
+
 <div class="container-fluid">
     <div class="cis-wrapper">
-        <div class="cis-toolbar d-flex flex-wrap align-items-center justify-content-between gap-2">
-            <div class="d-flex flex-wrap align-items-center gap-2">
-                <span class="title-badge">RFQ No - {{ $enquiry->qutation_id ?? $enquiry->enquiry_id ?? 'N/A' }}</span>
-                <span class="text-muted small">Branch Unit Details: {{ $enquiry->branch_name ?? 'N/A' }}</span>
-                <span class="text-muted small">Last Date to Respond: {{ $responseDeadlineLabel }}</span>
+        <div class="cis-meta-grid">
+            <div class="cis-meta-card">
+                <span>Quotation ID</span>
+                <strong>{{ $valueOrNA($enquiry->qutation_id ?? $enquiry->enquiry_id ?? null) }}</strong>
             </div>
-            <div class="d-flex flex-wrap align-items-center gap-2">
-                <span class="filter-chip"><i class="bi bi-funnel"></i>Sort by Price</span>
-                <span class="filter-chip"><i class="bi bi-calendar3"></i>Sort by Date</span>
-                <span class="filter-chip"><i class="bi bi-heart"></i>Select Favourite</span>
-                <span class="filter-chip"><i class="bi bi-clock-history"></i>Select Last Vendor</span>
-                <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.reload();">Reset</button>
-                    <a href="{{ route('buyer.price-list', $dataId) }}" class="btn btn-sm btn-primary">Back</a>
+            <div class="cis-meta-card">
+                <span>Buyer / Client</span>
+                <strong>{{ $valueOrNA($buyerName) }}</strong>
+            </div>
+            <div class="cis-meta-card">
+                <span>Date</span>
+                <strong>{{ $quotationDateLabel }}</strong>
+            </div>
+            @if($buyerLocationParts)
+                <div class="cis-meta-card">
+                    <span>Location</span>
+                    <strong>{{ $buyerLocationParts }}</strong>
                 </div>
+            @endif
+        </div>
+
+        <div class="cis-table-card">
+            <div class="cis-table-headline">
+                <h5>Your Exclusive Automated CIS</h5>
+                <p>Compare vendor quotations and identify the most competitive offer at a glance.</p>
             </div>
-        </div>
-
-        <div class="cis-alert mt-3">
-            <div>Your Exclusive Automated CIS <span>(To access more offers, click the Reset button and add CIS ID here)</span></div>
-            <div class="text-uppercase text-muted small">General &nbsp; <strong>•</strong> &nbsp; Fastener</div>
-        </div>
-
-        <div class="cis-table-wrapper mt-4">
-            <div class="table-responsive">
+            <div class="cis-table-scroll">
                 <table class="cis-table">
                     <thead>
                         <tr>
-                            <th rowspan="2" class="text-start">Product</th>
-                            <th rowspan="2" class="text-start">Specifications</th>
-                            <th rowspan="2" class="text-start">Size</th>
-                            <th rowspan="2" class="text-start">Quantity / UOM</th>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
+                            <th scope="col" class="cis-col-label sticky-col sticky-col-label">Attributes</th>
+                            <th scope="col" class="cis-col-value sticky-col sticky-col-value">
+                                <div class="cis-buyer-header">
+                                    <span class="cis-headline">Buyer Details</span>
+                                    <span class="cis-subtext">Reference Specification</span>
+                                </div>
+                            </th>
+                            @for ($index = 0; $index < $maxVendorColumns; $index++)
                                 @php
                                     $sellerRecord = $sellerRecords->get($index);
+                                    $sellerName = optional($sellerRecord)->seller_name ?? 'Vendor ' . ($index + 1);
+                                    $sellerContact = optional($sellerRecord)->seller_phone
+                                        ?? optional($sellerRecord)->seller_email
+                                        ?? null;
                                 @endphp
-                                <th class="text-center">
-                                    <div class="vendor-header">
-                                        <span class="vendor-badge">Vendor {{ $index + 1 }}</span>
-                                        <span class="fw-semibold">{{ optional($sellerRecord)->seller_name ?? 'N/A' }}</span>
-                                        <small class="text-muted">Quotation Page</small>
+                                <th scope="col">
+                                    <div class="cis-vendor-header">
+                                        <span class="cis-vendor-badge">Vendor {{ $index + 1 }}</span>
+                                        <span class="cis-vendor-name">{{ $valueOrNA($sellerName) }}</span>
+                                        <span class="cis-vendor-contact">{{ $valueOrNA($sellerContact) }}</span>
                                     </div>
                                 </th>
                             @endfor
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th>Product</th>
-                            <td>{{ $productTitle }}</td>
-                            <td>{{ $enquiry->size ?? '-' }}</td>
-                            <td>{{ $quantityLabel }}</td>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
-                                @php
-                                    $sellerRecord = $sellerRecords->get($index);
-                                    $sellerProduct = optional($sellerRecord)->product_title ?? optional($sellerRecord)->bidding_price_product_name;
-                                @endphp
-                                <td class="text-center">{{ $sellerProduct ?? '-' }}</td>
-                            @endfor
-                        </tr>
-                        <tr>
-                            <th>Specifications</th>
-                            <td>{{ $specification ?? 'Not specified' }}</td>
-                            <td>{{ $enquiry->grade ?? '-' }}</td>
-                            <td>{{ $enquiry->material ?? '-' }}</td>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
-                                @php
-                                    $sellerRecord = $sellerRecords->get($index);
-                                    $sellerSpec = optional($sellerRecord)->product_brand ?? optional($sellerRecord)->material;
-                                @endphp
-                                <td class="text-center">{{ $sellerSpec ?? 'Not specified' }}</td>
-                            @endfor
-                        </tr>
-                        <tr>
-                            <th>Counter Offer</th>
-                            <td colspan="3">&nbsp;</td>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
-                                @php
-                                    $sellerRecord = $sellerRecords->get($index);
-                                    $counter = optional($sellerRecord)->counter_offer;
-                                @endphp
-                                <td class="text-center fw-semibold text-success">
-                                    {{ $counter ? number_format((float) $counter, 2) : '-' }}
-                                </td>
-                            @endfor
-                        </tr>
-                        <tr>
-                            <th>Total</th>
-                            <td class="highlight">Start Price</td>
-                            <td class="highlight">{{ $startPrice !== null ? number_format($startPrice, 2) : 'N/A' }}</td>
-                            <td class="highlight">{{ $quantityLabel }}</td>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
-                                @php
-                                    $sellerRecord = $sellerRecords->get($index);
-                                    $rate = optional($sellerRecord)->rate;
-                                @endphp
-                                <td class="text-center highlight">
-                                    {{ is_numeric($rate) ? number_format((float) $rate, 2) : 'N/A' }}
-                                </td>
-                            @endfor
-                        </tr>
-                        <tr>
-                            <th>Quote Value</th>
-                            <td colspan="3">{{ $startPrice !== null && is_numeric($quantityValue) ? number_format((float) $quantityValue * (float) $startPrice, 2) : 'N/A' }}</td>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
-                                @php
-                                    $sellerRecord = $sellerRecords->get($index);
-                                    $totalValue = $sellerRecord ? $totalQuoteValue($sellerRecord) : null;
-                                @endphp
-                                <td class="text-center">
-                                    {{ $totalValue !== null ? number_format($totalValue, 2) : 'N/A' }}
-                                </td>
-                            @endfor
-                        </tr>
-                        <tr>
-                            <th>Platform Fee</th>
-                            <td colspan="3">{{ $enquiry->platform_fee ?? 'N/A' }}</td>
-                            @for($index = 0; $index < $maxVendorColumns; $index++)
-                                @php
-                                    $sellerRecord = $sellerRecords->get($index);
-                                    $platformFee = optional($sellerRecord)->platform_fee;
-                                @endphp
-                                <td class="text-center">{{ is_numeric($platformFee) ? number_format((float) $platformFee, 2) : 'N/A' }}</td>
-                            @endfor
-                        </tr>
+                        @foreach ($comparisonRows as $row)
+                            <tr>
+                                <th scope="row" class="sticky-col sticky-col-label">{{ $row['label'] }}</th>
+                                <td class="text-start sticky-col sticky-col-value">{{ $valueOrNA($row['buyerValue']) }}</td>
+                                @for ($index = 0; $index < $maxVendorColumns; $index++)
+                                    @php
+                                        $sellerRecord = $sellerRecords->get($index);
+                                        $sellerValue = $resolveSellerValue($sellerRecord ?? null, $row['key']);
+                                        $cellClasses = '';
+
+                                        if ($row['key'] === 'rate' && $sellerRecord && is_numeric($sellerRecord->rate ?? null)) {
+                                            $isBestRate = $lowestVendorRate !== null
+                                                && abs((float) $sellerRecord->rate - $lowestVendorRate) < 0.0001;
+
+                                            if ($isBestRate) {
+                                                $cellClasses = 'is-best';
+                                            }
+                                        }
+                                    @endphp
+                                    <td class="{{ trim($cellClasses) }}">{{ $valueOrNA($sellerValue) }}</td>
+                                @endfor
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="cis-summary">
+        <div class="cis-summary-grid">
             <div class="cis-summary-card">
                 <h6>Remarks</h6>
-                <p>{{ $enquiry->qutation_form_message ?? 'Nothing' }}</p>
+                <p>{{ $valueOrNA($enquiry->qutation_form_message ?? null, 'Nothing specified') }}</p>
             </div>
             <div class="cis-summary-card">
                 <h6>Price Basis</h6>
-                <p>{{ $enquiry->qutation_form_material ?? $enquiry->material ?? 'Not specified' }}</p>
+                <p>{{ $valueOrNA($enquiry->material ?? null, 'Not specified') }}</p>
             </div>
             <div class="cis-summary-card">
                 <h6>Payment Terms</h6>
-                <p>{{ $enquiry->payment_terms ?? 'No payment terms' }}</p>
+                <p>{{ $valueOrNA($enquiry->payment_terms ?? null, 'No payment terms available') }}</p>
             </div>
             <div class="cis-summary-card">
-                <h6>Delivery Period (In Days)</h6>
-                <p>{{ $enquiry->bid_time ?? 'Not available' }}</p>
+                <h6>Delivery Period (Days)</h6>
+                <p>{{ $valueOrNA($enquiry->bid_time ?? null, 'Not available') }}</p>
             </div>
         </div>
 
         @if(($invitedSellers ?? collect())->isNotEmpty())
-            <div class="cis-table-wrapper mt-4">
+            <div class="cis-invited-card">
+                <h5>Invited Vendors</h5>
                 <div class="table-responsive">
-                    <table class="cis-table">
+                    <table>
                         <thead>
                             <tr>
                                 <th class="text-start">#</th>
@@ -398,9 +637,9 @@
                             @foreach($invitedSellers as $index => $invitedSeller)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $invitedSeller->name ?? 'N/A' }}</td>
-                                    <td>{{ $invitedSeller->email ?? 'N/A' }}</td>
-                                    <td>{{ $invitedSeller->phone ?? 'N/A' }}</td>
+                                    <td>{{ $valueOrNA($invitedSeller->name ?? null) }}</td>
+                                    <td>{{ $valueOrNA($invitedSeller->email ?? null) }}</td>
+                                    <td>{{ $valueOrNA($invitedSeller->phone ?? null) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
