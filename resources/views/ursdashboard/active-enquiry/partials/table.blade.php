@@ -5,7 +5,7 @@
             <th>Sr no</th>
             <th>Action</th>
             <th>Quotation ID</th>
-            <th>Name</th>
+           <th>Buyer / Client</th>
             <th>Category</th>
             <th>Sub Category</th>
             <th>Product Name</th>
