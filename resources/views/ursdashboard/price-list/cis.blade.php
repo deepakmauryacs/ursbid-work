@@ -10,13 +10,82 @@
         ->values();
     $maxVendorColumns = max($sellerRecords->count(), 2);
 
-    $productTitle = $enquiry->product_title
-        ?? $sellerRecords->pluck('product_name')->filter(fn($name) => filled($name))->first()
-        ?? '-';
-    $productBrand = $enquiry->product_brand ?? null;
-    $quantityValue = $enquiry->quantity ?? null;
-    $unitValue = $enquiry->unit ?? null;
+    $firstRecord = $sellerRecords->first();
+
+    $productTitle = collect([
+            $enquiry->product_title ?? null,
+            $enquiry->bidding_price_product_name ?? null,
+            $enquiry->product_name ?? null,
+            optional($firstRecord)->product_title ?? null,
+            optional($firstRecord)->bidding_price_product_name ?? null,
+        ])
+        ->filter(fn ($value) => filled($value))
+        ->first() ?? '-';
+
+    $productBrand = collect([
+            $enquiry->product_brand ?? null,
+            $enquiry->material ?? null,
+            optional($firstRecord)->product_brand ?? null,
+            optional($firstRecord)->material ?? null,
+        ])
+        ->filter(fn ($value) => filled($value))
+        ->first();
+
+    $quantityValue = collect([
+            $enquiry->quantity ?? null,
+            optional($firstRecord)->quantity ?? null,
+        ])->filter(fn ($value) => filled($value))->first();
+
+    $unitValue = collect([
+            $enquiry->unit ?? null,
+            optional($firstRecord)->unit ?? null,
+        ])->filter(fn ($value) => filled($value))->first();
+
     $startPrice = $sellerRecords->pluck('rate')->filter(fn($r)=>is_numeric($r))->min();
+
+    $quantityNumeric = null;
+    if (is_numeric($quantityValue)) {
+        $quantityNumeric = (float) $quantityValue;
+    } elseif (is_string($quantityValue)) {
+        preg_match('/\d+(?:\.\d+)?/', $quantityValue, $matches);
+        $quantityNumeric = isset($matches[0]) ? (float) $matches[0] : null;
+    }
+
+    $sellerRate = function (int $index) use ($sellerRecords) {
+        $seller = $sellerRecords->get($index);
+
+        if (!$seller || !is_numeric($seller->rate)) {
+            return '-';
+        }
+
+        return number_format((float) $seller->rate, 2);
+    };
+
+    $sellerTotal = function (int $index) use ($sellerRecords) {
+        $seller = $sellerRecords->get($index);
+
+        if (!$seller) {
+            return '-';
+        }
+
+        $total = $seller->calculated_total ?? null;
+
+        if (is_numeric($total) && (float) $total !== 0.0) {
+            return '₹' . number_format((float) $total, 2);
+        }
+
+        $quantity = $seller->numeric_quantity ?? null;
+
+        if (is_numeric($quantity) && is_numeric($seller->rate)) {
+            $computed = (float) $quantity * (float) $seller->rate;
+
+            if ($computed !== 0.0) {
+                return '₹' . number_format($computed, 2);
+            }
+        }
+
+        return '-';
+    };
 
     $buyerName = $enquiry->name ?? $enquiry->buyer_name ?? 'N/A';
     $quotationDateRaw = $enquiry->date_time ?? $enquiry->created_at ?? null;
@@ -130,10 +199,27 @@
                                     <tr>
                                         <td>{{ $valueOrNA($productTitle) }}</td>
                                         <td>{{ $valueOrNA($productBrand) }}</td>
-                                        <td>{{ $valueOrNA($quantityValue) }} {{ $valueOrNA($unitValue) }}</td>
-                                        <td>{{ $startPrice ? number_format($startPrice, 2) : '-' }}</td>
+                                        <td>
+                                            {{ $valueOrNA($quantityValue) }}
+                                            @if(filled($unitValue))
+                                                {{ $valueOrNA($unitValue) }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $startPrice ? '₹' . number_format($startPrice, 2) : '-' }}</td>
                                     </tr>
-                                    <tr><td colspan="4" class="text-end">Total</td></tr>
+                                    <tr>
+                                        <td colspan="3" class="text-end fw-semibold">Total Amount</td>
+                                        <td>
+                                            @php
+                                                $totalAmount = null;
+
+                                                if (is_numeric($quantityNumeric) && is_numeric($startPrice)) {
+                                                    $totalAmount = (float) $quantityNumeric * (float) $startPrice;
+                                                }
+                                            @endphp
+                                            {{ is_numeric($totalAmount) ? '₹' . number_format($totalAmount, 2) : '-' }}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -165,13 +251,13 @@
                                     <tr>
                                         @for ($i = 0; $i < $maxVendorColumns; $i++)
                                             <td class="text-center">
-                                                {{ is_numeric(optional($sellerRecords->get($i))->rate) ? number_format(optional($sellerRecords->get($i))->rate, 2) : '-' }}
+                                                {{ $sellerRate($i) }}
                                             </td>
                                         @endfor
                                     </tr>
                                     <tr>
                                         @for ($i = 0; $i < $maxVendorColumns; $i++)
-                                            <td class="text-center">₹0.00</td>
+                                            <td class="text-center">{{ $sellerTotal($i) }}</td>
                                         @endfor
                                     </tr>
                                 </tbody>
