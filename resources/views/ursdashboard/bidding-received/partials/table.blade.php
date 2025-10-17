@@ -16,7 +16,7 @@
                 <th>Sr.No</th>
                 <th>Action</th>
                 <th>Quotation ID</th>
-                <th>Name</th>
+                <th>Buyer / Client</th>
                 <th>Category</th>
                 <th>Sub Category</th>
                 <th>Product Name</th>
@@ -48,15 +48,15 @@
                     <td class="d-flex gap-2">
                         @if($recordId && $hasVendorPrice)
                             <a href="{{ route('buyer.price-list', $recordId) }}" class="btn btn-primary btn-sm">
-                                View List
+                                Vendor List
                             </a>
                         @else
                             <button type="button" class="btn btn-primary btn-sm" disabled>
-                                View List
+                                Vendor List
                             </button>
                         @endif
                         <a href="{{ $recordId ? route('accepted-list', $recordId) : '#' }}" class="btn btn-success btn-sm">
-                            Accepted List
+                            Selected Vendor
                         </a>
                     </td>
                     <td>{{ $recordQuotationId ?: '-' }}</td>
