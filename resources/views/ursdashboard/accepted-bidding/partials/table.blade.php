@@ -41,7 +41,7 @@
                     <td>{{ $record->rate }}</td>
                     <td>{{ number_format($record->calculated_total_price ?? 0, 2) }}</td>
                     <td>{{ $record->price }}</td>
-                    <td class="text-success">Confirm</td>
+                    <td><span class="badge bg-success-subtle text-success py-1 px-2 fs-12">Confirm</span></td>
                 </tr>
             @empty
                 <tr>
