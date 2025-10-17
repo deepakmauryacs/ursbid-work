@@ -144,7 +144,7 @@
                 <!-- Export -->
                 <div class="col-12 col-lg-auto order-1 order-lg-2">
                     <div class="header-actions d-flex align-items-center justify-content-end">
-                        <a href="{{ url('buyer/buyer/forward-auction/export-cis/' . ($enquiry->qutation_id ?? '')) }}"
+                        <a href="{{ route('buyer.cis-export', $enquiry->qutation_id ?? '') }}"
                            class="ra-btn ra-btn-success px-2 font-size-11 d-inline-flex align-items-center text-nowrap">
                             <span class="bi bi-download font-size-12 me-1"></span> Export
                         </a>
