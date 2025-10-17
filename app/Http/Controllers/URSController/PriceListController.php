@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\URSController;
 
 use App\Http\Controllers\Controller;
-use App\Support\SimpleXlsxExporter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class PriceListController extends Controller
 {
@@ -99,8 +97,7 @@ class PriceListController extends Controller
         $enquiry = $this->hydrateEnquiryContext($records->first(), $quotationForm);
 
         $sellerRecords = $records
-            ->filter(fn ($record) => is_numeric($record->rate))
-            ->sortBy(fn ($record) => (float) $record->rate)
+            ->sortBy(fn ($record) => is_numeric($record->rate) ? (float) $record->rate : INF)
             ->values();
 
         $productTitle = collect([
@@ -131,11 +128,12 @@ class PriceListController extends Controller
             $quantityLabel = trim((string) $quantityLabel . ' ' . $unitValue);
         }
 
-        $startPrice = $sellerRecords
+        $sellerRates = $sellerRecords
             ->pluck('rate')
             ->filter(fn ($rate) => is_numeric($rate))
-            ->map(fn ($rate) => (float) $rate)
-            ->min();
+            ->map(fn ($rate) => (float) $rate);
+
+        $startPrice = $sellerRates->min();
 
         $quantityNumeric = null;
         if (is_numeric($quantityValue)) {
@@ -145,101 +143,147 @@ class PriceListController extends Controller
             $quantityNumeric = isset($matches[0]) ? (float) $matches[0] : null;
         }
 
-        $totalAmount = null;
-        if (is_numeric($quantityNumeric) && is_numeric($startPrice)) {
-            $totalAmount = (float) $quantityNumeric * (float) $startPrice;
-        }
-
-        $buyerName = $enquiry->name ?? $enquiry->buyer_name ?? 'N/A';
-        $quotationDateRaw = $enquiry->date_time ?? $enquiry->created_at ?? null;
-
-        try {
-            $quotationDateLabel = $quotationDateRaw
-                ? Carbon::parse($quotationDateRaw)->format('d/m/Y')
-                : 'N/A';
-        } catch (\Exception $e) {
-            $quotationDateLabel = is_string($quotationDateRaw) ? $quotationDateRaw : 'N/A';
-        }
-
-        $formatCurrency = function ($value) {
-            return is_numeric($value)
-                ? '₹ ' . number_format((float) $value, 2)
-                : '-';
-        };
-
-        $vendorNames = $sellerRecords->map(function ($record) {
-            $name = $record->seller_name ?? 'Vendor';
-            $phone = $record->seller_phone ?? '-';
-
-            return trim($name . ' (M: ' . $phone . ')');
-        });
-
-        $vendorRates = $sellerRecords->map(function ($record) use ($formatCurrency) {
-            return $formatCurrency($record->rate ?? null);
-        });
-
-        $vendorTotals = $sellerRecords->map(function ($record) use ($formatCurrency) {
-            $total = $record->calculated_total ?? null;
-
-            if (! is_numeric($total)) {
-                $quantity = $record->numeric_quantity ?? null;
-                if (is_numeric($quantity) && is_numeric($record->rate ?? null)) {
-                    $total = (float) $quantity * (float) $record->rate;
-                }
+        $resolveDate = function ($value, string $format) {
+            if (blank($value)) {
+                return null;
             }
 
-            return $formatCurrency($total);
+            try {
+                return Carbon::parse($value)->format($format);
+            } catch (\Throwable $e) {
+                return is_string($value) ? $value : null;
+            }
+        };
+
+        $scheduleDateRaw = $quotationForm->schedule_date ?? null;
+        $scheduleStartTimeRaw = $quotationForm->schedule_start_time ?? null;
+        $scheduleEndTimeRaw = $quotationForm->schedule_end_time ?? null;
+
+        $auctionDateLabel = $resolveDate($scheduleDateRaw ?? ($enquiry->date_time ?? null), 'd/m/Y');
+        $auctionStartTimeLabel = $resolveDate($scheduleStartTimeRaw, 'g:i A');
+        $auctionEndTimeLabel = $resolveDate($scheduleEndTimeRaw, 'g:i A');
+
+        $combineTimestamp = function ($date, $time) {
+            if (blank($date) || blank($time)) {
+                return null;
+            }
+
+            try {
+                return Carbon::parse($date . ' ' . $time)->timestamp;
+            } catch (\Throwable $e) {
+                return null;
+            }
+        };
+
+        $startTimestamp = $combineTimestamp($scheduleDateRaw, $scheduleStartTimeRaw);
+        $endTimestamp = $combineTimestamp($scheduleDateRaw, $scheduleEndTimeRaw);
+
+        $status = 'N/A';
+        $now = Carbon::now()->timestamp;
+        if ($startTimestamp && $now < $startTimestamp) {
+            $status = 'UPCOMING';
+        } elseif ($startTimestamp && $endTimestamp && $now >= $startTimestamp && $now <= $endTimestamp) {
+            $status = 'LIVE';
+        } elseif ($startTimestamp && $now >= $startTimestamp) {
+            $status = 'COMPLETED';
+        }
+
+        $currencyCode = $quotationForm->currency ?? $enquiry->currency ?? 'INR';
+
+        $products = collect([
+            (object) [
+                'id'           => (int) ($enquiry->product_id ?? $enquiry->bidding_price_product_id ?? 0),
+                'product_name' => $productTitle,
+                'specs'        => $productBrand ?? '-',
+                'quantity'     => $quantityValue ?? '-',
+                'uom_name'     => $unitValue ?? '',
+                'start_price'  => $startPrice,
+            ],
+        ]);
+
+        $vendorBids = $sellerRecords->map(function ($record) use ($products, $quantityNumeric) {
+            $productId = optional($products->first())->id ?? 0;
+            $rate = is_numeric($record->rate) ? (float) $record->rate : null;
+
+            $quantityForTotal = $record->numeric_quantity ?? null;
+            if (!is_numeric($quantityForTotal)) {
+                $quantityForTotal = $quantityNumeric;
+            }
+
+            $total = null;
+            if (is_numeric($quantityForTotal) && is_numeric($rate)) {
+                $total = (float) $quantityForTotal * (float) $rate;
+            } elseif (is_numeric($record->calculated_total ?? null)) {
+                $total = (float) $record->calculated_total;
+            }
+
+            return [
+                'name'         => $record->seller_name ?? 'Vendor',
+                'mobile'       => $record->seller_phone ?? '-',
+                'country_code' => $record->seller_country_code ?? null,
+                'prices'       => [
+                    $productId => $rate,
+                ],
+                'total'        => $total,
+            ];
         });
 
-        $rows = [];
-        $rows[] = ['Comparative Information Statement'];
-        $rows[] = [];
-        $rows[] = ['Quotation ID', $enquiry->qutation_id ?? $enquiry->enquiry_id ?? '-', '', 'Date', $quotationDateLabel];
-        $rows[] = ['Buyer / Client', $buyerName];
-        $rows[] = [];
-        $rows[] = ['Product Details'];
-        $rows[] = ['Product', 'Specs', 'Quantity/UOM', 'Start Price'];
-        $rows[] = [
-            filled($productTitle) ? $productTitle : '-',
-            filled($productBrand) ? $productBrand : '-',
-            filled($quantityLabel) ? $quantityLabel : '-',
-            is_numeric($startPrice) ? $formatCurrency($startPrice) : '-',
+        if ($vendorBids->isEmpty()) {
+            $vendorBids = collect([
+                [
+                    'name'         => 'Vendor',
+                    'mobile'       => '-',
+                    'country_code' => null,
+                    'prices'       => [optional($products->first())->id ?? 0 => null],
+                    'total'        => null,
+                ],
+            ]);
+        }
+
+        $auction = (object) [
+            'auction_id'           => $enquiry->qutation_id ?? $quotationId,
+            'schedule_date'        => $scheduleDateRaw,
+            'schedule_start_time'  => $scheduleStartTimeRaw,
+            'schedule_end_time'    => $scheduleEndTimeRaw,
+            'branch_name'          => $quotationForm->branch_name ?? '-',
+            'currency'             => $currencyCode,
+            'remarks'              => $quotationForm->message ?? $enquiry->qutation_form_message ?? null,
+            'price_basis'          => $quotationForm->price_basis ?? $enquiry->price_basis ?? null,
+            'payment_terms'        => $quotationForm->payment_terms ?? $enquiry->payment_terms ?? null,
+            'delivery_period'      => $quotationForm->delivery_period ?? $quotationForm->bid_time ?? $enquiry->bid_time ?? null,
+            'date_label'           => $auctionDateLabel ?? '-',
+            'start_time_label'     => $auctionStartTimeLabel ?? '-',
+            'end_time_label'       => $auctionEndTimeLabel ?? '-',
         ];
-        $rows[] = ['Total Amount', '', '', $formatCurrency($totalAmount)];
-        $rows[] = [];
 
-        if ($sellerRecords->isEmpty()) {
-            $rows[] = ['Vendor', 'No vendor submitted a price yet.'];
-            $rows[] = ['Rate Per Unit (₹)', '-'];
-            $rows[] = ['Total Amount (₹)', '-'];
-        } else {
-            $rows[] = array_merge(['Vendor'], $vendorNames->all());
-            $rows[] = array_merge(['Rate Per Unit (₹)'], $vendorRates->all());
-            $rows[] = array_merge(['Total Amount (₹)'], $vendorTotals->all());
+        $filename = 'Forward-Auction-CIS-' . ($auction->auction_id ?? $quotationId) . ' ' . now()->format('d-m-Y') . '.xls';
+
+        return response()->view('ursdashboard.price-list.export-cis', [
+            'auction'          => $auction,
+            'currencyCode'     => $currencyCode,
+            'currencySymbol'   => $this->resolveCurrencySymbol($currencyCode),
+            'vendorBids'       => $vendorBids,
+            'products'         => $products,
+            'status'           => $status,
+        ])->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename=' . $filename);
+    }
+
+    protected function resolveCurrencySymbol(?string $currency): string
+    {
+        if (!$currency) {
+            return '₹';
         }
 
-        $rows[] = [];
-        $rows[] = ['Remarks (Message)', filled($enquiry->qutation_form_message ?? null) ? $enquiry->qutation_form_message : '-'];
-        $rows[] = ['Material', filled($enquiry->material ?? null) ? $enquiry->material : '-'];
-        $rows[] = ['Delivery Period (In Days)', filled($enquiry->bid_time ?? null) ? $enquiry->bid_time : '-'];
+        $map = [
+            'INR' => '₹',
+            '₹'   => '₹',
+            'USD' => '$',
+            '$'   => '$',
+            'NPR' => 'NPR',
+        ];
 
-        $sheetName = 'CIS';
-
-        $xlsxContents = SimpleXlsxExporter::build($rows, $sheetName);
-
-        $fileBase = $enquiry->qutation_id ?? $quotationId ?? 'cis-export';
-        $fileSlug = Str::slug((string) $fileBase, '-');
-        if ($fileSlug === '') {
-            $fileSlug = 'cis-export';
-        }
-
-        $fileName = $fileSlug . '-' . now()->format('Ymd_His') . '.xlsx';
-
-        return response()->streamDownload(function () use ($xlsxContents) {
-            echo $xlsxContents;
-        }, $fileName, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
+        return $map[strtoupper((string) $currency)] ?? ($map[$currency] ?? $currency);
     }
 
     protected function fetchInvitedSellers(object $quotationForm): Collection
