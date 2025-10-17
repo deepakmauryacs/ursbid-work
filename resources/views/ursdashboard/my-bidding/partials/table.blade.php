@@ -46,10 +46,10 @@ $rowNumber = $isPaginator ? $records->firstItem() : 1;
             ? ($record->bidding_price_payment_status ?? '')
             : ($record['bidding_price_payment_status'] ?? '');
             if ($recordDate instanceof \Carbon\Carbon) {
-            $recordDate = $recordDate->format('Y-m-d');
+            $recordDate = $recordDate->format('d-m-Y');
             }
             if (!is_string($recordDate) && $recordDate) {
-            $recordDate = \Carbon\Carbon::parse($recordDate)->format('Y-m-d');
+            $recordDate = \Carbon\Carbon::parse($recordDate)->format('d-m-Y');
             }
             @endphp
             <tr>

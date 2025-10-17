@@ -35,7 +35,7 @@
                     <td>{{ $record->category_name }}</td>
                     <td>{{ $record->sub_name }}</td>
                     <td>{{ $record->product_name }}</td>
-                    <td>{{ $record->date_time ? \Carbon\Carbon::parse($record->date_time)->format('Y-m-d') : '' }}</td>
+                    <td>{{ $record->date_time ? \Carbon\Carbon::parse($record->date_time)->format('d-m-Y') : '' }}</td>
                     <td>{{ $record->unit }}</td>
                     <td>{{ $record->quantity }}</td>
                     <td>{{ $record->rate }}</td>
