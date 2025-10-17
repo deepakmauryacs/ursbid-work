@@ -62,7 +62,7 @@ class BiddingReceivedController extends Controller
         }
 
         if ($request->filled('qutation_id')) {
-            $query->where('qutation_form.id', 'like', '%' . $request->input('qutation_id') . '%');
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
         }
 
         if ($request->filled('keyword')) {
