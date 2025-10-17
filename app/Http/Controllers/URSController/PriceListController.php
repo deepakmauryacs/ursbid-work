@@ -32,6 +32,30 @@ class PriceListController extends Controller
         ]);
     }
 
+    public function cis(Request $request, int $dataId)
+    {
+        $seller = $request->session()->get('seller');
+
+        if (!$seller) {
+            abort(403, 'Seller session not found.');
+        }
+
+        $records = $this->basePriceListQuery($seller->email, $dataId)
+            ->orderByDesc('bidding_price.id')
+            ->get();
+
+        $records = $this->appendComputedState($records);
+
+        abort_if($records->isEmpty(), 404);
+
+        return view('ursdashboard.price-list.cis', [
+            'seller'   => $seller,
+            'records'  => $records,
+            'dataId'   => $dataId,
+            'enquiry'  => $records->first(),
+        ]);
+    }
+
     protected function basePriceListQuery(string $buyerEmail, int $dataId)
     {
         $productBrands = DB::table('product_brands')
