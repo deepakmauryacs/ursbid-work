@@ -15,7 +15,10 @@
                             </a>
                         </div>
                         <div class="action-btn">
-                            <a href="{{ route('buyer.cis-details', $enquiryId) }}" class="btn btn-sm btn-outline-primary">
+                            @php
+                                $cisId = $cisQuotationId ?? null;
+                            @endphp
+                            <a href="{{ $cisId ? route('buyer.cis-details', $cisId) : '#' }}" class="btn btn-sm btn-outline-primary {{ $cisId ? '' : 'disabled' }}">
                                 <i class="bi bi-clipboard-data me-1"></i> CIS View
                             </a>
                         </div>
@@ -28,7 +31,7 @@
             <div class="col-lg-12 mb-30">
                 <div class="card shadow-sm">
                     <div class="card-header border-bottom">
-                        <h5 class="mb-0">Enquiry #{{ $enquiryId }}</h5>
+                        <h5 class="mb-0">Enquiry #{{ $cisQuotationId ?? $enquiryId }}</h5>
                     </div>
                     <div class="card-body">
                         @include('ursdashboard.price-list.partials.table', [

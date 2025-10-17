@@ -46,11 +46,14 @@
                 <tr>
                     <td>{{ $rowNumber++ }}</td>
                     <td class="d-flex gap-2">
+                        @php
+                            $cisRouteId = $recordQuotationId ?: null;
+                        @endphp
                         @if($recordId && $hasVendorPrice)
                             <a href="{{ route('buyer.price-list', $recordId) }}" class="btn btn-primary btn-sm">
                                 Vendor List
                             </a>
-                            <a href="{{ route('buyer.cis-details', $recordId) }}" class="btn btn-outline-primary btn-sm">
+                            <a href="{{ $cisRouteId ? route('buyer.cis-details', $cisRouteId) : '#' }}" class="btn btn-outline-primary btn-sm {{ $cisRouteId ? '' : 'disabled' }}">
                                 CIS
                             </a>
                         @else

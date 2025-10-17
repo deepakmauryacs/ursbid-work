@@ -24,15 +24,19 @@ class PriceListController extends Controller
 
         $records = $this->appendComputedState($records);
 
+        $firstRecord = $records->first();
+        $cisQuotationId = $firstRecord->qutation_id ?? null;
+
         return view('ursdashboard.price-list.show', [
-            'seller' => $seller,
-            'records' => $records,
-            'total' => $records->count(),
-            'enquiryId' => $dataId,
+            'seller'          => $seller,
+            'records'         => $records,
+            'total'           => $records->count(),
+            'enquiryId'       => $dataId,
+            'cisQuotationId'  => $cisQuotationId,
         ]);
     }
 
-    public function cis(Request $request, int $dataId)
+    public function cis(Request $request, string $quotationId)
     {
         $seller = $request->session()->get('seller');
 
@@ -40,20 +44,127 @@ class PriceListController extends Controller
             abort(403, 'Seller session not found.');
         }
 
-        $records = $this->basePriceListQuery($seller->email, $dataId)
+        $quotationForm = DB::table('qutation_form')
+            ->where('qutation_id', $quotationId)
+            ->first();
+
+        abort_if(!$quotationForm, 404);
+
+        $invitedSellers = $this->fetchInvitedSellers($quotationForm);
+
+        $records = $this->basePriceListQuery($seller->email, (int) $quotationForm->id)
             ->orderByDesc('bidding_price.id')
             ->get();
 
+        $records = $this->mergeInvitedSellers($records, $invitedSellers, $quotationForm);
         $records = $this->appendComputedState($records);
 
-        abort_if($records->isEmpty(), 404);
+        $enquiry = $this->hydrateEnquiryContext($records->first(), $quotationForm);
 
         return view('ursdashboard.price-list.cis', [
-            'seller'   => $seller,
-            'records'  => $records,
-            'dataId'   => $dataId,
-            'enquiry'  => $records->first(),
+            'seller'          => $seller,
+            'records'         => $records,
+            'dataId'          => (int) $quotationForm->id,
+            'enquiry'         => $enquiry,
+            'invitedSellers'  => $invitedSellers,
+            'quotationForm'   => $quotationForm,
         ]);
+    }
+
+    protected function fetchInvitedSellers(object $quotationForm): Collection
+    {
+        $sellerIds = collect(explode(',', (string) ($quotationForm->seller_id ?? '')))
+            ->map(fn (string $value) => (int) trim($value))
+            ->filter(fn (int $id) => $id > 0)
+            ->unique()
+            ->values();
+
+        if ($sellerIds->isEmpty()) {
+            return collect();
+        }
+
+        $sellers = DB::table('seller')
+            ->whereIn('id', $sellerIds)
+            ->select('id', 'name', 'email', 'phone', 'hash_id')
+            ->get()
+            ->keyBy('id');
+
+        return $sellerIds
+            ->map(fn (int $id) => $sellers->get($id))
+            ->filter();
+    }
+
+    protected function mergeInvitedSellers(Collection $records, Collection $invitedSellers, object $quotationForm): Collection
+    {
+        if ($invitedSellers->isEmpty()) {
+            return $records;
+        }
+
+        $recordsBySellerId = $records->keyBy(fn ($record) => (int) ($record->seller_id ?? 0));
+        $merged = collect();
+
+        foreach ($invitedSellers as $seller) {
+            if (!$seller) {
+                continue;
+            }
+
+            $sellerId = (int) ($seller->id ?? 0);
+
+            if ($sellerId && $recordsBySellerId->has($sellerId)) {
+                $merged->push($recordsBySellerId->get($sellerId));
+                continue;
+            }
+
+            $merged->push((object) [
+                'seller_id'                     => $sellerId,
+                'seller_name'                   => $seller->name ?? null,
+                'seller_email'                  => $seller->email ?? null,
+                'seller_phone'                  => $seller->phone ?? null,
+                'seller_hash_id'                => $seller->hash_id ?? null,
+                'product_title'                 => $quotationForm->product_title ?? null,
+                'bidding_price_product_name'    => $quotationForm->product_title ?? null,
+                'product_brand'                 => $quotationForm->material ?? null,
+                'material'                      => $quotationForm->material ?? null,
+                'quantity'                      => $quotationForm->quantity ?? null,
+                'unit'                          => $quotationForm->unit ?? null,
+                'rate'                          => null,
+                'platform_fee'                  => null,
+                'action'                        => null,
+                'bid_time'                      => $quotationForm->bid_time ?? null,
+                'qutation_form_message'         => $quotationForm->message ?? null,
+                'qutation_id'                   => $quotationForm->qutation_id ?? null,
+            ]);
+        }
+
+        $existingSellerIds = $merged
+            ->map(fn ($record) => (int) ($record->seller_id ?? 0))
+            ->filter()
+            ->all();
+
+        $remaining = $records->filter(function ($record) use ($existingSellerIds) {
+            $sellerId = (int) ($record->seller_id ?? 0);
+
+            return $sellerId === 0 || !in_array($sellerId, $existingSellerIds, true);
+        });
+
+        return $merged->merge($remaining)->values();
+    }
+
+    protected function hydrateEnquiryContext(?object $record, object $quotationForm): object
+    {
+        $enquiry = $record ? clone $record : (object) [];
+
+        foreach ((array) $quotationForm as $key => $value) {
+            if (!property_exists($enquiry, $key) || $enquiry->{$key} === null) {
+                $enquiry->{$key} = $value;
+            }
+        }
+
+        if (!property_exists($enquiry, 'qutation_id')) {
+            $enquiry->qutation_id = $quotationForm->qutation_id ?? null;
+        }
+
+        return $enquiry;
     }
 
     protected function basePriceListQuery(string $buyerEmail, int $dataId)
