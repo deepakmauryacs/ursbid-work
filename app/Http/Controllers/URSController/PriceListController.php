@@ -245,7 +245,7 @@ class PriceListController extends Controller
             'end_time_label'       => $auctionEndTimeLabel ?? '-',
         ];
 
-        $filename = 'Forward-Auction-CIS-' . ($auction->auction_id ?? $quotationId) . ' ' . now()->format('d-m-Y') . '.xls';
+        $filename = 'URSBID-CIS-' . ($auction->auction_id ?? $quotationId) . ' ' . now()->format('d-m-Y') . '.xls';
 
         return response()->view('ursdashboard.price-list.export-cis', [
             'auction'          => $auction,

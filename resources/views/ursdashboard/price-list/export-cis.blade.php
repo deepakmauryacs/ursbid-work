@@ -5,22 +5,9 @@
     $status = $status ?? 'N/A';
     $currencySymbol = $currencySymbol ?? '₹';
 
-    if (! function_exists('get_currency_symbol_now')) {
-        function get_currency_symbol_now($currency)
-        {
-            $currency_symbols = [
-                'INR' => '₹',
-                '₹'   => '₹',
-                'USD' => '$',
-                '$'   => '$',
-                'NPR' => 'NPR',
-            ];
+ 
 
-            return $currency_symbols[$currency] ?? ($currency_symbols[strtoupper($currency)] ?? $currency);
-        }
-    }
-
-    $currencyLabel = get_currency_symbol_now($currencyCode ?? $auction->currency ?? 'INR');
+    $currencyLabel = 'INR';
 
     $displayDate = $auction->date_label ?? '-';
     $displayStartTime = $auction->start_time_label ?? '-';
@@ -42,14 +29,14 @@
     <tbody>
         <tr class="row0" style="height: 80.8pt;">
             <td class="cis-border" colspan="{{ $vendorBids->count() + 4 }}" style="text-align: center; vertical-align: middle; font-weight: bold; color: #27405E; font-family: 'Calibri'; font-size: 20pt; background-color: white;">
-                <img src="{{ asset('public/assets/images/logo-sm/rfq-logo.jpg') }}" border="0"><br>
-                Forward Auction - Comparative Information Statement
-            </td>
+                <img src="{{ asset('public/assets/images/logo-light.png') }}" border="0"><br>
+                 CIS - Comparative Information Statement
+             </td>
         </tr>
 
         <tr class="row1" style="height: 31.2pt;">
             <td class="cis-border" style="text-align: left; font-weight: bold;">
-                &nbsp; Auction ID: {{ $auctionId }}
+                &nbsp; Quotation ID: {{ $auctionId }}
             </td>
             <td class="cis-border" style="text-align: left; font-weight: bold;">
                 Date: {{ $displayDate }}
@@ -158,7 +145,7 @@
                     $total = $vendor['total'] ?? null;
                 @endphp
                 <td class="cis-border" style="text-align: center; background-color: #F2DBDB;">
-                    {{ is_numeric($total) ? ($currencySymbol . ' ' . number_format((float) $total, 2)) : ($currencySymbol . ' -') }}
+                    {{ is_numeric($total) ? ($currencyLabel  . ' ' . number_format((float) $total, 2)) : ( $currencyLabel  . ' -') }}
                 </td>
             @endforeach
         </tr>
@@ -181,14 +168,6 @@
             </td>
         </tr>
 
-        <tr class="row8" style="height: 16.36pt;">
-            <td class="cis-border" style="text-align: center; font-weight: bold; background-color: #F2F2F2;">
-                Payment Terms
-            </td>
-            <td class="cis-border" colspan="{{ $vendorBids->count() + 3 }}" style="background-color: #F2F2F2;">
-                {{ trim((string) $paymentTerms) !== '' ? $paymentTerms : '-' }}
-            </td>
-        </tr>
 
         <tr class="row9" style="height: 16.36pt;">
             <td class="cis-border" style="text-align: center; font-weight: bold;">
