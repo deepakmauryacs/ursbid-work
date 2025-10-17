@@ -50,9 +50,15 @@
                             <a href="{{ route('buyer.price-list', $recordId) }}" class="btn btn-primary btn-sm">
                                 Vendor List
                             </a>
+                            <a href="{{ route('buyer.cis-details', $recordId) }}" class="btn btn-outline-primary btn-sm">
+                                CIS
+                            </a>
                         @else
                             <button type="button" class="btn btn-primary btn-sm" disabled>
                                 Vendor List
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" disabled>
+                                CIS
                             </button>
                         @endif
                         <a href="{{ $recordId ? route('accepted-list', $recordId) : '#' }}" class="btn btn-success btn-sm">
