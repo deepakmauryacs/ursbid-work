@@ -5,10 +5,14 @@
 @php
     $records = ($records ?? collect())->values();
     $enquiry = $enquiry ?? null;
-    $sellerRecords = $records;
+    $sellerRecords = $records
+        ->sortBy(fn($record) => is_numeric(optional($record)->rate) ? (float) $record->rate : INF)
+        ->values();
     $maxVendorColumns = max($sellerRecords->count(), 2);
 
-    $productTitle = $enquiry->product_title ?? '-';
+    $productTitle = $enquiry->product_title
+        ?? $sellerRecords->pluck('product_name')->filter(fn($name) => filled($name))->first()
+        ?? '-';
     $productBrand = $enquiry->product_brand ?? null;
     $quantityValue = $enquiry->quantity ?? null;
     $unitValue = $enquiry->unit ?? null;
