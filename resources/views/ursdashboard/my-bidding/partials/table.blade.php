@@ -63,7 +63,20 @@ $rowNumber = $isPaginator ? $records->firstItem() : 1;
                 <td>{{ $recordQuantity ?: '-' }}</td>
                 <td>{{ $recordUnit ?: '-' }} </td>
                 <td>
-                    <div class="text-success">{{ $paymentStatus ?: '-' }}</div>
+                    @php
+                        $normalizedStatus = is_string($paymentStatus) ? strtolower(trim($paymentStatus)) : '';
+                        $statusBadgeClasses = [
+                            'success' => 'badge bg-success-subtle text-success py-1 px-2 fs-12',
+                            'cancelled' => 'badge bg-danger-subtle text-danger py-1 px-2 fs-12',
+                            'pending' => 'badge bg-warning-subtle text-warning py-1 px-2 fs-12',
+                        ];
+                        $badgeClass = $statusBadgeClasses[$normalizedStatus] ?? null;
+                    @endphp
+                    @if($paymentStatus && $badgeClass)
+                        <span class="{{ $badgeClass }}">{{ $paymentStatus }}</span>
+                    @else
+                        <span>-</span>
+                    @endif
                 </td>
             </tr>
             @empty
