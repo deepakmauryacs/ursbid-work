@@ -41,7 +41,7 @@
                     $hasVendorPrice = is_object($record)
                         ? (bool) ($record->has_vendor_price ?? false)
                         : (bool) ($record['has_vendor_price'] ?? false);
-                    $formattedDate = $recordDate ? \Carbon\Carbon::parse($recordDate)->format('Y-m-d') : '';
+                    $formattedDate = $recordDate ? \Carbon\Carbon::parse($recordDate)->format('d-m-Y') : '';
                 @endphp
                 <tr>
                     <td>{{ $rowNumber++ }}</td>
