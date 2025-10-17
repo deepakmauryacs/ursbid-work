@@ -168,6 +168,37 @@
                                 </div>
                             </div>
                         </div>
+                        @if(($invitedSellers ?? collect())->isNotEmpty())
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="border rounded p-3">
+                                        <h6 class="text-uppercase text-muted fs-12 mb-3">Invited Sellers</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Seller Name</th>
+                                                        <th scope="col">Email</th>
+                                                        <th scope="col">Phone</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($invitedSellers as $index => $invitedSeller)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $invitedSeller->name ?? 'N/A' }}</td>
+                                                            <td>{{ $invitedSeller->email ?? 'N/A' }}</td>
+                                                            <td>{{ $invitedSeller->phone ?? 'N/A' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
