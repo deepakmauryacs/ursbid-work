@@ -242,8 +242,10 @@ class PriceListController extends Controller
     protected function appendComputedState(Collection $records): Collection
     {
         return $records->map(function ($record) {
-            $record->formatted_date = $record->date_time
-                ? Carbon::parse($record->date_time)->format('Y-m-d')
+            $dateTime = property_exists($record, 'date_time') ? $record->date_time : null;
+
+            $record->formatted_date = $dateTime
+                ? Carbon::parse($dateTime)->format('Y-m-d')
                 : null;
 
             $quantityRaw = (string) ($record->quantity ?? '0');
