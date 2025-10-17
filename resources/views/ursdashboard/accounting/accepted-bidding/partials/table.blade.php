@@ -15,7 +15,7 @@
             <tr>
                 <th>Sr.No</th>
                 <th>Quotation ID</th>
-                <th>Name</th>
+                <th>Buyer / Client</th>
                 <th>Email Id</th>
                 <th>Contact No.</th>
                 <th>Category</th>

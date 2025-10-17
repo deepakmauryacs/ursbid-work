@@ -16,7 +16,7 @@ $rowNumber = $isPaginator ? $records->firstItem() : 1;
             <tr>
                 <th>Sr.No</th>
                 <th>Quotation ID</th>
-                <th>Name</th>
+                <th>Buyer / Client</th>
                 <th>Category</th>
                 <th>Sub Category</th>
                 <th>Product Name</th>
