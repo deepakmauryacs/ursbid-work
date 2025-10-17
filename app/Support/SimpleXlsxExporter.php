@@ -238,7 +238,7 @@ XML;
 
     protected static function sanitizeSheetName(string $sheetName): string
     {
-        $sheetName = trim(preg_replace('/[\*\?\:\[\]\\\/]/', ' ', $sheetName) ?? '');
+        $sheetName = trim(str_replace(['*', '?', ':', '[', ']', '\\', '/'], ' ', $sheetName));
 
         if ($sheetName === '') {
             $sheetName = 'Sheet1';
