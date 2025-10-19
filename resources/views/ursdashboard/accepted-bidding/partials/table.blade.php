@@ -10,6 +10,8 @@
             <tr>
                 <th>Sr. No</th>
                 <th>Quotation ID</th>
+                <th>Email ID</th>
+                <th>Contact No.</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Sub Category</th>
@@ -27,10 +29,14 @@
             @forelse($records as $index => $record)
                 @php
                     $quotationId = $record->qutation_id ?? '';
+                    $email = $record->email ?? '';
+                    $contactNumber = $record->seller_phone ?? $record->phone ?? '';
                 @endphp
                 <tr>
                     <td class="text-center">{{ $startIndex + $index }}</td>
                     <td>{{ $quotationId !== '' ? $quotationId : '-' }}</td>
+                    <td>{{ $email !== '' ? $email : '-' }}</td>
+                    <td>{{ $contactNumber !== '' ? $contactNumber : '-' }}</td>
                     <td>{{ $record->name }}</td>
                     <td>{{ $record->category_name }}</td>
                     <td>{{ $record->sub_name }}</td>
@@ -45,7 +51,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="13" class="text-center text-muted py-4">No accepted bids found.</td>
+                    <td colspan="15" class="text-center text-muted py-4">No accepted bids found.</td>
                 </tr>
             @endforelse
         </tbody>
