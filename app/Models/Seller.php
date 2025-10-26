@@ -2,7 +2,6 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Seller extends Authenticatable
@@ -13,21 +12,39 @@ class Seller extends Authenticatable
 
     protected $fillable = [
         'name',
-        'email',
         'hash_id',
+        'email',
         'phone',
         'password',
-        'user_type',
-        'pancard',
+        'gender',
+        'client',
         'gst',
+        'contractor',
+        'buyer',
+        'seller',
         'otp',
         'verify',
-        'gender',
+        'latitude',
+        'longitude',
+        'status',
+        'ref_code',
+        'ref_by',
+        'acc_type',
+        'pro_ser',
+        'created_at',
+        'lock_location',
+    ];
+
+    public const CREATED_AT = 'created_at';
+    public const UPDATED_AT = null;
+
+    protected $casts = [
+        'created_at' => 'datetime',
     ];
 
     // If you need to customize the authentication logic, you can override the getAuthPassword method
     // public function getAuthPassword()
     // {
-    //     return $this->password; 
+    //     return $this->password;
     // }
 }

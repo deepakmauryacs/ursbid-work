@@ -22,15 +22,19 @@
                 <div class="card-header border-bottom">
                     <h4 class="card-title mb-0">Account Details</h4>
                 </div>
+                @php
+                    $accountTypeLabels = [
+                        '1' => 'Vendor',
+                        '2' => 'Contractor',
+                        '3' => 'Client',
+                        '4' => 'Buyer',
+                    ];
+                @endphp
                 <div class="card-body">
                     <div class="mb-2"><strong>Name:</strong> {{ $user->name }}</div>
                     <div class="mb-2"><strong>Email:</strong> {{ $user->email }}</div>
                     <div class="mb-2"><strong>Phone:</strong> {{ $user->phone }}</div>
-                    <div class="mb-2"><strong>Roles:</strong>
-                        @foreach($user->roles as $r)
-                            <span class="badge bg-info-subtle text-info me-1">{{ $r->role_name }}</span>
-                        @endforeach
-                    </div>
+                    <div class="mb-2"><strong>Account Type:</strong> {{ $accountTypeLabels[$user->acc_type] ?? 'N/A' }}</div>
                     <div class="mb-2"><strong>Created Date:</strong> {{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</div>
                     <div class="mb-2"><strong>Status:</strong> {{ $user->status == '1' ? 'Active' : 'Inactive' }}</div>
                 </div>

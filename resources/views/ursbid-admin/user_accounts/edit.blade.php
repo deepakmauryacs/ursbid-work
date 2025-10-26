@@ -42,15 +42,6 @@
                             <div class="invalid-feedback" data-field="phone"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Roles</label>
-                            <select name="roles[]" class="form-select" multiple>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->id }}" {{ $user->roles->contains($role->id) ? 'selected' : '' }}>{{ $role->role_name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-field="roles"></div>
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">Joining Date</label>
                             <input type="text" name="created_at" class="form-control" value="{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}" placeholder="dd-mm-yyyy" required>
                             <div class="invalid-feedback" data-field="created_at"></div>
@@ -85,13 +76,6 @@ $(function(){
         if(!datePattern.test(joinDate)){
             $('[data-field="created_at"]').text('Date must be in dd-mm-yyyy format.');
             return;
-        }
-        const roles = $('select[name="roles[]"]').val() || [];
-        for(let r of roles){
-            if(!/^\d+$/.test(r)){
-                $('[data-field="roles"]').text('Invalid role selected.');
-                return;
-            }
         }
         $.ajax({
             url: '{{ route('super-admin.accounts.update', [$type, $user->id]) }}',

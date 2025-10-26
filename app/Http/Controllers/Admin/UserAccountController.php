@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserAccount;
-use App\Models\Role;
+use App\Models\Seller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -12,21 +11,10 @@ use Carbon\Carbon;
 class UserAccountController extends Controller
 {
     protected array $types = [
-        'vendors' => ['user_type' => '1', 'label' => 'Vendor'],
-        'buyers' => ['user_type' => '4', 'label' => 'Buyer'],
-        'contractors' => ['user_type' => '2', 'label' => 'Contractor'],
-        'clients' => ['user_type' => '3', 'label' => 'Client'],
-    ];
-
-    /**
-     * Mapping of numeric codes to user type strings.
-     * 1 -> Vendor, 2 -> Contractor, 3 -> Client, 4 -> Buyer
-     */
-    protected array $typeCodes = [
-        '1' => 'vendor',
-        '2' => 'contractor',
-        '3' => 'client',
-        '4' => 'buyer',
+        'vendors' => ['acc_type' => '1', 'label' => 'Vendor'],
+        'buyers' => ['acc_type' => '4', 'label' => 'Buyer'],
+        'contractors' => ['acc_type' => '2', 'label' => 'Contractor'],
+        'clients' => ['acc_type' => '3', 'label' => 'Client'],
     ];
 
     protected function getTypeData(string $type): array
@@ -42,17 +30,9 @@ class UserAccountController extends Controller
     {
         $data = $this->getTypeData($type);
 
-        $userTypeOptions = [
-            ['code' => '1', 'label' => 'Vendor'],
-            ['code' => '2', 'label' => 'Contractor'],
-            ['code' => '3', 'label' => 'Client'],
-            ['code' => '4', 'label' => 'Buyer'],
-        ];
-
         return view('ursbid-admin.user_accounts.index', [
             'type' => $type,
             'userType' => $data['label'],
-            'userTypeOptions' => $userTypeOptions,
         ]);
     }
 
@@ -64,8 +44,6 @@ class UserAccountController extends Controller
             'status' => 'nullable|in:1,2',
             'from_date' => 'nullable|date_format:d-m-Y',
             'to_date' => 'nullable|date_format:d-m-Y',
-            'user_types' => 'nullable|array',
-            'user_types.*' => 'in:1,2,3,4',
         ]);
 
         if ($validator->fails()) {
@@ -75,15 +53,8 @@ class UserAccountController extends Controller
             ], 422);
         }
 
-        $query = UserAccount::query();
-
-        if ($request->filled('user_types')) {
-            $mapped = array_map(fn($code) => $this->typeCodes[$code], $request->user_types);
-            $query->whereIn('user_type', $mapped);
-        } else {
-            $data = $this->getTypeData($type);
-            $query->whereRaw("FIND_IN_SET(?, user_type)", [$data['user_type']]);
-        }
+        $data = $this->getTypeData($type);
+        $query = Seller::query()->where('acc_type', $data['acc_type']);
 
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
@@ -105,18 +76,26 @@ class UserAccountController extends Controller
             $query->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d'));
         }
 
-        $users = $query->with('roles')->orderByDesc('id')->get();
+        $users = $query->orderByDesc('id')->get();
 
         $typeRouteMap = [
-            'vendor' => 'vendors',
-            'contractor' => 'contractors',
-            'client' => 'clients',
-            'buyer' => 'buyers',
+            '1' => 'vendors',
+            '2' => 'contractors',
+            '3' => 'clients',
+            '4' => 'buyers',
+        ];
+
+        $typeLabels = [
+            '1' => 'Vendor',
+            '2' => 'Contractor',
+            '3' => 'Client',
+            '4' => 'Buyer',
         ];
 
         $html = view('ursbid-admin.user_accounts.partials.table', [
             'users' => $users,
             'typeRouteMap' => $typeRouteMap,
+            'typeLabels' => $typeLabels,
         ])->render();
 
         return response()->json([
@@ -132,7 +111,6 @@ class UserAccountController extends Controller
         return view('ursbid-admin.user_accounts.create', [
             'type' => $type,
             'userType' => $data['label'],
-            'roles' => Role::orderBy('role_name')->get(),
         ]);
     }
 
@@ -142,12 +120,10 @@ class UserAccountController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user_accounts,email',
-            'phone' => 'required|string|max:20|unique:user_accounts,phone',
+            'email' => 'required|email|unique:seller,email',
+            'phone' => 'required|string|max:20|unique:seller,phone',
             'status' => 'required|in:1,2',
             'created_at' => 'required|date_format:d-m-Y',
-            'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id',
         ]);
 
         if ($validator->fails()) {
@@ -158,13 +134,9 @@ class UserAccountController extends Controller
         }
 
         $validated = $validator->validated();
-        $validated['user_type'] = $data['user_type'];
+        $validated['acc_type'] = $data['acc_type'];
         $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
-        $user = UserAccount::create($validated);
-
-        if ($request->filled('roles')) {
-            $user->roles()->sync($request->roles);
-        }
+        Seller::create($validated);
 
         return response()->json([
             'status' => 'success',
@@ -175,20 +147,19 @@ class UserAccountController extends Controller
     public function edit(string $type, int $id)
     {
         $data = $this->getTypeData($type);
-        $user = UserAccount::where('user_type', $data['user_type'])->findOrFail($id);
+        $user = Seller::where('acc_type', $data['acc_type'])->findOrFail($id);
 
         return view('ursbid-admin.user_accounts.edit', [
             'user' => $user,
             'type' => $type,
             'userType' => $data['label'],
-            'roles' => Role::orderBy('role_name')->get(),
         ]);
     }
 
     public function show(string $type, int $id)
     {
         $data = $this->getTypeData($type);
-        $user = UserAccount::where('user_type', $data['user_type'])->with('roles')->findOrFail($id);
+        $user = Seller::where('acc_type', $data['acc_type'])->findOrFail($id);
 
         return view('ursbid-admin.user_accounts.show', [
             'user' => $user,
@@ -200,16 +171,14 @@ class UserAccountController extends Controller
     public function update(Request $request, string $type, int $id)
     {
         $data = $this->getTypeData($type);
-        $user = UserAccount::where('user_type', $data['user_type'])->findOrFail($id);
+        $user = Seller::where('acc_type', $data['acc_type'])->findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user_accounts,email,' . $user->id,
-            'phone' => 'required|string|max:20|unique:user_accounts,phone,' . $user->id,
+            'email' => 'required|email|unique:seller,email,' . $user->id,
+            'phone' => 'required|string|max:20|unique:seller,phone,' . $user->id,
             'status' => 'required|in:1,2',
             'created_at' => 'required|date_format:d-m-Y',
-            'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id',
         ]);
 
         if ($validator->fails()) {
@@ -222,12 +191,6 @@ class UserAccountController extends Controller
         $validated = $validator->validated();
         $validated['created_at'] = Carbon::createFromFormat('d-m-Y', $validated['created_at']);
         $user->update($validated);
-
-        if ($request->filled('roles')) {
-            $user->roles()->sync($request->roles);
-        } else {
-            $user->roles()->detach();
-        }
 
         return response()->json([
             'status' => 'success',
