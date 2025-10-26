@@ -1,3 +1,18 @@
+@php
+    $accountTypeLabels = $typeLabels ?? [
+        '1' => 'Vendor',
+        '2' => 'Contractor',
+        '3' => 'Client',
+        '4' => 'Buyer',
+    ];
+    $accountRouteMap = $typeRouteMap ?? [
+        '1' => 'vendors',
+        '2' => 'contractors',
+        '3' => 'clients',
+        '4' => 'buyers',
+    ];
+@endphp
+
 <table class="table align-middle text-nowrap table-hover table-centered mb-0">
     <thead class="bg-light-subtle">
         <tr>
@@ -5,7 +20,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>User Type</th>
+            <th>Account Type</th>
             <th>Created Date</th>
             <th>Status</th>
             <th>Action</th>
@@ -18,7 +33,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
-                <td>{{ ucfirst($user->user_type) }}</td>
+                <td>{{ $accountTypeLabels[$user->acc_type] ?? 'N/A' }}</td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
                     @if($user->status == '1')
@@ -28,7 +43,7 @@
                     @endif
                 </td>
                 <td>
-                    @php $routeType = $typeRouteMap[$user->user_type] ?? ''; @endphp
+                    @php $routeType = $accountRouteMap[$user->acc_type] ?? ''; @endphp
                     <div class="d-flex gap-2">
                         <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm">Edit</a>
                         <a href="{{ route('super-admin.accounts.show', [$routeType, $user->id]) }}" class="btn btn-soft-info btn-sm">View</a>

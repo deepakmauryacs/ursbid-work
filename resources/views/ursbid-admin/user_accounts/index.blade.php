@@ -110,9 +110,7 @@ $(function(){
         const email = $('input[name="email"]').val();
         const from = $('input[name="from_date"]').val();
         const to = $('input[name="to_date"]').val();
-        const userTypes = $('select[name="user_types[]"]').val() || [];
         const datePattern = /^\d{2}-\d{2}-\d{4}$/;
-        const validTypes = ['1','2','3','4'];
         if(name.length > 255){
             toastr.error('Name may not be greater than 255 characters.');
             return;
@@ -128,12 +126,6 @@ $(function(){
         if(to && !datePattern.test(to)){
             toastr.error('To date must be in dd-mm-yyyy format.');
             return;
-        }
-        for(let t of userTypes){
-            if(!validTypes.includes(t)){
-                toastr.error('Invalid user type selected.');
-                return;
-            }
         }
         loadList();
     });
