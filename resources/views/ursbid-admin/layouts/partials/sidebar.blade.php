@@ -239,21 +239,21 @@
             
             
              <li class="nav-item">
-                <a class="nav-link menu-arrow {{ request()->is('super-admin/accounting/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'active' : '' }}"
+                <a class="nav-link menu-arrow {{ request()->is('super-admin/quotation/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'active' : '' }}"
                    href="#sidebarQuotation" data-bs-toggle="collapse"
                    role="button"
-                   aria-expanded="{{ request()->is('super-admin/accounting/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'true' : 'false' }}"
+                   aria-expanded="{{ request()->is('super-admin/quotation/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'true' : 'false' }}"
                    aria-controls="sidebarQuotation">
                     <span class="nav-icon">
                         <i class="ri-file-list-3-line"></i>
                     </span>
                     <span class="nav-text">Quotation</span>
                 </a>
-                <div class="collapse {{ request()->is('super-admin/accounting/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'show' : '' }}"
+                <div class="collapse {{ request()->is('super-admin/quotation/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'show' : '' }}"
                      id="sidebarQuotation">
                     <ul class="nav sub-navbar-nav">
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link {{ request()->is('super-admin/accounting/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'active' : '' }}"
+                            <a class="sub-nav-link {{ request()->is('super-admin/quotation/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'active' : '' }}"
                                href="{{ route('super-admin.accounting.accepted-bidding-list') }}">Accepted Bidding List</a>
                         </li>
                     </ul>
