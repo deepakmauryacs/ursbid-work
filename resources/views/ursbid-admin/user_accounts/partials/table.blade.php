@@ -67,11 +67,14 @@
                 </td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
-                    @if($user->status == '1')
-                        <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
-                    @else
-                        <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
-                    @endif
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input status-toggle" type="checkbox" data-id="{{ $user->id }}" {{ $user->status == '1' ? 'checked' : '' }}>
+                        </div>
+                        <span class="status-text fw-medium {{ $user->status == '1' ? 'text-success' : 'text-danger' }}">
+                            {{ $user->status == '1' ? 'Active' : 'Inactive' }}
+                        </span>
+                    </div>
                 </td>
             </tr>
         @empty

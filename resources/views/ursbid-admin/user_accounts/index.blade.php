@@ -101,6 +101,17 @@ $(function(){
         }
     }
 
+    function initTooltips(){
+        if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) {
+            return;
+        }
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('#listContainer [data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
+
     function loadList(){
         toggleLoader(true);
         $.ajax({
@@ -108,6 +119,7 @@ $(function(){
             data: $('#filterForm').serialize(),
             success: function(res){
                 $('#listContainer').html(res.html);
+                initTooltips();
                 toggleLoader(false);
             },
             error: function(xhr){
@@ -141,6 +153,31 @@ $(function(){
     $('#resetBtn').on('click', function(){
         $('#filterForm')[0].reset();
         loadList();
+    });
+
+    $('#listContainer').on('change', '.status-toggle', function(){
+        const checkbox = $(this);
+        const id = checkbox.data('id');
+        const status = checkbox.is(':checked') ? 1 : 2;
+        const url = '{{ route('super-admin.accounts.toggle-status', [$type, ':id']) }}'.replace(':id', id);
+        const statusText = checkbox.closest('tr').find('.status-text');
+
+        $.ajax({
+            url: url,
+            type: 'PATCH',
+            data: { status: status, _token: '{{ csrf_token() }}' },
+            success: function(res){
+                toastr.success(res.message);
+                statusText
+                    .text(status === 1 ? 'Active' : 'Inactive')
+                    .toggleClass('text-success', status === 1)
+                    .toggleClass('text-danger', status !== 1);
+            },
+            error: function(){
+                toastr.error('Unable to update status');
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            }
+        });
     });
 
     loadList();
