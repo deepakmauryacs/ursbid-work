@@ -58,8 +58,6 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
     Route::prefix('accounting')->name('super-admin.accounting.')->group(function () {
         Route::get('accounting-list', [AccountingController::class, 'accountingList'])
             ->name('accounting-list');
-        Route::get('accepted-bidding-list', [AccountingController::class, 'acceptedBiddingList'])
-            ->name('accepted-bidding-list');
         Route::get('price-list/{dataId}', [AccountingController::class, 'priceList'])
             ->name('price-list');
         Route::get('accepted-list/{dataId}', [AccountingController::class, 'acceptedList'])
@@ -67,6 +65,9 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
         Route::get('enquiry/{id}', [AccountingController::class, 'enquiryView'])
             ->name('enquiry-view');
     });
+
+    Route::get('quotation/accepted-bidding-list', [AccountingController::class, 'acceptedBiddingList'])
+        ->name('super-admin.accounting.accepted-bidding-list');
 
     // Categories
     Route::get('categories', [AdminCategoryController::class, 'index'])
