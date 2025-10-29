@@ -203,5 +203,34 @@ class UserAccountController extends Controller
             'message' => 'Account updated successfully.',
         ]);
     }
+
+    public function toggleStatus(Request $request, string $type, int $id)
+    {
+        $data = $this->getTypeData($type);
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = Seller::query()
+            ->where('verify', 1)
+            ->where('id', $id)
+            ->whereRaw('FIND_IN_SET(?, acc_type)', [$data['acc_type']])
+            ->firstOrFail();
+
+        $user->update(['status' => $request->status]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Account status updated successfully.',
+        ]);
+    }
 }
 

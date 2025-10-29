@@ -294,6 +294,9 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
         Route::get('{type}/{refCode}/join-users', [JoinUserController::class, 'index'])
             ->name('join-users')
             ->middleware('module.permission:accounts,can_view');
+        Route::patch('{type}/{id}/status', [UserAccountController::class, 'toggleStatus'])
+            ->name('toggle-status')
+            ->middleware('module.permission:accounts,can_edit');
         Route::put('{type}/{id}', [UserAccountController::class, 'update'])
             ->name('update')
             ->middleware('module.permission:accounts,can_edit');
