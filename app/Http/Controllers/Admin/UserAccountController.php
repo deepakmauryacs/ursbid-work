@@ -43,8 +43,8 @@ class UserAccountController extends Controller
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'status' => 'nullable|in:1,2',
-            'from_date' => 'nullable|date_format:d-m-Y',
-            'to_date' => 'nullable|date_format:d-m-Y',
+            'from_date' => 'nullable|date_format:Y-m-d',
+            'to_date' => 'nullable|date_format:Y-m-d',
         ]);
     
         if ($validator->fails()) {
@@ -77,12 +77,12 @@ class UserAccountController extends Controller
         }
     
         if ($request->filled('from_date')) {
-            $fromDate = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $fromDate = Carbon::createFromFormat('Y-m-d', $request->from_date)->format('Y-m-d');
             $query->whereDate('seller.created_at', '>=', $fromDate);
         }
-    
+
         if ($request->filled('to_date')) {
-            $toDate = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $toDate = Carbon::createFromFormat('Y-m-d', $request->to_date)->format('Y-m-d');
             $query->whereDate('seller.created_at', '<=', $toDate);
         }
     
@@ -96,19 +96,11 @@ class UserAccountController extends Controller
             '3' => 'clients',
             '4' => 'buyers',
         ];
-    
-        $typeLabels = [
-            '1' => 'Vendor',
-            '2' => 'Contractor',
-            '3' => 'Client',
-            '4' => 'Buyer',
-        ];
-    
+
         // 👇 Render HTML partial
         $html = view('ursbid-admin.user_accounts.partials.table', [
             'users'        => $users,
             'typeRouteMap' => $typeRouteMap,
-            'typeLabels'   => $typeLabels,
         ])->render();
     
         return response()->json([
