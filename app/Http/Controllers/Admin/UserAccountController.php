@@ -101,6 +101,7 @@ class UserAccountController extends Controller
         $html = view('ursbid-admin.user_accounts.partials.table', [
             'users'        => $users,
             'typeRouteMap' => $typeRouteMap,
+            'currentType'  => $type,
         ])->render();
     
         return response()->json([
