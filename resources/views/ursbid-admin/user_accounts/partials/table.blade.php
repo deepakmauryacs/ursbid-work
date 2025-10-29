@@ -9,7 +9,7 @@
 
 @php
     $showBusinessColumns = in_array($currentType ?? '', ['vendors', 'contractors'], true);
-    $emptyColspan = $showBusinessColumns ? 10 : 8;
+    $emptyColspan = $showBusinessColumns ? 9 : 7;
 @endphp
 
 <table class="table align-middle text-nowrap table-hover table-centered mb-0">
@@ -26,7 +26,6 @@
             <th>Join Users</th>
             <th>Created Date</th>
             <th>Status</th>
-            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -73,16 +72,6 @@
                     @else
                         <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
                     @endif
-                </td>
-                <td>
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm" title="Edit">
-                            <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
-                        </a>
-                        <a href="{{ route('super-admin.accounts.show', [$routeType, $user->id]) }}" class="btn btn-soft-info btn-sm" title="View">
-                            <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
-                        </a>
-                    </div>
                 </td>
             </tr>
         @empty
