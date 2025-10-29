@@ -9,7 +9,7 @@
 
 @php
     $showBusinessColumns = in_array($currentType ?? '', ['vendors', 'contractors'], true);
-    $emptyColspan = $showBusinessColumns ? 9 : 7;
+    $emptyColspan = $showBusinessColumns ? 10 : 8;
 @endphp
 
 <table class="table align-middle text-nowrap table-hover table-centered mb-0">
@@ -23,6 +23,7 @@
                 <th>GST</th>
                 <th>Product/Services</th>
             @endif
+            <th>Join Users</th>
             <th>Created Date</th>
             <th>Status</th>
             <th>Action</th>
@@ -35,6 +36,7 @@
                 <td>{{ \Illuminate\Support\Str::title($user->name) }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
+                @php $routeType = $accountRouteMap[$user->acc_type] ?? ($currentType ?? ''); @endphp
                 @if($showBusinessColumns)
                     <td>{{ $user->gst ?: '—' }}</td>
                     <td>
@@ -55,6 +57,15 @@
                 </td>
 
                 @endif
+                <td>
+                    @if(!empty($user->ref_code))
+                        <a href="{{ route('super-admin.accounts.join-users', [$routeType, $user->ref_code]) }}" class="btn btn-soft-primary btn-sm">
+                            View
+                        </a>
+                    @else
+                        —
+                    @endif
+                </td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
                     @if($user->status == '1')
@@ -64,7 +75,6 @@
                     @endif
                 </td>
                 <td>
-                    @php $routeType = $accountRouteMap[$user->acc_type] ?? ''; @endphp
                     <div class="d-flex gap-2">
                         <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm" title="Edit">
                             <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
