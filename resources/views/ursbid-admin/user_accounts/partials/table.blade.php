@@ -9,7 +9,7 @@
 
 @php
     $showBusinessColumns = in_array($currentType ?? '', ['vendors', 'contractors'], true);
-    $emptyColspan = $showBusinessColumns ? 9 : 7;
+    $emptyColspan = $showBusinessColumns ? 10 : 8;
 @endphp
 
 <table class="table align-middle text-nowrap table-hover table-centered mb-0">
@@ -25,6 +25,7 @@
             @endif
             <th>Created Date</th>
             <th>Status</th>
+            <th>Join User</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -61,6 +62,13 @@
                         <span class="badge bg-success-subtle text-success py-1 px-2 fs-13">Active</span>
                     @else
                         <span class="badge bg-danger-subtle text-danger py-1 px-2 fs-13">Inactive</span>
+                    @endif
+                </td>
+                <td>
+                    @if(!empty($user->ref_code))
+                        <a href="{{ url('admin/joinmember/'.$user->ref_code) }}" class="btn btn-soft-primary btn-sm">View Members</a>
+                    @else
+                        <span class="text-muted">N/A</span>
                     @endif
                 </td>
                 <td>

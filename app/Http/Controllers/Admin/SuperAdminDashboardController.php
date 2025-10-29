@@ -9,10 +9,10 @@ use App\Models\Product;
 use App\Models\Seller;
 use Carbon\Carbon;
 
-class AdminDashboardController extends Controller
+class SuperAdminDashboardController extends Controller
 {
     /**
-     * Display the admin dashboard.
+     * Display the Super Admin dashboard.
      *
      * @return \Illuminate\View\View
      */
@@ -30,6 +30,6 @@ class AdminDashboardController extends Controller
 
         $currentDate = Carbon::now()->format('d-m-Y');
 
-        return view('ursbid-admin.dashboard', compact('stats', 'currentDate'));
+        return view('ursbid-admin.super-admin.dashboard', compact('stats', 'currentDate'));
     }
 }
