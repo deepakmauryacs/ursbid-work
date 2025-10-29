@@ -75,7 +75,6 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <h4 class="card-title mb-0">{{ $userType }} Accounts</h4>
-                    <a href="{{ route('super-admin.accounts.create', $type) }}" class="btn btn-sm btn-primary">Add {{ $userType }}</a>
                 </div>
                 <div id="listLoader" class="text-center py-5">
                     <div class="spinner-border text-primary" role="status">
