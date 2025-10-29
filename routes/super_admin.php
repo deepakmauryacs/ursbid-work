@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\UsermanagementController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Frontend\AjexResponseController;
+use App\Http\Controllers\Admin\AccountingController;
 
 // Super Admin Auth
 Route::get('super-admin', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -52,6 +53,20 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
     Route::patch('help-support/{ticket}/status', [AdminSupportTicketController::class, 'updateStatus'])
         ->name('super-admin.support-tickets.update-status')
         ->middleware('module.permission:help-support,can_edit');
+
+    // Accounting
+    Route::prefix('accounting')->name('super-admin.accounting.')->group(function () {
+        Route::get('accounting-list', [AccountingController::class, 'accountingList'])
+            ->name('accounting-list');
+        Route::get('accepted-bidding-list', [AccountingController::class, 'acceptedBiddingList'])
+            ->name('accepted-bidding-list');
+        Route::get('price-list/{dataId}', [AccountingController::class, 'priceList'])
+            ->name('price-list');
+        Route::get('accepted-list/{dataId}', [AccountingController::class, 'acceptedList'])
+            ->name('accepted-list');
+        Route::get('enquiry/{id}', [AccountingController::class, 'enquiryView'])
+            ->name('enquiry-view');
+    });
 
     // Categories
     Route::get('categories', [AdminCategoryController::class, 'index'])
