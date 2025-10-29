@@ -7,6 +7,11 @@
     ];
 @endphp
 
+@php
+    $showBusinessColumns = in_array($currentType ?? '', ['vendors', 'contractors'], true);
+    $emptyColspan = $showBusinessColumns ? 9 : 7;
+@endphp
+
 <table class="table align-middle text-nowrap table-hover table-centered mb-0">
     <thead class="bg-light-subtle">
         <tr>
@@ -14,6 +19,10 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
+            @if($showBusinessColumns)
+                <th>GST</th>
+                <th>Product/Services</th>
+            @endif
             <th>Created Date</th>
             <th>Status</th>
             <th>Action</th>
@@ -26,6 +35,10 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
+                @if($showBusinessColumns)
+                    <td>{{ $user->gst ?: '—' }}</td>
+                    <td>{{ $user->pro_ser ?: '—' }}</td>
+                @endif
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
                     @if($user->status == '1')
@@ -44,7 +57,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="7" class="text-center">No records found.</td>
+                <td colspan="{{ $emptyColspan }}" class="text-center">No records found.</td>
             </tr>
         @endforelse
     </tbody>
