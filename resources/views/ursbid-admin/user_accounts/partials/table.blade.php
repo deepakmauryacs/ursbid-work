@@ -32,12 +32,28 @@
         @forelse($users as $user)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $user->name }}</td>
+                <td>{{ \Illuminate\Support\Str::title($user->name) }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
                 @if($showBusinessColumns)
                     <td>{{ $user->gst ?: '—' }}</td>
-                    <td>{{ $user->pro_ser ?: '—' }}</td>
+                    <td>
+                    @php
+                        $proSer = $user->pro_ser ?? '';
+                        $shortText = Str::limit($proSer, 20, '...');
+                    @endphp
+
+                    @if($proSer)
+                        {{ $shortText }}
+                        <i class="bi bi-info-circle ms-1 text-primary"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="{{ $proSer }}"></i>
+                    @else
+                        —
+                    @endif
+                </td>
+
                 @endif
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
