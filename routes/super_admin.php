@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\SuperAdminDashboardController;
 use App\Http\Controllers\Admin\WebSettingsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
@@ -35,7 +35,7 @@ Route::put('super-admin/change-password', [ProfileController::class, 'updatePass
 // Super Admin Panel Routes
 Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
     // Dashboard
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('super-admin.dashboard');
+    Route::get('dashboard', [SuperAdminDashboardController::class, 'index'])->name('super-admin.dashboard');
 
     // Web Settings
     Route::get('web-settings', [WebSettingsController::class, 'edit'])->name('super-admin.web-settings.edit');
