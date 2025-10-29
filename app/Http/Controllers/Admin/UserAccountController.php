@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Seller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -45,62 +46,74 @@ class UserAccountController extends Controller
             'from_date' => 'nullable|date_format:d-m-Y',
             'to_date' => 'nullable|date_format:d-m-Y',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+    
+        // 👇 Get type info
         $data = $this->getTypeData($type);
-        $query = Seller::query()->where('acc_type', $data['acc_type']);
-
+        $accType = $data['acc_type'] ?? 1; // default vendor
+    
+        // 👇 Base query with FIND_IN_SET and verify check
+        $query = DB::table('seller')
+            ->where('seller.verify', 1)
+            ->whereRaw('FIND_IN_SET(?, seller.acc_type)', [$accType]);
+    
+        // 👇 Filters
         if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->name . '%');
+            $query->where('seller.name', 'like', '%' . $request->name . '%');
         }
-
+    
         if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->email . '%');
+            $query->where('seller.email', 'like', '%' . $request->email . '%');
         }
-
+    
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('seller.status', $request->status);
         }
-
+    
         if ($request->filled('from_date')) {
-            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d'));
+            $fromDate = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $query->whereDate('seller.created_at', '>=', $fromDate);
         }
-
+    
         if ($request->filled('to_date')) {
-            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d'));
+            $toDate = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+            $query->whereDate('seller.created_at', '<=', $toDate);
         }
-
-        $users = $query->orderByDesc('id')->get();
-
+    
+        // 👇 Fetch users
+        $users = $query->orderByDesc('seller.id')->get();
+    
+        // 👇 Type mapping
         $typeRouteMap = [
             '1' => 'vendors',
             '2' => 'contractors',
             '3' => 'clients',
             '4' => 'buyers',
         ];
-
+    
         $typeLabels = [
             '1' => 'Vendor',
             '2' => 'Contractor',
             '3' => 'Client',
             '4' => 'Buyer',
         ];
-
+    
+        // 👇 Render HTML partial
         $html = view('ursbid-admin.user_accounts.partials.table', [
-            'users' => $users,
+            'users'        => $users,
             'typeRouteMap' => $typeRouteMap,
-            'typeLabels' => $typeLabels,
+            'typeLabels'   => $typeLabels,
         ])->render();
-
+    
         return response()->json([
             'status' => 'success',
-            'html' => $html,
+            'html'   => $html,
         ]);
     }
 
