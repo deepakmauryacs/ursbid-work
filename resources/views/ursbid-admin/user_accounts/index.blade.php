@@ -45,11 +45,11 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label">From Date</label>
-                                <input type="text" name="from_date" class="form-control" placeholder="dd-mm-yyyy">
+                                <input type="date" name="from_date" class="form-control">
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label">To Date</label>
-                                <input type="text" name="to_date" class="form-control" placeholder="dd-mm-yyyy">
+                                <input type="date" name="to_date" class="form-control">
                             </div>
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label d-none d-lg-block">&nbsp;</label>
@@ -77,7 +77,12 @@
                     <h4 class="card-title mb-0">{{ $userType }} Accounts</h4>
                     <a href="{{ route('super-admin.accounts.create', $type) }}" class="btn btn-sm btn-primary">Add {{ $userType }}</a>
                 </div>
-                <div id="listContainer" class="table-responsive"></div>
+                <div id="listLoader" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div id="listContainer" class="table-responsive d-none"></div>
             </div>
         </div>
     </div>
@@ -87,12 +92,24 @@
 @push('scripts')
 <script>
 $(function(){
+    function toggleLoader(show){
+        if(show){
+            $('#listLoader').removeClass('d-none');
+            $('#listContainer').addClass('d-none');
+        }else{
+            $('#listLoader').addClass('d-none');
+            $('#listContainer').removeClass('d-none');
+        }
+    }
+
     function loadList(){
+        toggleLoader(true);
         $.ajax({
             url: '{{ route('super-admin.accounts.list', $type) }}',
             data: $('#filterForm').serialize(),
             success: function(res){
                 $('#listContainer').html(res.html);
+                toggleLoader(false);
             },
             error: function(xhr){
                 if(xhr.status === 422){
@@ -100,6 +117,7 @@ $(function(){
                 }else{
                     toastr.error('Unable to load list');
                 }
+                toggleLoader(false);
             }
         });
     }
@@ -110,21 +128,12 @@ $(function(){
         const email = $('input[name="email"]').val();
         const from = $('input[name="from_date"]').val();
         const to = $('input[name="to_date"]').val();
-        const datePattern = /^\d{2}-\d{2}-\d{4}$/;
         if(name.length > 255){
             toastr.error('Name may not be greater than 255 characters.');
             return;
         }
         if(email.length > 255){
             toastr.error('Email may not be greater than 255 characters.');
-            return;
-        }
-        if(from && !datePattern.test(from)){
-            toastr.error('From date must be in dd-mm-yyyy format.');
-            return;
-        }
-        if(to && !datePattern.test(to)){
-            toastr.error('To date must be in dd-mm-yyyy format.');
             return;
         }
         loadList();
