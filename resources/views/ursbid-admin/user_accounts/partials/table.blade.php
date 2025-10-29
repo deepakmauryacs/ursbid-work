@@ -66,8 +66,12 @@
                 <td>
                     @php $routeType = $accountRouteMap[$user->acc_type] ?? ''; @endphp
                     <div class="d-flex gap-2">
-                        <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm">Edit</a>
-                        <a href="{{ route('super-admin.accounts.show', [$routeType, $user->id]) }}" class="btn btn-soft-info btn-sm">View</a>
+                        <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm" title="Edit">
+                            <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+                        </a>
+                        <a href="{{ route('super-admin.accounts.show', [$routeType, $user->id]) }}" class="btn btn-soft-info btn-sm" title="View">
+                            <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
+                        </a>
                     </div>
                 </td>
             </tr>
