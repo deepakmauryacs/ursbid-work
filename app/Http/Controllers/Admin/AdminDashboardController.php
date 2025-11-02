@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Product;
-use App\Models\Seller;
+use App\Models\UserAccount;
 use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
@@ -24,10 +24,10 @@ class AdminDashboardController extends Controller
             'categories'   => Category::count(),
             'subCategories'=> SubCategory::count(),
             'products'     => Product::count(),
-            'vendors'      => Seller::where('acc_type', '1')->count(),
-            'buyers'       => Seller::where('acc_type', '4')->count(),
-            'contractors'  => Seller::where('acc_type', '2')->count(),
-            'clients'      => Seller::where('acc_type', '3')->count(),
+            'vendors'      => UserAccount::where('user_type', 'vendor')->count(),
+            'buyers'       => UserAccount::where('user_type', 'buyer')->count(),
+            'contractors'  => UserAccount::where('user_type', 'contractor')->count(),
+            'clients'      => UserAccount::where('user_type', 'client')->count(),
         ];
 
         $currentDate = Carbon::now()->format('d-m-Y');

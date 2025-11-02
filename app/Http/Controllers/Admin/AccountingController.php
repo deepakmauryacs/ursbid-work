@@ -133,7 +133,8 @@ class AccountingController extends Controller
     }
 
     public function acceptedBiddingList(Request $request)
-    {
+    {   
+       
         $keyword      = $request->input('keyword');
         $category     = $request->input('category');
         $date         = $request->input('date');

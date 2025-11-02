@@ -29,7 +29,7 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">Date</label>
-                                <input type="text" name="date" class="form-control" placeholder="Date" value="{{ $datas['date'] ?? '' }}">
+                                <input type="date" name="date" class="form-control" placeholder="Date" value="{{ $datas['date'] ?? '' }}">
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label">City</label>

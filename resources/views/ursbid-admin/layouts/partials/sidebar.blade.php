@@ -247,7 +247,7 @@
                     <span class="nav-icon">
                         <i class="ri-file-list-3-line"></i>
                     </span>
-                    <span class="nav-text">Quotation</span>
+                    <span class="nav-text">Bidding</span>
                 </a>
                 <div class="collapse {{ request()->is('super-admin/quotation/accepted-bidding-list*') || request()->is('super-admin/accounting/accepted-list*') || request()->is('super-admin/accounting/price-list*') ? 'show' : '' }}"
                      id="sidebarQuotation">

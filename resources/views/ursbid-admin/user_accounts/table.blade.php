@@ -1,4 +1,10 @@
 @php
+    $accountTypeLabels = $typeLabels ?? [
+        '1' => 'Vendor',
+        '2' => 'Contractor',
+        '3' => 'Client',
+        '4' => 'Buyer',
+    ];
     $accountRouteMap = $typeRouteMap ?? [
         '1' => 'vendors',
         '2' => 'contractors',
@@ -14,6 +20,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>Account Type</th>
             <th>Created Date</th>
             <th>Status</th>
             <th>Action</th>
@@ -26,6 +33,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
+                <td>{{ $accountTypeLabels[$user->acc_type] ?? 'N/A' }}</td>
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d-m-Y') }}</td>
                 <td>
                     @if($user->status == '1')
@@ -37,18 +45,14 @@
                 <td>
                     @php $routeType = $accountRouteMap[$user->acc_type] ?? ''; @endphp
                     <div class="d-flex gap-2">
-                        <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm" title="Edit">
-                            <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
-                        </a>
-                        <a href="{{ route('super-admin.accounts.show', [$routeType, $user->id]) }}" class="btn btn-soft-info btn-sm" title="View">
-                            <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
-                        </a>
+                        <a href="{{ route('super-admin.accounts.edit', [$routeType, $user->id]) }}" class="btn btn-soft-primary btn-sm">Edit</a>
+                        <a href="{{ route('super-admin.accounts.show', [$routeType, $user->id]) }}" class="btn btn-soft-info btn-sm">View</a>
                     </div>
                 </td>
             </tr>
         @empty
             <tr>
-                <td colspan="7" class="text-center">No records found.</td>
+                <td colspan="8" class="text-center">No records found.</td>
             </tr>
         @endforelse
     </tbody>

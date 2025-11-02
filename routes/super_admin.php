@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\YoutubeLinkController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\AdvertisementController;
+use App\Http\Controllers\Admin\QuotationController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\UserAccountController;
 use App\Http\Controllers\Admin\JoinUserController;
@@ -53,7 +54,7 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
     Route::patch('help-support/{ticket}/status', [AdminSupportTicketController::class, 'updateStatus'])
         ->name('super-admin.support-tickets.update-status')
         ->middleware('module.permission:help-support,can_edit');
-
+        
     // Accounting
     Route::prefix('accounting')->name('super-admin.accounting.')->group(function () {
         Route::get('accounting-list', [AccountingController::class, 'accountingList'])
@@ -64,11 +65,13 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
             ->name('accepted-list');
         Route::get('enquiry/{id}', [AccountingController::class, 'enquiryView'])
             ->name('enquiry-view');
+         Route::get('accepted-bidding-list', [AccountingController::class, 'acceptedBiddingList'])
+            ->name('accepted-bidding-list');
     });
 
-    Route::get('quotation/accepted-bidding-list', [AccountingController::class, 'acceptedBiddingList'])
-        ->name('super-admin.accounting.accepted-bidding-list');
 
+        
+        
     // Categories
     Route::get('categories', [AdminCategoryController::class, 'index'])
         ->name('super-admin.categories.index')
@@ -286,6 +289,16 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
     Route::delete('advertisements/{id}', [AdvertisementController::class, 'destroy'])
         ->name('super-admin.advertisements.destroy')
         ->middleware('module.permission:advertisements,can_delete');
+        
+    // Quotations
+    Route::get('quotations/active', [QuotationController::class, 'active'])
+          ->name('super-admin.quotations.active');
+    Route::get('quotations/closed', [QuotationController::class, 'closed'])
+          ->name('super-admin.quotations.closed');
+    Route::get('quotation/view/{id}', [QuotationController::class, 'view'])
+          ->name('super-admin.quotation.view');
+    Route::get('quotation/file/{id}', [QuotationController::class, 'vewFile'])
+          ->name('super-admin.quotation.file');
 
     // Accounts
     Route::prefix('accounts')->name('super-admin.accounts.')->group(function () {
@@ -304,6 +317,9 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
         Route::get('{type}/{id}/edit', [UserAccountController::class, 'edit'])
             ->name('edit')
             ->middleware('module.permission:accounts,can_edit');
+        Route::get('{type}/{id}', [UserAccountController::class, 'show'])
+            ->name('show')
+            ->middleware('module.permission:accounts,can_view');
         Route::get('{type}/{id}', [UserAccountController::class, 'show'])
             ->name('show')
             ->middleware('module.permission:accounts,can_view');
