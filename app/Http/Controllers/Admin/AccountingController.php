@@ -465,7 +465,7 @@ class AccountingController extends Controller
                 'sc.id as sub_id',
                 'sc.name as sub_name',
                 'sc.category_id as sub_cat_id',
-                'sc.post_date as sub_post_date',
+                'sc.created_at as sub_post_date',
                 'sc.image as sub_image',
                 'sc.slug as sub_slug',
                 'sc.status as sub_status',
