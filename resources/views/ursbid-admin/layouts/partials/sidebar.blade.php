@@ -329,6 +329,15 @@
                           <li class="sub-nav-item">
                                <a class="sub-nav-link" href="{{ route('super-admin.web-settings.edit') }}">General Settings</a>
                           </li>
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link {{ request()->is('super-admin/profile') ? 'active' : '' }}" href="{{ route('super-admin.profile.edit') }}">Profile (Update Account)</a>
+                          </li>
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link {{ request()->is('super-admin/change-password') ? 'active' : '' }}" href="{{ route('super-admin.password.edit') }}">Change Password</a>
+                          </li>
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link {{ request()->is('delete-account') ? 'active' : '' }}" href="{{ url('delete-account') }}">Delete Account</a>
+                          </li>
                      </ul>
                 </div>
             </li>
