@@ -120,7 +120,7 @@
                                         <td>{{ $record->unit }}</td>
                                         <td>
                                             @if(!empty($record->qutation_form_image))
-                                                <a href="{{ url('admin/enquiry/file/'.$record->id) }}" target="_blank">View</a>
+                                                <a href="{{ route('super-admin.accounting.quotation-files', $record->id) }}" target="_blank">View</a>
                                             @else
                                                 No file found
                                             @endif
