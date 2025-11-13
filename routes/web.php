@@ -115,7 +115,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'submitResetForm
 Route::get('refer-register/{id}', [App\Http\Controllers\SellerloginController::class, 'refer_register'])->name('refer-register');
 Route::get('seller-register', [App\Http\Controllers\SellerloginController::class, 'seller_register'])->name('seller-register');
 
-
+Route::post('quotation-login', [App\Http\Controllers\QuotationLoginController::class, 'quotationLogin'])->name('quotation-login');
 
 Route::post('seller-register', [App\Http\Controllers\SellerloginController::class, 'seller_create']);
 Route::get('seller-login', [App\Http\Controllers\SellerloginController::class, 'seller_login'])->name('seller-login');

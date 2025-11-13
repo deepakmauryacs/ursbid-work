@@ -121,6 +121,8 @@
                                 @else
                                     @foreach ($products as $product)
                                         @php
+                                            $productBrand = DB::table('product_brands')->where('product_id', $product->id)->get();
+                                            
                                             // Safe product image
                                             $imgSrc = 'assets/front/img/placeholder-300x200.png';
                                             if (!empty($product->image)) {
@@ -134,14 +136,36 @@
                                             ]);
                                         @endphp
                                         <div class="item">
-                                            <a href="{{ $pUrl }}">
-                                                <div class="img">
-                                                    <img src="{{ asset($imgSrc) }}" alt="{{ $product->title }}">
-                                                </div>
-                                                <div class="hd_name">
-                                                    <h3>{{ $product->title }}</h3>
-                                                </div>
-                                            </a>
+                                            @if (count($productBrand) > 0) 
+                                                <a href="{{ $pUrl }}">
+                                                    <div class="img">
+                                                        <img src="{{ asset($imgSrc) }}" alt="{{ $product->title }}">
+                                                    </div>
+                                                    <div class="hd_name">
+                                                        <h3>{{ $product->title }}</h3>
+                                                    </div>
+                                                </a>
+                                            @else
+                                                @if (request()->session()->get('seller'))
+                                                    <a href="{{ $pUrl }}">
+                                                        <div class="img">
+                                                            <img src="{{ asset($imgSrc) }}" alt="{{ $product->title }}">
+                                                        </div>
+                                                        <div class="hd_name">
+                                                            <h3>{{ $product->title }}</h3>
+                                                        </div>
+                                                    </a>
+                                                @else
+                                                    <a href="javascript:void(0);" class="quotationLogin" data-redirect_url="{{ $pUrl }}">
+                                                        <div class="img">
+                                                            <img src="{{ url('public/'.$product->image) }}" alt="{{ $product->title }}">
+                                                        </div>
+                                                        <div class="hd_name">
+                                                            <h3>{{ $product->title }}</h3>
+                                                        </div>
+                                                    </a>
+                                                @endif
+                                            @endif
                                         </div>
                                     @endforeach
                                 @endif

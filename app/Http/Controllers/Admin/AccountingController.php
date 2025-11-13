@@ -43,6 +43,7 @@ class AccountingController extends Controller
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
                 'qutation_form.id as id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -115,7 +116,7 @@ class AccountingController extends Controller
             $query->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
         }
 
-        $blogs = $query->paginate($recordsPerPage);
+        $blogs = $query->orderBy('date_time', 'DESC')->paginate($recordsPerPage);
 
         $datas = [
             'keyword' => $keyword,
@@ -156,6 +157,7 @@ class AccountingController extends Controller
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
                 'qutation_form.id as id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -230,7 +232,7 @@ class AccountingController extends Controller
             $data->where('qutation_form.product_name', 'like', '%' . $productName . '%');
         }
 
-        $data = $data->orderBy('qutation_form.id', 'desc')->paginate($recordsPerPage);
+        $data = $data->orderBy('date_time', 'DESC')->paginate($recordsPerPage);
 
         $total = $data->total();
 
@@ -269,6 +271,7 @@ class AccountingController extends Controller
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
                 'qutation_form.id as id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -321,7 +324,7 @@ class AccountingController extends Controller
                 'categories.image as category_image',
                 'categories.slug as category_slug',
                 'categories.status as category_status'
-            )->get();
+            )->orderBy('date_time', 'ASC')->get();
 
         $total = $data->count();
 
@@ -351,6 +354,7 @@ class AccountingController extends Controller
                 'qutation_form.bid_time as bid_time',
                 'qutation_form.material as material',
                 'qutation_form.id as qf_id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as qf_name',
                 'qutation_form.email as qf_email',
                 'qutation_form.product_id as qf_product_id',
@@ -403,7 +407,7 @@ class AccountingController extends Controller
                 'categories.image as category_image',
                 'categories.slug as category_slug',
                 'categories.status as category_status'
-            )->get();
+            )->orderBy('date_time', 'ASC')->get();
 
         $total = $data->count();
 

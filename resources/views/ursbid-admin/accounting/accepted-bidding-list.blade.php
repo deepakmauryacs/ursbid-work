@@ -2,15 +2,21 @@
 @section('title', 'Accepted Bidding List')
 @section('content')
 <div class="container-fluid">
-    <div class="social-dash-wrap">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Accepted Bidding List</h4>
-                </div>
+    <!-- ========== Page Title Start ========== -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="mb-0 fw-semibold">Accepted Bidding List</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Accepted Bidding List</li>
+                </ol>
             </div>
         </div>
-
+    </div>
+    <!-- ========== Page Title End ========== -->
+    
+    <div class="social-dash-wrap">
         <div class="row">
             <div class="col-lg-12 mb-30">
                 <div class="card">
@@ -54,6 +60,7 @@
                                 <thead>
                                 <tr>
                                     <th>Sr No</th>
+                                    <th>Qutation ID</th>
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Sub Category</th>
@@ -68,6 +75,7 @@
                                 @forelse($data as $index => $record)
                                     <tr>
                                         <td>{{ $data->firstItem() + $index }}</td>
+                                        <td>{{ $record->qutation_id }}</td>
                                         <td>{{ $record->seller_name }}</td>
                                         <td>{{ $record->category_name }}</td>
                                         <td>{{ $record->sub_name }}</td>

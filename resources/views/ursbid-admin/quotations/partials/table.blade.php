@@ -3,6 +3,7 @@
         <thead class="bg-light-subtle">
             <tr>
                 <th>S.No</th>
+                <th>Qutation ID</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Sub Category</th>
@@ -35,6 +36,7 @@
                 @endphp
                 <tr id="row-{{ $quotation->id }}">
                     <td>{{ $start + $index + 1 }}</td>
+                    <td>{{ $quotation->qutation_id }}</td>
                     <td>{{ $quotation->name }}</td>
                     <td>{{ $quotation->category_name }}</td>
                     <td>{{ $quotation->sub_name }}</td>

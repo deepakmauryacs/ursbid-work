@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\Seller;
 use App\Models\Product;
 use App\Models\UserAccount;
 use Carbon\Carbon;
@@ -31,7 +32,9 @@ class AdminDashboardController extends Controller
         ];
 
         $currentDate = Carbon::now()->format('d-m-Y');
+        
+        $data = Seller::getTypeCounts();
 
-        return view('ursbid-admin.dashboard', compact('stats', 'currentDate'));
+        return view('ursbid-admin.dashboard', compact('stats', 'currentDate', 'data'));
     }
 }

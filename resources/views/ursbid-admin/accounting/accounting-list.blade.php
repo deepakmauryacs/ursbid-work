@@ -2,15 +2,22 @@
 @section('title', 'Accounting List')
 @section('content')
 <div class="container-fluid">
-    <div class="social-dash-wrap">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb-main">
-                    <h4 class="text-capitalize breadcrumb-title">Accounting List</h4>
-                </div>
+    
+    <!-- ========== Page Title Start ========== -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="mb-0 fw-semibold">Accounting List</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Accounting List</li>
+                </ol>
             </div>
         </div>
-
+    </div>
+    <!-- ========== Page Title End ========== -->
+    
+    <div class="social-dash-wrap">
         <div class="row">
             <div class="col-lg-12 mb-30">
                 <div class="card">
@@ -67,6 +74,7 @@
                                 <thead>
                                 <tr>
                                     <th>Sr No</th>
+                                    <th>Qutation ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Time</th>
@@ -84,6 +92,7 @@
                                 @forelse($blogs as $index => $blog)
                                     <tr>
                                         <td>{{ $blogs->firstItem() + $index }}</td>
+                                        <td>{{ $blog->qutation_id }}</td>
                                         <td>{{ $blog->name }}</td>
                                         <td>{{ $blog->email }}</td>
                                         <td>{{ $blog->bid_time }} day</td>

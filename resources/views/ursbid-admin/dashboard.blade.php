@@ -178,60 +178,68 @@
         <!-- Total Vendor -->
         <div class="col-lg-4 col-md-6">
             <div class="card metric-card border-warning-left">
-                <div class="card-body">
-                    <div class="metric-info">
-                         <i class="bi bi-shop icon"></i>
-                        <h5 class="mb-0">Total Vendor</h5>
+                <a href="{{ route('super-admin.accounts.index', 'vendors') }}">
+                    <div class="card-body">
+                        <div class="metric-info">
+                             <i class="bi bi-shop icon"></i>
+                            <h5 class="mb-0">Total Vendor</h5>
+                        </div>
+                        <div class="metric-value">
+                            <h2 class="mb-0">{{ $data['seller'] }}</h2>
+                        </div>
                     </div>
-                    <div class="metric-value">
-                        <h2 class="mb-0">{{ $stats['vendors'] }}</h2>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
 
         <!-- Total Buyer -->
         <div class="col-lg-4 col-md-6">
             <div class="card metric-card border-danger-left">
-                <div class="card-body">
-                    <div class="metric-info">
-                        <i class="bi bi-bag icon"></i>
-                        <h5 class="mb-0">Total Buyer</h5>
+                <a href="{{ route('super-admin.accounts.index', 'buyers') }}">
+                    <div class="card-body">
+                        <div class="metric-info">
+                            <i class="bi bi-bag icon"></i>
+                            <h5 class="mb-0">Total Buyer</h5>
+                        </div>
+                        <div class="metric-value">
+                            <h2 class="mb-0">{{ $data['buyer'] }}</h2>
+                        </div>
                     </div>
-                    <div class="metric-value">
-                        <h2 class="mb-0">{{ $stats['buyers'] }}</h2>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
 
         <!-- Total Contractor -->
         <div class="col-lg-4 col-md-6">
             <div class="card metric-card border-purple-left">
-                <div class="card-body">
-                    <div class="metric-info">
-                        <i class="bi bi-tools icon"></i>
-                        <h5 class="mb-0">Total Contractor</h5>
+                <a href="{{ route('super-admin.accounts.index', 'contractors') }}">
+                    <div class="card-body">
+                        <div class="metric-info">
+                            <i class="bi bi-tools icon"></i>
+                            <h5 class="mb-0">Total Contractor</h5>
+                        </div>
+                        <div class="metric-value">
+                            <h2 class="mb-0">{{ $data['contractor'] }}</h2>
+                        </div>
                     </div>
-                    <div class="metric-value">
-                        <h2 class="mb-0">{{ $stats['contractors'] }}</h2>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
 
         <!-- Total Client -->
         <div class="col-lg-4 col-md-6">
             <div class="card metric-card border-dark-left">
-                <div class="card-body">
-                    <div class="metric-info">
-                        <i class="bi bi-people-fill icon"></i>
-                        <h5 class="mb-0">Total Client</h5>
+                <a href="{{ route('super-admin.accounts.index', 'clients') }}">
+                    <div class="card-body">
+                        <div class="metric-info">
+                            <i class="bi bi-people-fill icon"></i>
+                            <h5 class="mb-0">Total Client</h5>
+                        </div>
+                        <div class="metric-value">
+                            <h2 class="mb-0">{{ $data['client'] }}</h2>
+                        </div>
                     </div>
-                    <div class="metric-value">
-                        <h2 class="mb-0">{{ $stats['clients'] }}</h2>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

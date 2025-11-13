@@ -1,52 +1,51 @@
 <style>
 /* Custom button class matching Bootstrap's btn-primary */
 .urs-btn-primary {
-  display: inline-block;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  background-color: #0d6efd;
-  border: 1px solid #0d6efd;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, 
-              border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #0d6efd;
+    border: 1px solid #0d6efd;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, 
+    background-color 0.15s ease-in-out, 
+    border-color 0.15s ease-in-out, 
+    box-shadow 0.15s ease-in-out;
 }
-
 .urs-btn-primary:hover {
-  color: #fff;
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+    color: #fff;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
 }
-
 .urs-btn-primary:focus {
-  color: #fff;
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
-  box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+    color: #fff;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
 }
-
 .urs-btn-primary:active {
-  color: #fff;
-  background-color: #0a58ca;
-  border-color: #0a53be;
+    color: #fff;
+    background-color: #0a58ca;
+    border-color: #0a53be;
 }
-
 .urs-btn-primary:disabled {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
-  opacity: 0.65;
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    opacity: 0.65;
 }
 </style>
+
 <!-- FOOTER AREA START -->
 <footer class="site-footer">
     <div class="footer-top">
@@ -58,9 +57,7 @@
                         <img src="{{ url('assets/front/img/logo.png') }}" alt="URSBID Logo">
                         <div class="brand-name">URSBID</div>
                     </div>
-
                     <p class="tagline">Connecting Dreams To Reality.</p>
-
                     <ul class="contact-list">
                         <li>
                             <i class="bi bi-geo-alt-fill"></i>
@@ -75,7 +72,6 @@
                             <a href="mailto:info@ursbid.com">info@ursbid.com</a>
                         </li>
                     </ul>
-
                     <div class="social">
                         <ul>
                             <li><a target="_blank" href="https://www.facebook.com/profile.php?viewas=100000686899395&id=61566764819246" aria-label="Facebook"><i class="bi bi-facebook"></i></a></li>
@@ -89,10 +85,8 @@
                 <!-- Right Side -->
                 @php
                     $currentDate = \Carbon\Carbon::now();
-                    $active = DB::table('qutation_form')
-                        ->whereRaw("DATE_ADD(date_time, INTERVAL bid_time DAY) >= ?", [$currentDate])
-                        ->count();
-                    $total = DB::table('qutation_form')->count();
+                    $active = DB::table('qutation_form')->whereRaw("DATE_ADD(date_time, INTERVAL bid_time DAY) >= ?", [$currentDate])->count();
+                    $total  = DB::table('qutation_form')->count();
                 @endphp
 
                 <div class="col-xl-8 col-lg-7">
@@ -102,14 +96,9 @@
 
                             <!-- Simple blue Bootstrap buttons (added) -->
                             <div class="mb-3 d-flex flex-wrap gap-2">
-                                <a href="{{ url('seller-register') }}" class="urs-btn-primary">
-                                     SELLER / CONTRACTOR REGISTER
-                                </a>
-                                <a href="{{ url('buyer-register') }}" class="urs-btn-primary">
-                                     BUYER / CLIENT REGISTER
-                                </a>
+                                <a href="{{ url('seller-register') }}" class="urs-btn-primary">SELLER / CONTRACTOR REGISTER</a>
+                                <a href="{{ url('buyer-register') }}" class="urs-btn-primary">BUYER / CLIENT REGISTER</a>
                             </div>
-
                             <h5 class="widget-title">More</h5>
                             <div class="stat-row">
                                 <div class="stat-label">Active Bidding</div>
@@ -182,5 +171,52 @@
         // Set current year automatically
         (function(){ var el=document.querySelector('.current-year'); if(el) el.textContent=new Date().getFullYear(); })();
     </script>
+    
 </footer>
 <!-- FOOTER AREA END -->
+
+{{-- Quotation Login Modal --}}
+<div class="modal fade login-ui" id="quotationLoginModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="quotationLoginModelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content login-card">
+            <div class="modal-header border-0 pb-0">
+                <h1 class="modal-title fw-bold fs-3" id="quotationLoginModelLabel">Login</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form id="loginForm1" action="{{ route('quotation-login') }}" method="POST" class="ajaxForm" novalidate>
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label login-label" for="email">Email Id</label>
+                        <input id="email" type="email" name="email" class="form-control login-control" autocomplete="email">
+                        <div class="emailErr err"></div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label login-label" for="seller_password">Password</label>
+                        <div class="password-container">
+                            <input id="seller_password" type="password" name="password" class="form-control login-control pe-5" autocomplete="current-password">
+                            <div class="passwordErr err"></div>
+                            <button class="toggle-pass" type="button" aria-label="Show password" data-target="#seller_password">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="passwordError" class="error-message">Password is required</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-1 mb-4">
+                        <span class="text-muted small">Forgot your password?
+                            <a class="link-restore" href="{{ url('/forgot-password') }}">Restore access now</a>
+                        </span>
+                    </div>
+                    <input type="hidden" name="redirect_url" id="redirect_url" class="form-control login-control">
+                    <button class="btn btn-login w-100" type="submit">Login <i class="fa fa-spinner fa-spin" style="display:none;"></i></button>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <p class="w-100 text-center text-muted mb-0">Don't have an account? <a href="{{ url('seller-register') }}" class="link-restore">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+</div>

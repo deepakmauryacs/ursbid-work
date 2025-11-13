@@ -24,6 +24,7 @@ class QuotationController extends Controller
             ->select(
                 // qutation_form
                 'qutation_form.id as id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -105,7 +106,8 @@ class QuotationController extends Controller
             $query->where('product_name', 'like', '%' . $request->product_name . '%');
         }
 
-        $quotations = $query->paginate($perPage)->appends($request->all());
+        $quotations = $query->orderBy('date_time', 'DESC')->paginate($perPage)->appends($request->all());
+        
         $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
         
         if ($request->ajax()) {
@@ -129,6 +131,7 @@ class QuotationController extends Controller
             ->select(
                 // qutation_form
                 'qutation_form.id as id',
+                'qutation_form.qutation_id as qutation_id',
                 'qutation_form.name as name',
                 'qutation_form.email as email',
                 'qutation_form.product_id as qutation_form_product_id',
@@ -210,7 +213,7 @@ class QuotationController extends Controller
             $query->where('product_name', 'like', '%' . $request->product_name . '%');
         }
 
-        $quotations = $query->paginate($perPage)->appends($request->all());
+        $quotations = $query->orderBy('date_time', 'DESC')->paginate($perPage)->appends($request->all());
         $categories = DB::table('categories')->where('status', 1)->orderBy('name')->get();
         
         if ($request->ajax()) {

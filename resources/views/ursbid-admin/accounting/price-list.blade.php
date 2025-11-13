@@ -2,15 +2,30 @@
 @section('title', 'Seller List with Price')
 @section('content')
 <div class="container-fluid">
-    <div class="social-dash-wrap">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb-main d-flex justify-content-between align-items-center">
-                    <h4 class="text-capitalize breadcrumb-title">Seller List with Price</h4>
-                    <a href="{{ route('super-admin.accounting.accepted-bidding-list') }}" class="btn btn-sm btn-outline-primary">Back</a>
-                </div>
+    
+    <!-- ========== Page Title Start ========== -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="mb-0 fw-semibold">Seller List with Price</h4>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Seller List with Price</li>
+                </ol>
             </div>
         </div>
+    </div>
+    <!-- ========== Page Title End ========== -->
+    
+    <div class="social-dash-wrap">
+        <!--<div class="row">-->
+        <!--    <div class="col-lg-12">-->
+        <!--        <div class="breadcrumb-main d-flex justify-content-between align-items-center">-->
+        <!--            <h4 class="text-capitalize breadcrumb-title">Seller List with Price</h4>-->
+        <!--            <a href="{{ route('super-admin.accounting.accepted-bidding-list') }}" class="btn btn-sm btn-outline-primary">Back</a>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--</div>-->
 
         <div class="row">
             <div class="col-lg-12 mb-30">
@@ -21,6 +36,7 @@
                                 <thead>
                                 <tr>
                                     <th>Sr No</th>
+                                    <th>Qutation ID</th>
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Sub Category</th>
@@ -39,6 +55,7 @@
                                 @forelse($data as $index => $record)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
+                                        <td>{{ $record->qutation_id }}</td>
                                         <td>{{ $record->seller_name }}</td>
                                         <td>{{ $record->category_name }}</td>
                                         <td>{{ $record->sub_name }}</td>
