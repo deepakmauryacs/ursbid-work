@@ -40,6 +40,14 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
+                                <label class="form-label">Product Name</label>
+                                <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $datas['product_name'] ?? '' }}">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Quotation ID</label>
+                                <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID" value="{{ $datas['qutation_id'] ?? '' }}">
+                            </div>
+                            <div class="col-md-2">
                                 <label class="form-label">Date</label>
                                 <input type="date" name="date" class="form-control" placeholder="Date" value="{{ $datas['date'] ?? '' }}">
                             </div>
@@ -50,14 +58,6 @@
                             <div class="col-md-2">
                                 <label class="form-label">Quantity</label>
                                 <input type="text" name="quantity" class="form-control" placeholder="Quantity" value="{{ $datas['quantity'] ?? '' }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Product Name</label>
-                                <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $datas['product_name'] ?? '' }}">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Quotation ID</label>
-                                <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID" value="{{ $datas['qutation_id'] ?? '' }}">
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary me-2">Filter</button>
