@@ -47,6 +47,13 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <label class="form-label">Sub Category</label>
+                                <select name="subcategory" id="subcategory" class="form-select">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
                 
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label">Date</label>
@@ -66,6 +73,11 @@
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label">Product Name</label>
                                 <input type="text" name="product_name" id="product_name" value="{{ request('product_name') }}" class="form-control" placeholder="Enter product name">
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <label class="form-label">Quotation ID</label>
+                                <input type="text" name="qutation_id" id="qutation_id" value="{{ request('qutation_id') }}" class="form-control" placeholder="Enter quotation ID">
                             </div>
                 
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">

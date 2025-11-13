@@ -12,6 +12,8 @@ class AccountingController extends Controller
     {
         $keyword      = $request->input('keyword');
         $category     = $request->input('category');
+        $subcategory  = $request->input('subcategory');
+        $qutationId   = $request->input('qutation_id');
         $date         = $request->input('date');
         $city         = $request->input('city');
         $quantity     = $request->input('quantity');
@@ -100,6 +102,14 @@ class AccountingController extends Controller
             $query->where('c.id', $category);
         }
 
+        if ($subcategory) {
+            $query->where('sc.id', $subcategory);
+        }
+
+        if ($qutationId) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $qutationId . '%');
+        }
+
         if ($productName) {
             $query->where('product.title', 'like', '%' . $productName . '%');
         }
@@ -124,6 +134,8 @@ class AccountingController extends Controller
             'city' => $city,
             'quantity' => $quantity,
             'category' => $category,
+            'subcategory' => $subcategory,
+            'qutation_id' => $qutationId,
             'product_name' => $productName,
             'r_page' => $recordsPerPage,
         ];
@@ -138,6 +150,8 @@ class AccountingController extends Controller
        
         $keyword      = $request->input('keyword');
         $category     = $request->input('category');
+        $subcategory  = $request->input('subcategory');
+        $qutationId   = $request->input('qutation_id');
         $date         = $request->input('date');
         $city         = $request->input('city');
         $quantity     = $request->input('quantity');
@@ -216,6 +230,14 @@ class AccountingController extends Controller
             $data->where('categories.id', 'like', '%' . $category . '%');
         }
 
+        if ($subcategory) {
+            $data->where('sub_categories.id', $subcategory);
+        }
+
+        if ($qutationId) {
+            $data->where('qutation_form.qutation_id', 'like', '%' . $qutationId . '%');
+        }
+
         if ($date) {
             $data->where('qutation_form.date_time', 'like', '%' . $date . '%');
         }
@@ -242,6 +264,8 @@ class AccountingController extends Controller
             'city' => $city,
             'quantity' => $quantity,
             'category' => $category,
+            'subcategory' => $subcategory,
+            'qutation_id' => $qutationId,
             'product_name' => $productName,
             'r_page' => $recordsPerPage,
         ];

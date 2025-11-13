@@ -25,13 +25,19 @@
                         <form class="row g-3 mb-4" method="get" action="">
                             <div class="col-md-2">
                                 <label class="form-label">Category</label>
-                                <select name="category" class="form-control">
+                                <select name="category" id="categoryFilter" class="form-control">
                                     <option value="">Select Category</option>
                                     @foreach($categoryData as $cat)
                                         <option value="{{ $cat->id }}" {{ ($datas['category'] ?? '') == $cat->id ? 'selected' : '' }}>
                                             {{ $cat->title }}
                                         </option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Sub Category</label>
+                                <select name="subcategory" id="subcategoryFilter" class="form-control">
+                                    <option value="">Select Sub Category</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -49,6 +55,10 @@
                             <div class="col-md-2">
                                 <label class="form-label">Product Name</label>
                                 <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $datas['product_name'] ?? '' }}">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Quotation ID</label>
+                                <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID" value="{{ $datas['qutation_id'] ?? '' }}">
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary me-2">Filter</button>
@@ -141,3 +151,37 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    const $category = $('#categoryFilter');
+    const $subcategory = $('#subcategoryFilter');
+    const preselectedSub = @json($datas['subcategory'] ?? '');
+
+    function loadSubCategories(catId, preselect = '') {
+        $subcategory.html('<option value="">Select Sub Category</option>');
+        if (!catId) {
+            return;
+        }
+
+        $.get('{{ route('super-admin.products.get-subcategories') }}', {cat_id: catId}, function (res) {
+            $subcategory.html('<option value="">Select Sub Category</option>');
+            (res || []).forEach(function (item) {
+                const selected = String(preselect) === String(item.id) ? 'selected' : '';
+                $subcategory.append(`<option value="${item.id}" ${selected}>${item.name}</option>`);
+            });
+        });
+    }
+
+    const initialCategory = $category.val();
+    if (initialCategory) {
+        loadSubCategories(initialCategory, preselectedSub);
+    }
+
+    $category.on('change', function () {
+        loadSubCategories($(this).val(), '');
+    });
+})();
+</script>
+@endpush

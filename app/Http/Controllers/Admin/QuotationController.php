@@ -93,6 +93,12 @@ class QuotationController extends Controller
         if ($request->filled('category')) {
             $query->where('c.id', $request->category);
         }
+        if ($request->filled('subcategory')) {
+            $query->where('sc.id', $request->subcategory);
+        }
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->qutation_id . '%');
+        }
         if ($request->filled('date')) {
             $query->where('date_time', 'like', '%' . $request->date . '%');
         }
@@ -199,6 +205,12 @@ class QuotationController extends Controller
 
         if ($request->filled('category')) {
             $query->where('c.id', $request->category);
+        }
+        if ($request->filled('subcategory')) {
+            $query->where('sc.id', $request->subcategory);
+        }
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->qutation_id . '%');
         }
         if ($request->filled('date')) {
             $query->where('date_time', 'like', '%' . $request->date . '%');
