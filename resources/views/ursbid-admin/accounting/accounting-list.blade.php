@@ -134,7 +134,7 @@
                                         <td>{{ $blog->date_time ? \Carbon\Carbon::parse($blog->date_time)->format('Y-m-d') : 'N/A' }}</td>
                                         <td>
                                             @if(!empty($blog->qutation_form_image))
-                                                <a href="{{ url('admin/enquiry/file/'.$blog->id) }}" target="_blank">View</a>
+                                                <a href="{{ route('super-admin.accounting.quotation-files', $blog->id) }}" target="_blank">View</a>
                                             @else
                                                 No file found
                                             @endif

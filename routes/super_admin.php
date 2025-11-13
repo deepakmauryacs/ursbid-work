@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketCont
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Frontend\AjexResponseController;
 use App\Http\Controllers\Admin\AccountingController;
+use App\Http\Controllers\Admin\AccountingQuotationFileController;
 
 // Super Admin Auth
 Route::get('super-admin', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -67,6 +68,8 @@ Route::prefix('super-admin')->middleware('SuperAdmin')->group(function () {
             ->name('enquiry-view');
          Route::get('accepted-bidding-list', [AccountingController::class, 'acceptedBiddingList'])
             ->name('accepted-bidding-list');
+        Route::get('quotation-files/{id}', [AccountingQuotationFileController::class, 'show'])
+            ->name('quotation-files');
     });
 
 
