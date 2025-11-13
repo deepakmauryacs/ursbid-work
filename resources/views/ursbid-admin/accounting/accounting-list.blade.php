@@ -113,6 +113,7 @@
                                     <th>Email</th>
                                     <th>Time</th>
                                     <th>Date</th>
+                                    <th>Quotation</th>
                                     <th>Quotation File</th>
                                     <th>Unit</th>
                                     <th>Quantity</th>
@@ -131,6 +132,13 @@
                                         <td>{{ $blog->email }}</td>
                                         <td>{{ $blog->bid_time }} day</td>
                                         <td>{{ $blog->date_time ? \Carbon\Carbon::parse($blog->date_time)->format('Y-m-d') : 'N/A' }}</td>
+                                        <td>
+                                            @if(!empty($blog->qutation_form_image))
+                                                <a href="{{ url('admin/enquiry/file/'.$blog->id) }}" target="_blank">View</a>
+                                            @else
+                                                No file found
+                                            @endif
+                                        </td>
                                         <td>
                                             @if(!empty($blog->bidding_price_image))
                                                 <a href="{{ url('public/uploads/'.$blog->bidding_price_image) }}" target="_blank">View</a>

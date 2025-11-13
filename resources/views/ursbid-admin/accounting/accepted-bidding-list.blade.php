@@ -102,6 +102,7 @@
                                     <th>Date</th>
                                     <th>Quantity</th>
                                     <th>Unit</th>
+                                    <th>Quotation</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -117,6 +118,13 @@
                                         <td>{{ $record->date_time ? \Carbon\Carbon::parse($record->date_time)->format('Y-m-d') : 'N/A' }}</td>
                                         <td>{{ $record->quantity }}</td>
                                         <td>{{ $record->unit }}</td>
+                                        <td>
+                                            @if(!empty($record->qutation_form_image))
+                                                <a href="{{ url('admin/enquiry/file/'.$record->id) }}" target="_blank">View</a>
+                                            @else
+                                                No file found
+                                            @endif
+                                        </td>
                                         <td class="d-flex gap-2">
                                             <a href="{{ route('super-admin.accounting.price-list', $record->id) }}" class="btn btn-sm btn-outline-primary">View List</a>
                                             <a href="{{ route('super-admin.accounting.accepted-list', $record->id) }}" class="btn btn-sm btn-success">Accepted List</a>
