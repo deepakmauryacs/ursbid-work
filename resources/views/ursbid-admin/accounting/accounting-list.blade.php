@@ -114,7 +114,6 @@
                                     <th>Time</th>
                                     <th>Date</th>
                                     <th>Quotation</th>
-                                    <th>Quotation File</th>
                                     <th>Unit</th>
                                     <th>Quantity</th>
                                     <th>Rate</th>
@@ -139,13 +138,6 @@
                                                 No file found
                                             @endif
                                         </td>
-                                        <td>
-                                            @if(!empty($blog->bidding_price_image))
-                                                <a href="{{ url('public/uploads/'.$blog->bidding_price_image) }}" target="_blank">View</a>
-                                            @else
-                                                N/A
-                                            @endif
-                                        </td>
                                         <td>{{ $blog->unit }}</td>
                                         <td>{{ $blog->quantity }}</td>
                                         <td>{{ $blog->rate }}</td>
@@ -164,7 +156,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="12" class="text-center text-danger">Sorry, no data found!</td>
+                                        <td colspan="13" class="text-center text-danger">Sorry, no data found!</td>
                                     </tr>
                                 @endforelse
                                 </tbody>
