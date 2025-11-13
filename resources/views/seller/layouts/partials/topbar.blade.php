@@ -8,6 +8,9 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <div class="d-flex align-items-center gap-2">
+
+                   
+
                     <!-- Menu Toggle Button -->
                     <div class="topbar-item">
                         <button type="button" class="button-toggle-menu topbar-button">
@@ -17,6 +20,14 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-1">
+                    
+                     <!-- Website Home Icon -->
+                    <div class="topbar-item">
+                        <a href="https://ursbid.com" target="_blank" class="topbar-button">
+                            <i class="ri-global-line fs-24"></i>
+                        </a>
+                    </div>
+                    
                     <!-- Theme Color (Light/Dark) -->
                     <div class="topbar-item">
                         <button type="button" class="topbar-button" id="light-dark-mode">
@@ -27,9 +38,11 @@
 
                     <!-- User -->
                     <div class="dropdown topbar-item">
-                        <a type="button" class="topbar-button" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a type="button" class="topbar-button" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="d-flex align-items-center">
-                                <img class="rounded-circle" width="32" src="{{ asset('public/assets/images/users/avatar-1.jpg') }}" alt="seller-avatar">
+                                <img class="rounded-circle" width="32"
+                                    src="{{ asset('public/assets/images/users/avatar-1.jpg') }}" alt="seller-avatar">
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -41,6 +54,7 @@
                             </a>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
