@@ -23,17 +23,12 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h5 class="mb-0">Filter Closed Quotations</h5>
-                    <div class="d-flex align-items-center gap-2">
-                        <!--<a href="{{ route('super-admin.products.create') }}" class="btn btn-success btn-sm">-->
-                        <!--    <i class="bi bi-plus-circle me-1"></i>Add Product-->
-                        <!--</a>-->
-                        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#productFilters" aria-expanded="true" aria-controls="productFilters">
-                            Toggle Filters
-                        </button>
-                    </div>
+                    <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#closedQuotationFilters" aria-expanded="true" aria-controls="closedQuotationFilters">
+                        Toggle Filters
+                    </button>
                 </div>
-    
-                <div class="collapse show" id="productFilters">
+
+                <div class="collapse show" id="closedQuotationFilters">
                     <div class="card-body">
                         <form id="filterForm" action="{{ route('super-admin.quotations.closed') }}" method="GET" class="row g-3 align-items-end">
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
@@ -82,12 +77,16 @@
                 
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label d-none d-lg-block">&nbsp;</label>
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel-fill me-2"></i>Apply Filters</button>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-funnel-fill me-2"></i>Apply Filters
+                                </button>
                             </div>
-                
+
                             <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                                 <label class="form-label d-none d-lg-block">&nbsp;</label>
-                                <button type="button" id="resetBtn" class="btn btn-outline-secondary w-100"><i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters</button>
+                                <button type="button" id="resetBtn" class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+                                </button>
                             </div>
                         </form>
                     </div>
