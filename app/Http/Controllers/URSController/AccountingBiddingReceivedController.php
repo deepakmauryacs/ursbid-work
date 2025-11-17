@@ -22,7 +22,9 @@ class AccountingBiddingReceivedController extends Controller
 
         $filters = [
             'category' => $request->input('category'),
+            'sub_category' => $request->input('sub_category'),
             'date' => $request->input('date'),
+            'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
             'product_name' => $request->input('product_name'),
             'qutation_id' => $request->input('qutation_id'),
@@ -40,8 +42,16 @@ class AccountingBiddingReceivedController extends Controller
             });
         }
 
+        if ($request->filled('sub_category')) {
+            $query->where('sc.id', $request->input('sub_category'));
+        }
+
         if ($request->filled('date')) {
             $query->whereDate('qutation_form.date_time', $request->input('date'));
+        }
+
+        if ($request->filled('city')) {
+            $query->where('qutation_form.city', 'like', '%' . $request->input('city') . '%');
         }
 
         if ($request->filled('quantity')) {
@@ -74,6 +84,11 @@ class AccountingBiddingReceivedController extends Controller
             ->orderBy('name')
             ->get();
 
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
+            ->orderBy('name')
+            ->get();
+
         if ($request->ajax()) {
             return view('ursdashboard.accounting.bidding-received.partials.table', [
                 'records' => $records,
@@ -86,6 +101,7 @@ class AccountingBiddingReceivedController extends Controller
             'seller' => $seller,
             'filters' => $filters,
             'category_data' => $categoryData,
+            'sub_category_data' => $subCategoryData,
             'records' => $records,
             'datas' => $filters,
             'data' => $records,
