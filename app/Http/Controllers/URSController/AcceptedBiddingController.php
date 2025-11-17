@@ -22,6 +22,7 @@ class AcceptedBiddingController extends Controller
         $filters = [
             'qutation_id'  => $request->input('qutation_id'),
             'category'     => $request->input('category'),
+            'subcategory'  => $request->input('subcategory'),
             'date'         => $request->input('date'),
             'city'         => $request->input('city'),
             'quantity'     => $request->input('quantity'),
@@ -34,6 +35,14 @@ class AcceptedBiddingController extends Controller
         // filter by NEW categories.id
         if ($request->filled('category')) {
             $query->where('categories.id', $request->input('category'));
+        }
+
+        if ($request->filled('subcategory')) {
+            $query->where(function ($innerQuery) use ($request) {
+                $subcategory = $request->input('subcategory');
+                $innerQuery->where('sub_categories.id', $subcategory)
+                    ->orWhere('product.sub_id', $subcategory);
+            });
         }
 
         if ($request->filled('date')) {
@@ -73,6 +82,11 @@ class AcceptedBiddingController extends Controller
             ->orderBy('name')
             ->get();
 
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
+            ->orderBy('name')
+            ->get();
+
         if ($request->ajax()) {
             return view('ursdashboard.accepted-bidding.partials.table', [
                 'records' => $records,
@@ -84,6 +98,7 @@ class AcceptedBiddingController extends Controller
             'seller'        => $seller,
             'filters'       => $filters,
             'category_data' => $categoryData,
+            'sub_category_data' => $subCategoryData,
             'records'       => $records,
             'datas'         => $filters,
             'total'         => $records->total(),

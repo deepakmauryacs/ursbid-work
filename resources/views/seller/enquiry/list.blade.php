@@ -130,7 +130,7 @@
                         <!-- Date -->
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                            <label class="form-label">Date</label>
-                           <input type="text" name="date" id="filterDate" class="form-control"
+                           <input type="date" name="date" id="filterDate" class="form-control"
                               placeholder="Date" value="{{ $data['date'] ?? '' }}">
                         </div>
 

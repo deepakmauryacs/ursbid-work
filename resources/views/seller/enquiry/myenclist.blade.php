@@ -116,7 +116,7 @@
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                            <label for="myDate" class="form-label">Date</label>
-                           <input type="text" id="myDate" name="date" class="form-control" placeholder="Date"
+                           <input type="date" id="myDate" name="date" class="form-control" placeholder="Date"
                               value="{{ isset($data['date']) ? $data['date'] : '' }}">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">

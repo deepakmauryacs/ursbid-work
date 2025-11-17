@@ -25,6 +25,7 @@ class MyBiddingController extends Controller
         $filters = [
             'keyword'      => trim((string) $request->input('keyword', '')),
             'category'     => trim((string) $request->input('category', '')), // category id
+            'subcategory'  => trim((string) $request->input('subcategory', '')),
             'date'         => trim((string) $request->input('date', '')),
             'city'         => trim((string) $request->input('city', '')),
             'quantity'     => trim((string) $request->input('quantity', '')),
@@ -42,6 +43,14 @@ class MyBiddingController extends Controller
                 // Match by categories.id OR by qutation_form.cat_id (CSV/in-list text)
                 $innerQuery->where('c.id', $category)
                     ->orWhere('qutation_form.cat_id', 'like', '%' . $category . '%');
+            });
+        }
+
+        if ($filters['subcategory'] !== '') {
+            $subcategory = $filters['subcategory'];
+            $query->where(function ($innerQuery) use ($subcategory) {
+                $innerQuery->where('sc.id', $subcategory)
+                    ->orWhere('product.sub_id', $subcategory);
             });
         }
 
@@ -93,6 +102,12 @@ class MyBiddingController extends Controller
             ->orderBy('name')
             ->get();
 
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
+            ->where('status', '1')
+            ->orderBy('name')
+            ->get();
+
         if ($request->ajax()) {
             return view('ursdashboard.my-bidding.partials.table', [
                 'records' => $records,
@@ -107,6 +122,7 @@ class MyBiddingController extends Controller
             'seller'        => $seller,
             'filters'       => $filters,
             'category_data' => $categoryData,
+            'sub_category_data' => $subCategoryData,
             'records'       => $records,
             // legacy keys some views expect:
             'datas'         => $filters,
