@@ -39,7 +39,14 @@ class SellerloginController extends Controller
             'name' => 'required',
             'gst' => 'required',
             'phone' => 'required',
+            'email' => 'required|email',
             'acc_type' => 'required',
+        ], [
+            'name.required' => 'Name is required.',
+            'phone.required' => 'Phone is required.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please provide a valid email address.',
+            'acc_type.required' => 'Please select at least one registration type.',
         ]);
 
         if ($validator->fails()) {
@@ -63,6 +70,7 @@ class SellerloginController extends Controller
             'name' => $request->name,
             'gst' => $request->gst,
             'phone' => $request->phone,
+            'email' => $request->email,
             'acc_type' => $acc_type,
             'pro_ser' => $pro_ser,
         ];

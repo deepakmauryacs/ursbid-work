@@ -30,13 +30,13 @@
 
                         <div class="row g-4">
                             <div class="col-md-6">
-                                <label for="seller-name" class="form-label text-capitalize">Name</label>
-                                <input type="text" class="form-control" id="seller-name" placeholder="Enter your name" name="name" value="{{ $blog->name }}">
+                                <label for="seller-name" class="form-label text-capitalize">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="seller-name" placeholder="Enter your name" name="name" value="{{ $blog->name }}" required>
                                 <div class="text-danger small mt-1 error-text" data-error="name" style="{{ $errors->has('name') ? '' : 'display:none;' }}">{{ $errors->first('name') }}</div>
                             </div>
                             <div class="col-md-6">
-                                <label for="seller-phone" class="form-label text-capitalize">Phone</label>
-                                <input type="text" class="form-control" id="seller-phone" placeholder="Enter your phone number" name="phone" value="{{ $blog->phone }}">
+                                <label for="seller-phone" class="form-label text-capitalize">Phone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="seller-phone" placeholder="Enter your phone number" name="phone" value="{{ $blog->phone }}" required>
                                 <div class="text-danger small mt-1 error-text" data-error="phone" style="{{ $errors->has('phone') ? '' : 'display:none;' }}">{{ $errors->first('phone') }}</div>
                             </div>
                             <div class="col-md-6">
@@ -45,11 +45,9 @@
                                 <div class="text-danger small mt-1 error-text" data-error="gst" style="{{ $errors->has('gst') ? '' : 'display:none;' }}">{{ $errors->first('gst') }}</div>
                             </div>
                             <div class="col-md-6">
-                                <label for="seller-email" class="form-label text-capitalize">Email</label>
-                                <input type="email" class="form-control" id="seller-email" placeholder="Email" value="{{ $blog->email }}" readonly>
-                                @if ($errors->has('email'))
-                                    <div class="text-danger small mt-1">{{ $errors->first('email') }}</div>
-                                @endif
+                                <label for="seller-email" class="form-label text-capitalize">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="seller-email" placeholder="Email" value="{{ $blog->email }}" name="email" readonly required>
+                                <div class="text-danger small mt-1 error-text" data-error="email" style="{{ $errors->has('email') ? '' : 'display:none;' }}">{{ $errors->first('email') }}</div>
                             </div>
 
                             @php
@@ -179,8 +177,34 @@
 
                 var $form = $(this);
                 var $submitButton = $('#updateAccountSubmit');
+                var hasError = false;
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 clearErrors();
+
+                if (!$.trim($('#seller-name').val())) {
+                    showFieldError('name', 'Name is required.');
+                    hasError = true;
+                }
+
+                if (!$.trim($('#seller-phone').val())) {
+                    showFieldError('phone', 'Phone is required.');
+                    hasError = true;
+                }
+
+                var emailValue = $.trim($('#seller-email').val());
+                if (!emailValue) {
+                    showFieldError('email', 'Email is required.');
+                    hasError = true;
+                } else if (!emailPattern.test(emailValue)) {
+                    showFieldError('email', 'Please provide a valid email address.');
+                    hasError = true;
+                }
+
+                if (hasError) {
+                    toastr.error('Please correct the highlighted errors and try again.');
+                    return;
+                }
 
                 $submitButton.prop('disabled', true).addClass('disabled');
 
