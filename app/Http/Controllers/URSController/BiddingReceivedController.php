@@ -23,6 +23,7 @@ class BiddingReceivedController extends Controller
         $filters = [
             'keyword' => $request->input('keyword'),
             'category' => $request->input('category'),
+            'subcategory' => $request->input('subcategory'),
             'date' => $request->input('date'),
             'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
@@ -38,6 +39,14 @@ class BiddingReceivedController extends Controller
                 $category = $request->input('category');
                 $innerQuery->where('c.id', $category)
                     ->orWhere('qutation_form.cat_id', 'like', '%' . $category . '%');
+            });
+        }
+
+        if ($request->filled('subcategory')) {
+            $query->where(function ($innerQuery) use ($request) {
+                $subcategory = $request->input('subcategory');
+                $innerQuery->where('sc.id', $subcategory)
+                    ->orWhere('product.sub_id', $subcategory);
             });
         }
 
@@ -86,6 +95,11 @@ class BiddingReceivedController extends Controller
             ->orderBy('name')
             ->get();
 
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
+            ->orderBy('name')
+            ->get();
+
         if ($request->ajax()) {
             return view('ursdashboard.bidding-received.partials.table', [
                 'records' => $records,
@@ -98,6 +112,7 @@ class BiddingReceivedController extends Controller
             'seller' => $seller,
             'filters' => $filters,
             'category_data' => $categoryData,
+            'sub_category_data' => $subCategoryData,
             'records' => $records,
             'datas' => $filters,
             'data' => $records,

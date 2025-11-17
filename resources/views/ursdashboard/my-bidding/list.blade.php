@@ -53,6 +53,38 @@
                                     </div>
                                 </div>
 
+                                <!-- Sub Category -->
+                                <div class="col-12 col-sm-6 col-lg-3">
+                                    <label class="form-label">Sub Category</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                                        <select name="subcategory" id="myBiddingSubCategory" class="form-select">
+                                            <option value="">Select Sub Category</option>
+                                            @foreach($sub_category_data ?? [] as $sub)
+                                                @php
+                                                    $subCategoryId = is_object($sub) ? ($sub->id ?? null) : ($sub['id'] ?? null);
+                                                    $subCategoryLabel = is_object($sub)
+                                                        ? ($sub->name ?? '')
+                                                        : ($sub['name'] ?? '');
+                                                @endphp
+                                                <option value="{{ $subCategoryId }}" {{ ($filters['subcategory'] ?? '') == $subCategoryId ? 'selected' : '' }}>
+                                                    {{ $subCategoryLabel }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Product Name -->
+                                <div class="col-12 col-sm-6 col-lg-3">
+                                    <label class="form-label">Product Name</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                                        <input type="text" name="product_name" id="myBiddingProduct" class="form-control" placeholder="Product Name"
+                                            value="{{ $filters['product_name'] ?? '' }}">
+                                    </div>
+                                </div>
+
                                 <!-- Quotation ID -->
                                 <div class="col-12 col-sm-6 col-lg-3">
                                     <label class="form-label">Quotation ID</label>
@@ -90,16 +122,6 @@
                                         <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
                                         <input type="text" name="quantity" id="myBiddingQuantity" class="form-control" placeholder="Quantity"
                                             value="{{ $filters['quantity'] ?? '' }}">
-                                    </div>
-                                </div>
-
-                                <!-- Product Name -->
-                                <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">Product Name</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-bag"></i></span>
-                                        <input type="text" name="product_name" id="myBiddingProduct" class="form-control" placeholder="Product Name"
-                                            value="{{ $filters['product_name'] ?? '' }}">
                                     </div>
                                 </div>
 
