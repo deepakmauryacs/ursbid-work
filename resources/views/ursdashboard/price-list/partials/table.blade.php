@@ -25,81 +25,120 @@
 
     $hasRecords = $records->isNotEmpty();
 @endphp
-<div class="card mb-4 shadow-none border">
-    <div class="card-body pb-0">
-        <form class="row gy-3" method="GET" action="{{ route('buyer.price-list', $enquiryId) }}">
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">Category</label>
-                <select name="category" class="form-select">
-                    <option value="">All</option>
-                    @foreach ($filterOptions['categories'] as $category)
-                        <option value="{{ $category['id'] }}" {{ $filters['category'] == $category['id'] ? 'selected' : '' }}>
-                            {{ $category['name'] }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">Sub Category</label>
-                <select name="sub_category" class="form-select">
-                    <option value="">All</option>
-                    @foreach ($filterOptions['subCategories'] as $subCategory)
-                        <option value="{{ $subCategory['id'] }}" {{ $filters['sub_category'] == $subCategory['id'] ? 'selected' : '' }}>
-                            {{ $subCategory['name'] }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">Product Name</label>
-                <select name="product_name" class="form-select">
-                    <option value="">All</option>
-                    @foreach ($filterOptions['products'] as $product)
-                        <option value="{{ $product['name'] }}" {{ $filters['product_name'] == $product['name'] ? 'selected' : '' }}>
-                            {{ $product['name'] }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">Quotation ID</label>
-                <input type="text" name="quotation_id" value="{{ $filters['quotation_id'] }}" class="form-control"
-                    placeholder="Enter quotation id">
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">Date</label>
-                <select name="date" class="form-select">
-                    <option value="">All</option>
-                    @foreach ($filterOptions['dates'] as $date)
-                        <option value="{{ $date }}" {{ $filters['date'] == $date ? 'selected' : '' }}>{{ $date }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">City</label>
-                <select name="city" class="form-select">
-                    <option value="">All</option>
-                    @foreach ($filterOptions['cities'] as $city)
-                        <option value="{{ $city }}" {{ $filters['city'] == $city ? 'selected' : '' }}>{{ $city }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <label class="form-label fw-semibold">Quantity</label>
-                <select name="quantity" class="form-select">
-                    <option value="">All</option>
-                    @foreach ($filterOptions['quantities'] as $quantity)
-                        <option value="{{ $quantity }}" {{ $filters['quantity'] == $quantity ? 'selected' : '' }}>
-                            {{ $quantity }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-12 d-flex gap-2 justify-content-end">
-                <button type="submit" class="btn btn-primary">Apply</button>
-                <a href="{{ route('buyer.price-list', $enquiryId) }}" class="btn btn-outline-secondary">Reset</a>
-            </div>
-        </form>
+<div class="card mb-4 shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+        <h5 class="mb-0">Filter Bids</h5>
+        <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#priceListFilters" aria-expanded="true" aria-controls="priceListFilters">
+            Toggle Filters
+        </button>
+    </div>
+
+    <div class="collapse show" id="priceListFilters">
+        <div class="card-body">
+            <form class="row g-3 align-items-end" method="GET" action="{{ route('buyer.price-list', $enquiryId) }}">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">Category</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-tags"></i></span>
+                        <select name="category" class="form-select">
+                            <option value="">Select Category</option>
+                            @foreach ($filterOptions['categories'] as $category)
+                                <option value="{{ $category['id'] }}" {{ $filters['category'] == $category['id'] ? 'selected' : '' }}>
+                                    {{ $category['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">Sub Category</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                        <select name="sub_category" class="form-select">
+                            <option value="">Select Sub Category</option>
+                            @foreach ($filterOptions['subCategories'] as $subCategory)
+                                <option value="{{ $subCategory['id'] }}" {{ $filters['sub_category'] == $subCategory['id'] ? 'selected' : '' }}>
+                                    {{ $subCategory['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">Product Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                        <input type="text" name="product_name" class="form-control" placeholder="Product Name"
+                            value="{{ $filters['product_name'] }}">
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">Quotation ID</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
+                        <input type="text" name="quotation_id" value="{{ $filters['quotation_id'] }}" class="form-control"
+                            placeholder="Quotation ID">
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">Date</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                        <select name="date" class="form-select">
+                            <option value="">Select Date</option>
+                            @foreach ($filterOptions['dates'] as $date)
+                                <option value="{{ $date }}" {{ $filters['date'] == $date ? 'selected' : '' }}>{{ $date }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">City</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                        <select name="city" class="form-select">
+                            <option value="">Select City</option>
+                            @foreach ($filterOptions['cities'] as $city)
+                                <option value="{{ $city }}" {{ $filters['city'] == $city ? 'selected' : '' }}>{{ $city }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label">Quantity</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                        <select name="quantity" class="form-select">
+                            <option value="">Select Quantity</option>
+                            @foreach ($filterOptions['quantities'] as $quantity)
+                                <option value="{{ $quantity }}" {{ $filters['quantity'] == $quantity ? 'selected' : '' }}>
+                                    {{ $quantity }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label d-none d-lg-block">&nbsp;</label>
+                    <div class="d-flex flex-column flex-sm-row flex-lg-column flex-xl-row gap-2">
+                        <button type="submit" class="btn btn-primary w-100 flex-fill">
+                            <i class="bi bi-funnel-fill me-2"></i>Apply
+                        </button>
+                        <a href="{{ route('buyer.price-list', $enquiryId) }}" class="btn btn-outline-secondary w-100 flex-fill">
+                            <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <div class="table-responsive">
