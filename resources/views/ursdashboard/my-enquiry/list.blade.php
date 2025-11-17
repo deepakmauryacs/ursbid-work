@@ -81,7 +81,7 @@
                            <label for="myDate" class="form-label">Date</label>
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                              <input type="text" id="myDate" name="date" class="form-control" placeholder="Date" value="{{ $data['date'] ?? '' }}">
+                              <input type="date" id="myDate" name="date" class="form-control" value="{{ $data['date'] ?? '' }}">
                            </div>
                         </div>
 
