@@ -10,6 +10,7 @@ use App\Http\Controllers\URSController\ActiveEnquiryController;
 use App\Http\Controllers\URSController\ClosedEnquiryController;
 use App\Http\Controllers\URSController\MyEnquiryController;
 use App\Http\Controllers\URSController\UpdateAccountController;
+use App\Http\Controllers\URSController\ChangePasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,8 +139,8 @@ Route::get('/seller-dashboard', [App\Http\Controllers\CategoryController::class,
 Route::get('/delete-account', [App\Http\Controllers\SellerloginController::class, 'delete_account']);
 Route::post('/delete_acc', [App\Http\Controllers\SellerloginController::class, 'delete_acc']);
 
-Route::get('/seller/change-password', [App\Http\Controllers\SellerloginController::class, 'change_password'])->name('seller.password.edit');
-Route::post('/seller/change-password', [App\Http\Controllers\SellerloginController::class, 'update_password'])->name('seller.password.update');
+Route::get('/seller/change-password', [ChangePasswordController::class, 'show'])->name('seller.password.edit');
+Route::post('/seller/change-password', [ChangePasswordController::class, 'update'])->name('seller.password.update');
 
 Route::get('/update-account/{any}', [UpdateAccountController::class, 'show']);
 Route::post('/update_details/{any}', [App\Http\Controllers\SellerloginController::class, 'update_details']);
