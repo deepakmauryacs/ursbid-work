@@ -22,10 +22,12 @@ class AccountingTotalBiddingController extends Controller
 
         $filters = [
             'category' => $request->input('category'),
+            'sub_category' => $request->input('sub_category'),
             'date' => $request->input('date'),
             'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
             'product_name' => $request->input('product_name'),
+            'qutation_id' => $request->input('qutation_id'),
             'r_page' => $perPage,
         ];
 
@@ -33,6 +35,10 @@ class AccountingTotalBiddingController extends Controller
 
         if ($request->filled('category')) {
             $query->where('c.id', $request->input('category'));
+        }
+
+        if ($request->filled('sub_category')) {
+            $query->where('sc.id', $request->input('sub_category'));
         }
 
         if ($request->filled('date')) {
@@ -59,6 +65,10 @@ class AccountingTotalBiddingController extends Controller
             });
         }
 
+        if ($request->filled('qutation_id')) {
+            $query->where('qutation_form.qutation_id', 'like', '%' . $request->input('qutation_id') . '%');
+        }
+
         $records = $query
             ->orderByDesc('bidding_price.id')
             ->paginate($perPage)
@@ -68,6 +78,11 @@ class AccountingTotalBiddingController extends Controller
 
         $categoryData = DB::table('categories')
             ->select('id', 'name', DB::raw('name as title'))
+            ->orderBy('name')
+            ->get();
+
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
             ->orderBy('name')
             ->get();
 
@@ -83,6 +98,7 @@ class AccountingTotalBiddingController extends Controller
             'records' => $records,
             'filters' => $filters,
             'category_data' => $categoryData,
+            'sub_category_data' => $subCategoryData,
         ]);
     }
 

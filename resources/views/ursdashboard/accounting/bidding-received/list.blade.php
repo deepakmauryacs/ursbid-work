@@ -7,6 +7,7 @@
     $sellerEmail = $seller->email ?? ($seller['email'] ?? '');
     $filters = $filters ?? [];
     $categories = $category_data ?? collect();
+    $subCategories = $sub_category_data ?? collect();
     $records = $records ?? collect();
     $listingUrl = route('seller.accounting.biddrecive');
 @endphp
@@ -56,20 +57,23 @@
                                 </div>
 
                                 <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">Date</label>
+                                    <label class="form-label">Sub Category</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                                        <input type="date" name="date" class="form-control"
-                                            value="{{ $filters['date'] ?? '' }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-sm-6 col-lg-3">
-                                    <label class="form-label">Quantity</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
-                                        <input type="text" name="quantity" class="form-control" placeholder="Quantity"
-                                            value="{{ $filters['quantity'] ?? '' }}">
+                                        <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                                        <select name="sub_category" class="form-select">
+                                            <option value="">Select Sub Category</option>
+                                            @foreach($subCategories as $subCategory)
+                                                @php
+                                                    $subCategoryId = is_object($subCategory) ? ($subCategory->id ?? null) : ($subCategory['id'] ?? null);
+                                                    $subCategoryLabel = is_object($subCategory)
+                                                        ? ($subCategory->name ?? '')
+                                                        : ($subCategory['name'] ?? '');
+                                                @endphp
+                                                <option value="{{ $subCategoryId }}" {{ ($filters['sub_category'] ?? '') == $subCategoryId ? 'selected' : '' }}>
+                                                    {{ $subCategoryLabel }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
 
@@ -88,6 +92,33 @@
                                         <span class="input-group-text"><i class="bi bi-file-earmark-text"></i></span>
                                         <input type="text" name="qutation_id" class="form-control" placeholder="Quotation ID"
                                             value="{{ $filters['qutation_id'] ?? '' }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-3">
+                                    <label class="form-label">Date</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                        <input type="date" name="date" class="form-control"
+                                            value="{{ $filters['date'] ?? '' }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-3">
+                                    <label class="form-label">City</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                        <input type="text" name="city" class="form-control" placeholder="City"
+                                            value="{{ $filters['city'] ?? '' }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-3">
+                                    <label class="form-label">Quantity</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                                        <input type="text" name="quantity" class="form-control" placeholder="Quantity"
+                                            value="{{ $filters['quantity'] ?? '' }}">
                                     </div>
                                 </div>
 
