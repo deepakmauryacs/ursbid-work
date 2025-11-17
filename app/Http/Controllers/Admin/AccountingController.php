@@ -273,8 +273,18 @@ class AccountingController extends Controller
         return view('ursbid-admin.accounting.accepted-bidding-list', compact('datas', 'data', 'total', 'categoryData'));
     }
 
-    public function priceList($dataId)
+    public function priceList(Request $request, $dataId)
     {
+        $category    = $request->input('category');
+        $subcategory = $request->input('subcategory');
+        $qutationId  = $request->input('qutation_id');
+        $date        = $request->input('date');
+        $city        = $request->input('city');
+        $quantity    = $request->input('quantity');
+        $productName = $request->input('product_name');
+
+        $categoryData = DB::table('categories')->select('id', 'name')->orderBy('name')->get();
+
         $data = DB::table('bidding_price')
             ->leftJoin('seller', 'bidding_price.seller_email', '=', 'seller.email')
             ->leftJoin('product', 'bidding_price.product_id', '=', 'product.id')
@@ -348,11 +358,51 @@ class AccountingController extends Controller
                 'categories.image as category_image',
                 'categories.slug as category_slug',
                 'categories.status as category_status'
-            )->orderBy('date_time', 'ASC')->get();
+            );
+
+        if ($category) {
+            $data->where('categories.id', $category);
+        }
+
+        if ($subcategory) {
+            $data->where('sub_categories.id', $subcategory);
+        }
+
+        if ($qutationId) {
+            $data->where('qutation_form.qutation_id', 'like', '%' . $qutationId . '%');
+        }
+
+        if ($productName) {
+            $data->where('product.title', 'like', '%' . $productName . '%');
+        }
+
+        if ($date) {
+            $data->where('qutation_form.date_time', 'like', '%' . $date . '%');
+        }
+
+        if ($city) {
+            $data->where('qutation_form.city', 'like', '%' . $city . '%');
+        }
+
+        if ($quantity) {
+            $data->where('qutation_form.quantity', 'like', '%' . $quantity . '%');
+        }
+
+        $data = $data->orderBy('date_time', 'ASC')->get();
 
         $total = $data->count();
 
-        return view('ursbid-admin.accounting.price-list', compact('data', 'total'));
+        $datas = [
+            'date' => $date,
+            'city' => $city,
+            'quantity' => $quantity,
+            'category' => $category,
+            'subcategory' => $subcategory,
+            'qutation_id' => $qutationId,
+            'product_name' => $productName,
+        ];
+
+        return view('ursbid-admin.accounting.price-list', compact('data', 'total', 'categoryData', 'datas'));
     }
 
     public function acceptedList($dataId)
