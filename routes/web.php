@@ -9,6 +9,7 @@ use App\Http\Controllers\Frontend\AjexResponseController;
 use App\Http\Controllers\URSController\ActiveEnquiryController;
 use App\Http\Controllers\URSController\ClosedEnquiryController;
 use App\Http\Controllers\URSController\MyEnquiryController;
+use App\Http\Controllers\URSController\UpdateAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -140,7 +141,7 @@ Route::post('/delete_acc', [App\Http\Controllers\SellerloginController::class, '
 Route::get('/seller/change-password', [App\Http\Controllers\SellerloginController::class, 'change_password'])->name('seller.password.edit');
 Route::post('/seller/change-password', [App\Http\Controllers\SellerloginController::class, 'update_password'])->name('seller.password.update');
 
-Route::get('/update-account/{any}', [App\Http\Controllers\SellerloginController::class, 'update_account']);
+Route::get('/update-account/{any}', [UpdateAccountController::class, 'show']);
 Route::post('/update_details/{any}', [App\Http\Controllers\SellerloginController::class, 'update_details']);
 
 Route::get('/lock_location/{any}', [App\Http\Controllers\SellerloginController::class, 'lock_location']);
