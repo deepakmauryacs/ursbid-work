@@ -22,6 +22,7 @@ class ActiveEnquiryController extends Controller
 
         $filters = [
             'category' => $request->has('category') ? $request->input('category') : $id,
+            'sub_category' => $request->input('sub_category'),
             'date' => $request->input('date'),
             'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
@@ -36,6 +37,10 @@ class ActiveEnquiryController extends Controller
             $query->where('c.id', $request->input('category'));
         } elseif (!$request->has('category') && $id) {
             $query->where('c.id', $id);
+        }
+
+        if ($request->filled('sub_category')) {
+            $query->where('sc.id', $request->input('sub_category'));
         }
 
         if ($request->filled('date')) {
@@ -70,6 +75,11 @@ class ActiveEnquiryController extends Controller
             ->orderBy('name')
             ->get();
 
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
+            ->orderBy('name')
+            ->get();
+
         if ($request->ajax()) {
             return view('ursdashboard.active-enquiry.partials.table', [
                 'blogs' => $blogs,
@@ -82,6 +92,7 @@ class ActiveEnquiryController extends Controller
             'blogs' => $blogs,
             'data' => $filters,
             'category_data' => $categoryData,
+            'sub_category_data' => $subCategoryData,
             'sellerEmail' => $seller->email,
             'selectedCategoryId' => $id,
         ]);

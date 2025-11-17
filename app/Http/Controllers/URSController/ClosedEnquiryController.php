@@ -22,6 +22,7 @@ class ClosedEnquiryController extends Controller
 
         $filters = [
             'category' => $request->input('category'),
+            'sub_category' => $request->input('sub_category'),
             'date' => $request->input('date'),
             'city' => $request->input('city'),
             'quantity' => $request->input('quantity'),
@@ -34,6 +35,10 @@ class ClosedEnquiryController extends Controller
 
         if ($request->filled('category')) {
             $query->where('c.id', $request->input('category'));
+        }
+
+        if ($request->filled('sub_category')) {
+            $query->where('sc.id', $request->input('sub_category'));
         }
 
         if ($request->filled('date')) {
@@ -68,6 +73,11 @@ class ClosedEnquiryController extends Controller
             ->orderBy('name')
             ->get();
 
+        $subCategoryData = DB::table('sub_categories')
+            ->select('id', 'name', 'category_id')
+            ->orderBy('name')
+            ->get();
+
         if ($request->ajax()) {
             return view('ursdashboard.closed-enquiry.partials.table', [
                 'blogs' => $blogs,
@@ -75,12 +85,13 @@ class ClosedEnquiryController extends Controller
             ])->render();
         }
 
-        return view('ursdashboard.closed-enquiry.list', [
-            'blogs' => $blogs,
-            'data' => $filters,
-            'category_data' => $categoryData,
-        ]);
-    }
+            return view('ursdashboard.closed-enquiry.list', [
+                'blogs' => $blogs,
+                'data' => $filters,
+                'category_data' => $categoryData,
+                'sub_category_data' => $subCategoryData,
+            ]);
+        }
 
     protected function baseClosedEnquiryQuery($sellerId, string $sellerEmail)
     {

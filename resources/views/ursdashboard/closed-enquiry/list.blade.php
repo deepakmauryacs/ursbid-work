@@ -31,14 +31,39 @@
                            <label class="form-label">Category</label>
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-tags"></i></span>
-                              <select name="category" class="form-select">
-                                 <option value="">Select Category</option>
+                              <select name="category" class="form-select" id="closedCategory">
+                                 <option value="" data-category="">Select Category</option>
                                  @foreach($category_data as $cat)
-                                    <option value="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
+                                    <option value="{{ $cat->id }}" data-category="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
                                        {{ $cat->name ?? $cat->title ?? '' }}
                                     </option>
                                  @endforeach
                               </select>
+                           </div>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label class="form-label">Sub Category</label>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                              <select name="sub_category" class="form-select" id="closedSubCategory">
+                                 <option value="" data-category="">Select Sub Category</option>
+                                 @foreach($sub_category_data as $subCategory)
+                                    <option value="{{ $subCategory->id }}" data-category="{{ $subCategory->category_id }}" {{ ($data['sub_category'] ?? '') == $subCategory->id ? 'selected' : '' }}>
+                                       {{ $subCategory->name ?? '' }}
+                                    </option>
+                                 @endforeach
+                              </select>
+                           </div>
+                        </div>
+
+                        <!-- Product Name -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label class="form-label">Product Name</label>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                              <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                            </div>
                         </div>
 
@@ -75,15 +100,6 @@
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
                               <input type="number" name="quantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}" min="1" step="1" inputmode="numeric">
-                           </div>
-                        </div>
-
-                        <!-- Product Name -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                           <label class="form-label">Product Name</label>
-                           <div class="input-group">
-                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
-                              <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                            </div>
                         </div>
 
@@ -158,6 +174,27 @@
       const $tableWrapper = $('#closedEnquiryTable');
       const baseUrl = "{{ route('seller.enquiry.closed') }}";
 
+      function filterClosedSubCategories() {
+         const selectedCategory = $('#closedCategory').val();
+         const $subCategory = $('#closedSubCategory');
+
+         $subCategory.find('option').each(function () {
+            const optionCategory = $(this).data('category');
+            const shouldShow = !optionCategory || !selectedCategory || optionCategory == selectedCategory;
+
+            $(this).prop('disabled', !shouldShow);
+            $(this).toggle(shouldShow);
+
+            if (!shouldShow && $(this).is(':selected')) {
+               $(this).prop('selected', false);
+            }
+         });
+
+         if (!$subCategory.find('option:selected').length) {
+            $subCategory.val('');
+         }
+      }
+
       function updateHistory(url, serializedForm) {
          const params = new URLSearchParams(serializedForm);
          const requestUrl = new URL(url, window.location.origin);
@@ -219,9 +256,14 @@
       });
 
       $('#resetClosedEnquiryFilters').on('click', function () {
-         $form[0].reset();
+         $form.find('select').val('');
+         $form.find('input[type="text"], input[type="number"], input[type="date"]').val('');
+         filterClosedSubCategories();
          fetchClosedEnquiries(baseUrl);
       });
+
+      $form.on('change', '#closedCategory', filterClosedSubCategories);
+      filterClosedSubCategories();
    })(jQuery);
 </script>
 @endsection
