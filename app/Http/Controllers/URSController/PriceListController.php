@@ -18,7 +18,28 @@ class PriceListController extends Controller
             abort(403, 'Seller session not found.');
         }
 
-        $records = $this->basePriceListQuery($seller->email, $dataId)
+        $baseQuery = $this->basePriceListQuery($seller->email, $dataId);
+
+        $allRecords = $this->appendComputedState(
+            $baseQuery
+                ->orderByDesc('bidding_price.id')
+                ->get()
+        );
+
+        $filters = [
+            'category'     => $request->input('category'),
+            'sub_category' => $request->input('sub_category'),
+            'product_name' => $request->input('product_name'),
+            'quotation_id' => $request->input('quotation_id'),
+            'date'         => $request->input('date'),
+            'city'         => $request->input('city'),
+            'quantity'     => $request->input('quantity'),
+        ];
+
+        $records = $this->applyFilters(
+            $this->basePriceListQuery($seller->email, $dataId),
+            $filters
+        )
             ->orderByDesc('bidding_price.id')
             ->get();
 
@@ -33,6 +54,8 @@ class PriceListController extends Controller
             'total'           => $records->count(),
             'enquiryId'       => $dataId,
             'cisQuotationId'  => $cisQuotationId,
+            'filters'         => $filters,
+            'filterOptions'   => $this->buildFilterOptions($allRecords),
         ]);
     }
 
@@ -351,7 +374,63 @@ class PriceListController extends Controller
             return $sellerId === 0 || !in_array($sellerId, $existingSellerIds, true);
         });
 
-        return $merged->merge($remaining)->values();
+            return $merged->merge($remaining)->values();
+    }
+
+    protected function applyFilters($query, array $filters)
+    {
+        $normalizeDate = function ($value) {
+            if (blank($value)) {
+                return null;
+            }
+
+            try {
+                return Carbon::parse($value)->toDateString();
+            } catch (\Throwable $e) {
+                return $value;
+            }
+        };
+
+        return $query
+            ->when($filters['category'], function ($query, $categoryId) {
+                return $query->where('c.id', (int) $categoryId);
+            })
+            ->when($filters['sub_category'], function ($query, $subCategoryId) {
+                return $query->where('sc.id', (int) $subCategoryId);
+            })
+            ->when($filters['product_name'], function ($query, $productName) {
+                $productName = trim((string) $productName);
+
+                return $query->where(function ($subQuery) use ($productName) {
+                    $subQuery
+                        ->where('product.title', 'LIKE', "%{$productName}%")
+                        ->orWhere('bidding_price.product_name', 'LIKE', "%{$productName}%");
+                });
+            })
+            ->when($filters['quotation_id'], function ($query, $quotationId) {
+                $quotationId = trim((string) $quotationId);
+
+                return $query->where('qutation_form.qutation_id', 'LIKE', "%{$quotationId}%");
+            })
+            ->when($filters['date'], function ($query, $date) use ($normalizeDate) {
+                $normalizedDate = $normalizeDate($date);
+
+                if (!$normalizedDate) {
+                    return $query;
+                }
+
+                return $query->whereDate('qutation_form.date_time', $normalizedDate);
+            })
+            ->when($filters['city'], function ($query, $city) {
+                $city = trim((string) $city);
+
+                return $query->where('qutation_form.city', 'LIKE', "%{$city}%");
+            })
+            ->when($filters['quantity'], function ($query, $quantity) {
+                $quantity = trim((string) $quantity);
+
+                return $query->where('qutation_form.quantity', 'LIKE', "%{$quantity}%");
+            });
     }
 
     protected function hydrateEnquiryContext(?object $record, object $quotationForm): object
@@ -468,5 +547,73 @@ class PriceListController extends Controller
 
             return $record;
         });
+    }
+
+    protected function buildFilterOptions(Collection $records): array
+    {
+        $resolveProductName = function ($record) {
+            return collect([
+                $record->product_title ?? null,
+                $record->bidding_price_product_name ?? null,
+            ])->filter()->first();
+        };
+
+        $categories = $records
+            ->map(fn ($record) => [
+                'id' => $record->category_id ?? null,
+                'name' => $record->category_name ?? null,
+            ])
+            ->filter(fn ($option) => filled($option['id']) && filled($option['name']))
+            ->unique('id')
+            ->values();
+
+        $subCategories = $records
+            ->map(fn ($record) => [
+                'id' => $record->sub_id ?? null,
+                'name' => $record->sub_name ?? null,
+            ])
+            ->filter(fn ($option) => filled($option['id']) && filled($option['name']))
+            ->unique('id')
+            ->values();
+
+        $products = $records
+            ->map(function ($record) use ($resolveProductName) {
+                return [
+                    'id' => $record->product_id ?? $record->bidding_price_product_id ?? null,
+                    'name' => $resolveProductName($record),
+                ];
+            })
+            ->filter(fn ($option) => filled($option['name']))
+            ->unique(function ($option) {
+                return strtolower($option['name']);
+            })
+            ->values();
+
+        $dates = $records
+            ->map(fn ($record) => $record->formatted_date ?? null)
+            ->filter()
+            ->unique()
+            ->values();
+
+        $cities = $records
+            ->map(fn ($record) => $record->qutation_form_city ?? null)
+            ->filter()
+            ->unique()
+            ->values();
+
+        $quantities = $records
+            ->map(fn ($record) => $record->quantity ?? null)
+            ->filter()
+            ->unique()
+            ->values();
+
+        return [
+            'categories'    => $categories,
+            'subCategories' => $subCategories,
+            'products'      => $products,
+            'dates'         => $dates,
+            'cities'        => $cities,
+            'quantities'    => $quantities,
+        ];
     }
 }

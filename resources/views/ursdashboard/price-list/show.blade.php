@@ -37,6 +37,9 @@
                         @include('ursdashboard.price-list.partials.table', [
                             'records' => $records,
                             'total' => $total,
+                            'filters' => $filters,
+                            'filterOptions' => $filterOptions,
+                            'enquiryId' => $enquiryId,
                         ])
                     </div>
                 </div>
