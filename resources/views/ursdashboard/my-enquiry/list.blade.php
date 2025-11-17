@@ -1,4 +1,4 @@
-@extends('seller.layouts.app')
+@extends('ursdashboard.layouts.app')
 @section('title', 'My Enquiry List')
 
 @section('content')

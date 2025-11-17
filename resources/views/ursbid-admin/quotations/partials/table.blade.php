@@ -65,7 +65,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">No quotations found.</td>
+                    <td colspan="13" class="text-center">No quotations found.</td>
                 </tr>
             @endforelse
         </tbody>
