@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                 <label for="filter-date" class="form-label mb-1">Date</label>
-                                <input type="date" name="date" id="filter-date" class="form-control" placeholder="DD/MM/YYYY"
+                                <input type="text" name="date" id="filter-date" class="form-control" placeholder="DD/MM/YYYY"
                                     value="{{ $datas['date'] ?? '' }}">
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">

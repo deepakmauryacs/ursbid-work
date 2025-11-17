@@ -25,29 +25,37 @@
 
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-                    <form id="updateAccountForm" method="post" action="{{ url('/update_details/' . $blog->id) }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                    <form id="updateAccountForm" method="post" action="{{ url('/update_details/' . $blog->id) }}">
+                        @csrf
 
                         <div class="row g-4">
+
+                            {{-- NAME --}}
                             <div class="col-md-6">
-                                <label for="seller-name" class="form-label text-capitalize">Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="seller-name" placeholder="Enter your name" name="name" value="{{ $blog->name }}" required>
-                                <div class="text-danger small mt-1 error-text" data-error="name" style="{{ $errors->has('name') ? '' : 'display:none;' }}">{{ $errors->first('name') }}</div>
+                                <label for="seller-name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="seller-name" name="name" value="{{ $blog->name }}">
+                                <div class="text-danger small mt-1 error-text" data-error="name"></div>
                             </div>
+
+                            {{-- PHONE --}}
                             <div class="col-md-6">
-                                <label for="seller-phone" class="form-label text-capitalize">Phone <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="seller-phone" placeholder="Enter your phone number" name="phone" value="{{ $blog->phone }}" required>
-                                <div class="text-danger small mt-1 error-text" data-error="phone" style="{{ $errors->has('phone') ? '' : 'display:none;' }}">{{ $errors->first('phone') }}</div>
+                                <label for="seller-phone" class="form-label">Phone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="seller-phone" name="phone" value="{{ $blog->phone }}">
+                                <div class="text-danger small mt-1 error-text" data-error="phone"></div>
                             </div>
+
+                            {{-- GST --}}
                             <div class="col-md-6">
-                                <label for="seller-gst" class="form-label text-uppercase">GST</label>
-                                <input type="text" class="form-control" id="seller-gst" placeholder="Enter GST number" name="gst" value="{{ $blog->gst }}">
-                                <div class="text-danger small mt-1 error-text" data-error="gst" style="{{ $errors->has('gst') ? '' : 'display:none;' }}">{{ $errors->first('gst') }}</div>
+                                <label for="seller-gst" class="form-label">GST</label>
+                                <input type="text" class="form-control" id="seller-gst" name="gst" value="{{ $blog->gst }}">
+                                <div class="text-danger small mt-1 error-text" data-error="gst"></div>
                             </div>
+
+                            {{-- EMAIL --}}
                             <div class="col-md-6">
-                                <label for="seller-email" class="form-label text-capitalize">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="seller-email" placeholder="Email" value="{{ $blog->email }}" name="email" readonly required>
-                                <div class="text-danger small mt-1 error-text" data-error="email" style="{{ $errors->has('email') ? '' : 'display:none;' }}">{{ $errors->first('email') }}</div>
+                                <label for="seller-email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="seller-email" name="email" value="{{ $blog->email }}" readonly>
+                                <div class="text-danger small mt-1 error-text" data-error="email"></div>
                             </div>
 
                             @php
@@ -55,66 +63,68 @@
                                 $selectedProServices = array_filter(array_map('trim', explode(',', (string) $blog->pro_ser)));
                             @endphp
 
+                            {{-- REGISTER AS --}}
                             <div class="col-12">
-                                <span class="form-label d-block mb-2">Register As</span>
+                                <label class="form-label">Register As <span class="text-danger">*</span></label>
                                 <div class="d-flex flex-wrap gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="acc_type_seller" name="acc_type[]" value="1" {{ in_array(1, $selectedAccTypes) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="acc_type_seller">Seller</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="acc_type_contractor" name="acc_type[]" value="2" {{ in_array(2, $selectedAccTypes) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="acc_type_contractor">Contractor</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="acc_type_client" name="acc_type[]" value="3" {{ in_array(3, $selectedAccTypes) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="acc_type_client">Client</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="acc_type_buyer" name="acc_type[]" value="4" {{ in_array(4, $selectedAccTypes) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="acc_type_buyer">Buyer</label>
-                                    </div>
+                                    <label class="form-check-label me-3">
+                                        <input type="checkbox" class="form-check-input me-1" name="acc_type[]" value="1" {{ in_array(1, $selectedAccTypes) ? 'checked' : '' }}>
+                                        Seller
+                                    </label>
+                                    <label class="form-check-label me-3">
+                                        <input type="checkbox" class="form-check-input me-1" name="acc_type[]" value="2" {{ in_array(2, $selectedAccTypes) ? 'checked' : '' }}>
+                                        Contractor
+                                    </label>
+                                    <label class="form-check-label me-3">
+                                        <input type="checkbox" class="form-check-input me-1" name="acc_type[]" value="3" {{ in_array(3, $selectedAccTypes) ? 'checked' : '' }}>
+                                        Client
+                                    </label>
+                                    <label class="form-check-label me-3">
+                                        <input type="checkbox" class="form-check-input me-1" name="acc_type[]" value="4" {{ in_array(4, $selectedAccTypes) ? 'checked' : '' }}>
+                                        Buyer
+                                    </label>
                                 </div>
-                                <div class="text-danger small mt-1 error-text" data-error="acc_type" style="{{ $errors->has('acc_type') ? '' : 'display:none;' }}">{{ $errors->first('acc_type') }}</div>
+                                <div class="text-danger small mt-1 error-text" data-error="acc_type"></div>
                             </div>
 
+                            {{-- PRODUCT / SERVICES --}}
                             <div class="col-12">
-                                <div id="gstField" class="mt-2" style="display: none;">
-                                    <label for="pro_ser" class="form-label fw-semibold">Product / Services</label>
+                                <div id="gstField" class="mt-2" style="display:none;">
+                                    <label class="form-label">Product / Services</label>
                                     <div id="checkboxContainer" class="row g-2"></div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="text-danger small mt-1 error-text" data-error="pro_ser" style="display:none;"></div>
+                                <div class="text-danger small mt-1 error-text" data-error="pro_ser"></div>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary" id="updateAccountSubmit">Save Changes</button>
+                            <button type="submit" id="updateAccountSubmit" class="btn btn-primary">
+                                Save Changes
+                            </button>
                         </div>
+
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+@endsection
 
-@push('styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKM265AxtUtKeAoD0UDiP0wQmgFDBDsG/T7InhxiZx4nU+uGHVxgAhWYoS4JT3KjIP9ezefK1z6LXm4O0hZrXQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-@endpush
 
 @push('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-HHV3Pk2VYK9ER5iq90aqw2GUlycvIbwkWNAv8hBlC9yxy0OTUUkLR53Lcs7Vp1IU7DqDZr1P0N6xJbVQfE3d3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{-- jQuery Validate --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             const existingServices = @json($selectedProServices);
 
+            // ---------- Product/Service checkboxes ----------
             function markExistingServices() {
-                if (!existingServices || !existingServices.length) {
-                    return;
-                }
+                if (!existingServices || !existingServices.length) return;
 
-                $('#checkboxContainer input[type="checkbox"]').each(function() {
+                $('#checkboxContainer').find('input[type="checkbox"]').each(function () {
                     const value = $(this).val();
                     if (existingServices.includes(value)) {
                         $(this).prop('checked', true);
@@ -123,13 +133,15 @@
             }
 
             function updateDropdown() {
-                var selectedCategories = [];
-                if ($('#acc_type_seller').is(':checked')) {
+                let selectedCategories = [];
+                // Seller = 1, Contractor = 2 (agar aapka backend aise expect kar raha hai)
+                if ($('input[name="acc_type[]"][value="1"]').is(':checked')) {
                     selectedCategories.push(1);
                 }
-                if ($('#acc_type_contractor').is(':checked')) {
+                if ($('input[name="acc_type[]"][value="2"]').is(':checked')) {
                     selectedCategories.push(2);
                 }
+
                 if (selectedCategories.length > 0) {
                     $('#gstField').show();
                     $.ajax({
@@ -139,7 +151,7 @@
                             categories: selectedCategories,
                             _token: '{{ csrf_token() }}'
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $('#checkboxContainer').html(response);
                             markExistingServices();
                         }
@@ -150,21 +162,15 @@
                 }
             }
 
-            function clearErrors() {
-                $('#updateAccountForm').find('.error-text').each(function() {
-                    $(this).text('').hide();
-                });
-            }
+            // change on acc_type -> dropdown + re-validate group
+            $('input[name="acc_type[]"]').on('change', function () {
+                updateDropdown();
+                $('input[name="acc_type[]"]').valid();   // validate checkbox group again
+            });
 
-            function showFieldError(field, message) {
-                var $target = $('#updateAccountForm').find('.error-text[data-error="' + field + '"]');
-                if ($target.length) {
-                    $target.text(message).show();
-                } else {
-                    toastr.error(message);
-                }
-            }
+            updateDropdown();
 
+            // ---------- Toastr options ----------
             toastr.options = {
                 closeButton: true,
                 progressBar: true,
@@ -172,80 +178,153 @@
                 positionClass: 'toast-top-right'
             };
 
-            $('#updateAccountForm').on('submit', function(event) {
-                event.preventDefault();
+            // ---------- Custom GST rule (Indian GSTIN) ----------
+            $.validator.addMethod("indianGST", function (value, element) {
+                const val = $.trim(value);
+                if (val === "") return true; // optional field
+                const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i;
+                return gstRegex.test(val);
+            }, "Please enter a valid Indian GSTIN (15 characters).");
 
-                var $form = $(this);
-                var $submitButton = $('#updateAccountSubmit');
-                var hasError = false;
-                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            function clearInlineErrors() {
+                $('#updateAccountForm').find('.error-text').text('').hide();
+                $('#updateAccountForm').find('.is-invalid').removeClass('is-invalid');
+            }
 
-                clearErrors();
+            // ---------- jQuery Validate setup ----------
+            var form = $('#updateAccountForm');
 
-                if (!$.trim($('#seller-name').val())) {
-                    showFieldError('name', 'Name is required.');
-                    hasError = true;
-                }
-
-                if (!$.trim($('#seller-phone').val())) {
-                    showFieldError('phone', 'Phone is required.');
-                    hasError = true;
-                }
-
-                var emailValue = $.trim($('#seller-email').val());
-                if (!emailValue) {
-                    showFieldError('email', 'Email is required.');
-                    hasError = true;
-                } else if (!emailPattern.test(emailValue)) {
-                    showFieldError('email', 'Please provide a valid email address.');
-                    hasError = true;
-                }
-
-                if (hasError) {
-                    toastr.error('Please correct the highlighted errors and try again.');
-                    return;
-                }
-
-                $submitButton.prop('disabled', true).addClass('disabled');
-
-                $.ajax({
-                    url: $form.attr('action'),
-                    type: 'POST',
-                    data: $form.serialize(),
-                    success: function(response) {
-                        if (response && response.status === 'success') {
-                            toastr.success(response.message || 'Account details updated successfully.');
-                        } else {
-                            toastr.success('Account details updated successfully.');
-                        }
+            form.validate({
+                ignore: [], // dynamic fields bhi validate hon
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 255
                     },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON ? xhr.responseJSON.errors : {};
-                            $.each(errors, function(field, messages) {
-                                if ($.isArray(messages) && messages.length) {
-                                    showFieldError(field, messages[0]);
-                                }
-                            });
-                            var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Please correct the highlighted errors and try again.';
-                            toastr.error(errorMessage);
-                        } else {
-                            var generalMessage = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Something went wrong. Please try again.';
-                            toastr.error(generalMessage);
-                        }
+                    phone: {
+                        required: true,
+                        digits: true,
+                        minlength: 10,
+                        maxlength: 10
                     },
-                    complete: function() {
-                        $submitButton.prop('disabled', false).removeClass('disabled');
+                    gst: {
+                        indianGST: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    "acc_type[]": {
+                        required: true
+                    },
+                    "pro_ser[]": {
+                        required: function () {
+                            return $('#gstField').is(':visible');
+                        }
                     }
-                });
-            });
+                },
+                messages: {
+                    name: {
+                        required: "Name is required."
+                    },
+                    phone: {
+                        required: "Phone is required.",
+                        digits: "Phone must contain digits only.",
+                        minlength: "Phone must be 10 digits.",
+                        maxlength: "Phone must be 10 digits."
+                    },
+                    gst: {
+                        indianGST: "Please enter a valid Indian GSTIN (15 characters)."
+                    },
+                    email: {
+                        required: "Email is required.",
+                        email: "Please provide a valid email address."
+                    },
+                    "acc_type[]": {
+                        required: "Please select at least one account type."
+                    },
+                    "pro_ser[]": {
+                        required: "Please select at least one product / service."
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    var name = element.attr('name') || '';
+                    name = name.replace('[]', ''); // acc_type[] -> acc_type
 
-            $('input[name="acc_type[]"]').change(function() {
-                updateDropdown();
-            });
+                    var $span = form.find('.error-text[data-error="' + name + '"]');
+                    if ($span.length) {
+                        $span.text(error.text()).show();
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                highlight: function (element) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('is-invalid');
+                    var name = $(element).attr('name') || '';
+                    name = name.replace('[]', '');
+                    form.find('.error-text[data-error="' + name + '"]').text('').hide();
+                },
+                submitHandler: function (formEl) {
+                    clearInlineErrors();
 
-            updateDropdown();
+                    var $form = $(formEl);
+                    var $submitButton = $('#updateAccountSubmit');
+                    $submitButton.prop('disabled', true).addClass('disabled');
+
+                    $.ajax({
+                        url: $form.attr('action'),
+                        type: 'POST',
+                        data: $form.serialize(),
+                        success: function (response) {
+                            clearInlineErrors();
+                            if (response && response.status === 'success') {
+                                toastr.success(response.message || 'Account details updated successfully.');
+                            } else {
+                                toastr.success('Account details updated successfully.');
+                            }
+                        },
+                        error: function (xhr) {
+                            clearInlineErrors();
+
+                            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                                var firstField = null;
+                                $.each(xhr.responseJSON.errors, function (field, messages) {
+                                    var name = field.replace(/\.\d+$/, '');
+                                    var $span = form.find('.error-text[data-error="' + name + '"]');
+                                    if ($span.length && messages.length) {
+                                        $span.text(messages[0]).show();
+                                        var $input = form.find('[name="' + name + '"], [name="' + name + '[]"]');
+                                        $input.addClass('is-invalid');
+                                        if (!firstField) firstField = name;
+                                    }
+                                });
+
+                                if (firstField) {
+                                    var $first = form.find('.error-text[data-error="' + firstField + '"]');
+                                    if ($first.length) {
+                                        $('html, body').animate({
+                                            scrollTop: $first.offset().top - 120
+                                        }, 400);
+                                    }
+                                }
+                            } else {
+                                var msg = (xhr.responseJSON && xhr.responseJSON.message)
+                                    ? xhr.responseJSON.message
+                                    : 'Something went wrong. Please try again.';
+                                toastr.error(msg);
+                            }
+                        },
+                        complete: function () {
+                            $submitButton.prop('disabled', false).removeClass('disabled');
+                        }
+                    });
+
+                    return false; // prevent default submit
+                }
+            });
         });
     </script>
 @endpush
-@endsection

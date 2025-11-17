@@ -110,7 +110,7 @@
                             </div>
                             <div class="col-md-2 no-margin-left">
                                 <div class="form-group">
-                                    <input type="date" name="date" class="form-control" placeholder="Date"
+                                    <input type="text" name="date" class="form-control" placeholder="Date"
                                         value="{{ isset($data['date']) ? $data['date'] : '' }}">
                                 </div>
                             </div>

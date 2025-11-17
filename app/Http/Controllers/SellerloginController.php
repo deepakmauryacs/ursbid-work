@@ -37,7 +37,6 @@ class SellerloginController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'gst' => 'required',
             'phone' => 'required',
             'email' => 'required|email',
             'acc_type' => 'required',
