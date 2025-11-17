@@ -32,13 +32,38 @@
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-tags"></i></span>
                               <select name="category" id="myCategory" class="form-select">
-                                 <option value="">Select Category</option>
+                                 <option value="" data-category="">Select Category</option>
                                  @foreach($category_data as $cat)
-                                    <option value="{{ $cat->id }}" {{ ($data['category'] ?? null) == $cat->id ? 'selected' : '' }}>
+                                    <option value="{{ $cat->id }}" data-category="{{ $cat->id }}" {{ ($data['category'] ?? null) == $cat->id ? 'selected' : '' }}>
                                        {{ $cat->name ?? $cat->title ?? '' }}
                                     </option>
                                  @endforeach
                               </select>
+                           </div>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label for="mySubCategory" class="form-label">Sub Category</label>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                              <select name="sub_category" id="mySubCategory" class="form-select">
+                                 <option value="" data-category="">Select Sub Category</option>
+                                 @foreach($sub_category_data as $subCategory)
+                                    <option value="{{ $subCategory->id }}" data-category="{{ $subCategory->category_id }}" {{ ($data['sub_category'] ?? '') == $subCategory->id ? 'selected' : '' }}>
+                                       {{ $subCategory->name ?? '' }}
+                                    </option>
+                                 @endforeach
+                              </select>
+                           </div>
+                        </div>
+
+                        <!-- Product Name -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label for="myProduct" class="form-label">Product Name</label>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                              <input type="text" id="myProduct" name="product_name" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                            </div>
                         </div>
 
@@ -56,7 +81,7 @@
                            <label for="myDate" class="form-label">Date</label>
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                              <input type="text" id="myDate" name="date" class="form-control" placeholder="Date" value="{{ $data['date'] ?? '' }}">
+                              <input type="date" id="myDate" name="date" class="form-control" value="{{ $data['date'] ?? '' }}">
                            </div>
                         </div>
 
@@ -75,15 +100,6 @@
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
                               <input type="text" id="myQuantity" name="quantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}">
-                           </div>
-                        </div>
-
-                        <!-- Product Name -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                           <label for="myProduct" class="form-label">Product Name</label>
-                           <div class="input-group">
-                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
-                              <input type="text" id="myProduct" name="product_name" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                            </div>
                         </div>
 
@@ -154,16 +170,46 @@
    </div>
 </div>
 
-<script>
-   (function () {
-      const resetButton = document.getElementById('resetMyEnquiryFilters');
-      const filtersForm = document.getElementById('myEnquiryFiltersForm');
+   <script>
+      (function () {
+         const categorySelect = document.getElementById('myCategory');
+         const subCategorySelect = document.getElementById('mySubCategory');
+         const resetButton = document.getElementById('resetMyEnquiryFilters');
+         const filtersForm = document.getElementById('myEnquiryFiltersForm');
 
-      if (resetButton && filtersForm) {
-         resetButton.addEventListener('click', function () {
-            window.location.href = filtersForm.getAttribute('action');
-         });
-      }
-   })();
-</script>
+         function filterMySubCategories() {
+            if (!subCategorySelect) return;
+
+            const selectedCategory = categorySelect ? categorySelect.value : '';
+
+            Array.from(subCategorySelect.options).forEach((option) => {
+               const optionCategory = option.dataset.category;
+               const shouldShow = !optionCategory || !selectedCategory || optionCategory === selectedCategory;
+
+               option.disabled = !shouldShow;
+               option.hidden = !shouldShow;
+
+               if (!shouldShow && option.selected) {
+                  option.selected = false;
+               }
+            });
+
+            if (!subCategorySelect.value) {
+               subCategorySelect.value = '';
+            }
+         }
+
+         if (resetButton && filtersForm) {
+            resetButton.addEventListener('click', function () {
+               window.location.href = filtersForm.getAttribute('action');
+            });
+         }
+
+         if (categorySelect) {
+            categorySelect.addEventListener('change', filterMySubCategories);
+         }
+
+         filterMySubCategories();
+      })();
+   </script>
 @endsection

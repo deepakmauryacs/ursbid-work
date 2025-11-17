@@ -62,13 +62,38 @@
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-tags"></i></span>
                               <select name="category" id="category" class="form-select">
-                                 <option value="">Select Category</option>
+                                 <option value="" data-category="">Select Category</option>
                                  @foreach($category_data as $cat)
-                                    <option value="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
+                                    <option value="{{ $cat->id }}" data-category="{{ $cat->id }}" {{ $data['category'] == $cat->id ? 'selected' : '' }}>
                                        {{ $cat->name ?? $cat->title ?? '' }}
                                     </option>
                                  @endforeach
                               </select>
+                           </div>
+                        </div>
+
+                        <!-- Sub Category -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label class="form-label">Sub Category</label>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                              <select name="sub_category" id="subCategory" class="form-select">
+                                 <option value="" data-category="">Select Sub Category</option>
+                                 @foreach($sub_category_data as $subCategory)
+                                    <option value="{{ $subCategory->id }}" data-category="{{ $subCategory->category_id }}" {{ ($data['sub_category'] ?? '') == $subCategory->id ? 'selected' : '' }}>
+                                       {{ $subCategory->name ?? '' }}
+                                    </option>
+                                 @endforeach
+                              </select>
+                           </div>
+                        </div>
+
+                        <!-- Product Name -->
+                        <div class="col-12 col-sm-6 col-lg-3">
+                           <label class="form-label">Product Name</label>
+                           <div class="input-group">
+                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
+                              <input type="text" name="product_name" id="filterProduct" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                            </div>
                         </div>
 
@@ -86,7 +111,7 @@
                            <label class="form-label">Date</label>
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-                              <input type="date" name="date" id="filterDate" class="form-control" value="{{ $data['date'] ?? '' }}">
+                              <input type="date" name="date" id="filterDate" class="form-control" value="{{ $data['date'] ?? ''}}">
                            </div>
                         </div>
 
@@ -105,15 +130,6 @@
                            <div class="input-group">
                               <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
                               <input type="number" name="quantity" id="filterQuantity" class="form-control" placeholder="Quantity" value="{{ $data['quantity'] ?? '' }}" min="1" step="1">
-                           </div>
-                        </div>
-
-                        <!-- Product Name -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                           <label class="form-label">Product Name</label>
-                           <div class="input-group">
-                              <span class="input-group-text"><i class="bi bi-bag"></i></span>
-                              <input type="text" name="product_name" id="filterProduct" class="form-control" placeholder="Product Name" value="{{ $data['product_name'] ?? '' }}">
                            </div>
                         </div>
 
@@ -206,6 +222,27 @@
          window.history.replaceState({}, '', finalUrl);
       }
 
+      function filterSubCategories() {
+         const selectedCategory = $('#category').val();
+         const $subCategory = $('#subCategory');
+
+         $subCategory.find('option').each(function () {
+            const optionCategory = $(this).data('category');
+            const shouldShow = !optionCategory || !selectedCategory || optionCategory == selectedCategory;
+
+            $(this).prop('disabled', !shouldShow);
+            $(this).toggle(shouldShow);
+
+            if (!shouldShow && $(this).is(':selected')) {
+               $(this).prop('selected', false);
+            }
+         });
+
+         if (!$subCategory.find('option:selected').length) {
+            $subCategory.val('');
+         }
+      }
+
       function showLoader() {
          $tableWrapper.addClass('position-relative');
          if (!$tableWrapper.find('.table-loader').length) {
@@ -247,12 +284,14 @@
          $form.trigger('submit');
       });
 
+      $form.on('change', '#category', filterSubCategories);
+
+      filterSubCategories();
+
       $('#resetActiveEnquiryFilters').on('click', function () {
-         $form[0].reset();
-         $form.find('select').each(function () {
-            $(this).val('').trigger('change');
-         });
-         $form.find('input[type="text"]').val('');
+         $form.find('select').val('');
+         $form.find('input[type="text"], input[type="number"], input[type="date"]').val('');
+         filterSubCategories();
          fetchActiveEnquiries(baseUrl);
       });
 
